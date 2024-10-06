@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Sign Up</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="container">
+  <h2>Sign Up</h2>
+  <form th:action="@{/signup}" method="post">
+    <div>
+      <label for="name">Username:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+      <label for="description">Description:</label>
+      <input type="text" id="description" name="description">
+    </div>
+    <div>
+      <label for="availability">Availability:</label>
+      <input type="checkbox" id="availability" name="availability">
+    </div>
+    <!--div>
+      <label for="latitude">Latitude (optional):</label>
+      <input type="text" id="latitude" name="latitude">
+    </div>
+    <div>
+      <label for="longitude">Longitude (optional):</label>
+      <input type="text" id="longitude" name="longitude">
+    </div-->
+    <div>
+      <label for="competences">Competences:</label>
+      <select id="competences" name="competences" multiple>
+        <option th:each="competence : ${competences}" th:value="${competence.id}" th:text="${competence.name}"></option>
+      </select>
+    </div>
+    <div>
+      <label for="interests">Interests:</label>
+      <select id="interests" name="interests" multiple>
+        <option th:each="interest : ${interests}" th:value="${interest.id}" th:text="${interest.name}"></option>
+      </select>
+    </div>
+    <div>
+      <label for="groups">Groups:</label>
+      <select id="groups" name="groups" multiple>
+        <option th:each="group : ${groups}" th:value="${group.id}" th:text="${group.name}"></option>
+      </select>
+    </div>
+    <div>
+      <button type="submit">Sign Up</button>
+    </div>
+  </form>
+  <div th:if="${error}">
+    <p class="error" th:text="${error}"></p>
+  </div>
+</div>
+</body>
+</html>
+
+
+
