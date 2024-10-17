@@ -1,0 +1,79 @@
+/* profile-editor.css */
+
+body {
+    background-color: #f9f9f9; /* Light background for the entire page */
+    font-family: 'Arial', sans-serif; /* Use a clean sans-serif font */
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: #ffffff; /* White background for the navbar */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.navbar-brand {
+    font-size: 24px; /* Slightly larger font for brand name */
+    color: #007bff; /* Bootstrap primary color */
+}
+
+.nav-link {
+    color: #555; /* Darker color for nav links */
+}
+
+.nav-link:hover {
+    color: #007bff; /* Change color on hover */
+}
+
+/* Container for Profile Editor */
+.container {
+    background-color: white; /* White background for the form container */
+    border-radius: 10px; /* Rounded corners for the form */
+    padding: 30px; /* Inner padding */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    max-width: 600px; /* Limit max width */
+    margin: auto; /* Center the container */
+}
+
+/* Form Heading */
+h1 {
+    color: #333; /* Dark color for the heading */
+    font-size: 28px; /* Size for the main heading */
+    margin-bottom: 20px; /* Space below the heading */
+}
+
+/* Form Styles */
+.form-group label {
+    font-weight: bold; /* Bold labels for better visibility */
+    color: #666; /* Slightly dark color for labels */
+}
+
+.form-control {
+    border: 1px solid #ccc; /* Light border for inputs */
+    border-radius: 5px; /* Rounded corners for inputs */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Inner shadow for inputs */
+    transition: border-color 0.2s; /* Smooth transition for focus effect */
+}
+
+.form-control:focus {
+    border-color: #007bff; /* Border color on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Focus shadow */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Bootstrap primary color */
+    border-color: #007bff; /* Match border with background */
+    border-radius: 5px; /* Rounded corners for buttons */
+    padding: 10px 20px; /* Button padding */
+    transition: background-color 0.2s, border-color 0.2s; /* Smooth transition */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    border-color: #004085; /* Darker border on hover */
+}
+
+/* Success Message */
+.alert {
+    margin-top: 20px; /* Space above the alert */
+    border-radius: 5px; /* Rounded corners for alerts */
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/locales-all.min.js"></script>
+  <style>
+    #calendar {
+      max-width: 900px;
+      margin: 40px auto;
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/home">Home</a>
+  <a href="/logout">Logout</a>
+  <a href="/account/settings">Account Settings</a>
+  <a href="/booking">Booking</a>
+  <a href="/calendar">My Calendar</a>
+  <a href="/bulletin">Bulletin Board</a>
+  <a href="/chat">Chat</a>
+  <a href="/notifications">Notifications</a>
+</nav>
+<div class="container">
+  <h1>Calendar</h1>
+  <div id="calendar"></div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      locale: 'en',
+      events: [
+        /*[[${bookings}]] and [[${initiatives}]] will be replaced by Thymeleaf with actual JSON data*/
+        /* The event data structure:
+        {
+            title: 'Event Title',
+            start: 'Event Start DateTime',
+            end: 'Event End DateTime',
+            description: 'Event Description'
+        }
+        */
+        /* Iterate over bookings and initiatives and add them as events */
+        /* Bookings */
+        /*[[#th:each="booking : ${bookings}"]]*/
+        {
+          title: /*[[${booking.title}]]*/,
+          start: /*[[${booking.startTime}]]*/,
+          end: /*[[${booking.endTime}]]*/,
+          description: /*[[${booking.description}]]*/,
+          color: 'blue' // Bookings color
+        },
+        /*[[/th:each]]*/
+        /* Initiatives */
+        /*[[#th:each="initiative : ${initiatives}"]]*/
+        {
+          title: /*[[${initiative.title}]]*/,
+          start: /*[[${initiative.startTime}]]*/,
+          end: /*[[${initiative.endTime}]]*/,
+          description: /*[[${initiative.description}]]*/,
+          color: 'green' // Initiatives color
+        }
+        /*[[/th:each]]*/
+      ],
+      eventClick: function(info) {
+        alert('Event: ' + info.event.title + '\n' + 'Description: ' + info.event.extendedProps.description);
+      }
+    });
+    calendar.render();
+  });
+</script>
+</body>
+</html>

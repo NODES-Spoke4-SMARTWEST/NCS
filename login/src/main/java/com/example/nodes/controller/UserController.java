@@ -1,10 +1,10 @@
 package com.example.nodes.controller;
 
+
 import com.example.nodes.entity.User;
 import com.example.nodes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -13,15 +13,24 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/user")
-    public String getUser(@RequestParam("id") int id, Model model) {
+    @GetMapping("/signup")
+    public String signupForm() {
+        return "signup";
+    }
 
-        System.out.println("---- check: " + id);
+    @PostMapping("/signup")
+    public String signup(User user) {
+        userService.save(user);
+        return "redirect:/login";
+    }
 
-        User user =null/* userService.getUserById(id)*/;
-        model.addAttribute("user", user);
-        return "user"; // This should correspond to the user.html template
+    @GetMapping("/login")
+    public String loginForm() {
+        return "login";
+    }
+
+    @GetMapping("/home")
+    public String home() {
+        return "home";
     }
 }
-
-

@@ -1,0 +1,267 @@
+<!--DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Hub</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 400px; /* Set height for the map */
+      width: 100%;   /* Full width */
+      margin-top: 20px; /* Space above the map */
+    }
+  </style>
+</head>
+<body>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/home">NODES</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="navbar-nav ml-auto">
+        <a class="nav-item nav-link" href="/booking">Booking</a>
+        <a class="nav-item nav-link" href="/calendar">My Calendar</a>
+        <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
+        <a class="nav-item nav-link" href="/chat">Chat</a>
+        <a class="nav-item nav-link" href="/notifications">Notifications</a>
+        <a class="nav-item nav-link" href="/search-users">Search Users</a>
+        <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="container mt-5">
+  <h1>Search Hubs</h1>
+  <form id="searchForm" class="mt-3">
+    <div class="form-group">
+      <label for="location">Location</label>
+      <select class="form-control" id="location" name="location">
+        <option value="">Select a location</option>-->
+        <!-- Dynamically populate locations from the database --><!--
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="criteria">Criteria (Competences / Interests)</label>
+      <input type="text" class="form-control" id="criteria" name="criteria" placeholder="Enter Competence or Interest">
+    </div>
+
+    <div class="form-group">
+      <label for="resources">Resources Offered</label>
+      <select class="form-control" id="resources" name="resources">
+        <option value="">Select Resource</option>
+        --><!-- Dynamically populate resources from the database --><!--
+      </select>
+    </div>
+
+    <button type="button" class="btn btn-primary" onclick="searchHubs()">Search</button>
+  </form>
+
+  <h2 class="mt-5">Search Results</h2>
+  <ul id="hubList" class="list-group mt-3"></ul>
+  <div id="map"></div>
+</div>
+
+<footer class="bg-light text-center mt-5">
+  <div class="footer-content py-4">
+    <div class="footer-logo">
+      <h2>NODES</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <div class="footer-links row">
+      <div class="footer-column col-md-4">
+        <h3>COMPANY</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Legal Information</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Blogs</a></li>
+        </ul>
+      </div>
+      <div class="footer-column col-md-4">
+        <h3>HELP CENTER</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">Find a Property</a></li>
+          <li><a href="#">How To Host?</a></li>
+          <li><a href="#">Why Us?</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Rental Guides</a></li>
+        </ul>
+      </div>
+      <div class="footer-column col-md-4">
+        <h3>CONTACT INFO</h3>
+        <p>Phone: 1234567890</p>
+        <p>Email: company@email.com</p>
+        <p>Location: 100 Smart Street, LA, USA</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom py-2">
+    <a href="#">PlayStore</a>
+    <a href="#">AppleStore</a>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  function searchHubs() {
+    const location = document.getElementById('location').value;
+    const criteria = document.getElementById('criteria').value;
+    const resources = document.getElementById('resources').value;
+
+    fetch(`/api/search-hubs?location=${location}&criteria=${criteria}&resources=${resources}`)
+            .then(response => response.json())
+            .then(data => {
+              const hubList = document.getElementById('hubList');
+              hubList.innerHTML = '';
+              const map = L.map('map').setView([20.0, 0.0], 2); // Default center
+
+              // Clear existing markers
+              const markers = L.markerClusterGroup();
+
+              data.forEach(hub => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.innerHTML = `<h5>${hub.name}</h5><p>${hub.description}</p>`;
+                hubList.appendChild(li);
+
+                // Add marker for each hub on the map
+                const marker = L.marker([hub.latitude, hub.longitude])
+                        .bindPopup(`<b>${hub.name}</b><br>${hub.description}`);
+                markers.addLayer(marker);
+              });
+
+              // Add markers to the map
+              map.addLayer(markers);
+
+              // Set map view to the bounds of the markers
+              if (markers.getLayers().length > 0) {
+                const group = new L.featureGroup(markers.getLayers());
+                map.fitBounds(group.getBounds());
+              }
+
+              // Set the OpenStreetMap layer
+              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              }).addTo(map);
+            });
+  }
+</script>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Hubs</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css">
+  <link rel="stylesheet" href="/css/search-hub.css"> <!-- Your custom styles -->
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/home">Home</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <h1 class="mb-4">Search Hubs</h1>
+  <form action="/search-hub/results" method="get">
+    <div class="form-group">
+      <label for="location">Location:</label>
+      <select class="form-control" id="location" name="location">
+        <option value="">Select Location</option>
+        <option th:each="hub : ${hubs}" th:value="${hub.id}" th:text="${hub.name}">Sample Hub Name</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="competences">Competences:</label>
+      <select class="form-control" id="competences" name="competences" multiple>
+        <option th:each="competence : ${competences}" th:value="${competence.id}" th:text="${competence.name}">Sample Competence</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="interests">Interests:</label>
+      <select class="form-control" id="interests" name="interests" multiple>
+        <option th:each="interest : ${interests}" th:value="${interest.id}" th:text="${interest.name}">Sample Interest</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="resources">Resources:</label>
+      <select class="form-control" id="resources" name="resources" multiple>
+        <option th:each="resource : ${resources}" th:value="${resource.id}" th:text="${resource.name}">Sample Resource</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  <div id="search-results" class="mt-5" th:if="${searchResults}">
+    <h2>Search Results</h2>
+    <ul class="list-group">
+      <li class="list-group-item" th:each="hub : ${searchResults}">
+        <h3 th:text="${hub.name}">Sample Hub Name</h3>
+        <p>Location: <span th:text="${hub.location.name}">Sample Location</span></p>
+        <p>Resources: <span th:each="resource : ${hub.resources}" th:text="${resource.name}">Sample Resource</span></p>
+      </li>
+    </ul>
+  </div>
+
+  <div id="map" class="mt-5" style="height: 400px;" th:if="${searchResults}"></div>
+</div>
+
+<footer class="bg-light text-center mt-5">
+  <div class="footer-content py-4">
+    <div class="footer-logo">
+      <h2>NODES</h2>
+      <p>&copy; 2024 All Rights Reserved</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  var searchResults = /*[[${searchResults}]]*/ [];
+  if (searchResults.length > 0) {
+    var map = L.map('map').setView([0, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    searchResults.forEach(function(hub) {
+      L.marker([hub.latitude, hub.longitude]).addTo(map)
+              .bindPopup(hub.name)
+              .openPopup();
+    });
+  }
+  /*]]>*/
+</script>
+</body>
+</html>
+
+

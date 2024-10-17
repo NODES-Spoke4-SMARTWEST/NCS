@@ -1,11 +1,14 @@
 package com.example.nodes.service;
 
 import com.example.nodes.entity.User;
+import com.example.nodes.repository.CompetenceRepository;
+import com.example.nodes.repository.InterestRepository;
 import com.example.nodes.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,39 +17,41 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    public User findUserByName(String name) {
-        return userRepository.findByName(name);
-    }
-
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
-}
-
-
-/*
-@Service
-public class UserService {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserRepository userRepository;
+    private CompetenceRepository competenceRepository;
 
-    public User getUserById(int id) {
+    @Autowired
+    private InterestRepository interestRepository;
 
-        System.out.println("---- check: " + id);
-
-        return userRepository.findById(id)
-                .filter(user -> user.isActive() && !user.isBanned()) // Check if the user is active and not banned
-                .orElse(null);
+    public void save(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
-    public String getUserNameById(int id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.map(User::getName).orElse(null);
+    public User findByUsername(String username) {
+        return userRepository.findByName(username);
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public List<User> searchUsers(String username, String competence, String interest) {
+        if(username=="") username = null;
+        if(competence=="") competence = null;
+        if(interest=="") interest = null;
+        return userRepository.searchUsers(username, competence, interest);
+    }
+
+
+    public List<String> getAllCompetences() {
+        return competenceRepository.findAllCompetences();
+    }
+
+    public List<String> getAllInterests() {
+        return interestRepository.findAllInterests();
     }
 }
-*/
