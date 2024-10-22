@@ -3,12 +3,7 @@ package com.example.nodes.entity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.TypeDef;
 import org.locationtech.jts.geom.Point;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -45,7 +40,7 @@ public class Hub{
     @Column(name="longitude", nullable = false)
     private double longitude;
 
-    @OneToMany(mappedBy = "hub", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "hub_id", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resource> resources;
 
     // Getters and setters

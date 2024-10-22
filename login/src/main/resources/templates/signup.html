@@ -22,10 +22,10 @@
       <h1>Welcome</h1>
       <p>Register to start enjoying the benefits of the co-working network.</p>
     <div class="col-md-6 right-panel">
-      <div class="tabs">
+      <!--div class="tabs">
         <div class="tab" onclick="location.href='/login'">Login</div>
         <div class="tab active" onclick="location.href='/signup'">Register</div>
-      </div>
+      </div-->
       <form th:action="@{/signup}" th:object="${user}" method="post">
         <div class="form-group">
           <label for="name">Username</label>

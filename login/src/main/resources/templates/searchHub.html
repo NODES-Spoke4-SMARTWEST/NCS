@@ -172,19 +172,25 @@
   <link rel="stylesheet" href="/css/search-hub.css"> <!-- Your custom styles -->
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/home">Home</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="/logout">Logout</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/home">NODES</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="navbar-nav ml-auto">
+        <a class="nav-item nav-link" href="/booking">Booking</a>
+        <a class="nav-item nav-link" href="/calendar">My Calendar</a>
+        <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
+        <a class="nav-item nav-link" href="/chat">Chat</a>
+        <a class="nav-item nav-link" href="/notifications">Notifications</a>
+        <a class="nav-item nav-link" href="/search-users">Search Users</a>
+        <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
+      </div>
+    </div>
+  </nav>
+</header>
 
 <div class="container mt-5">
   <h1 class="mb-4">Search Hubs</h1>
@@ -211,7 +217,7 @@
     <div class="form-group">
       <label for="resources">Resources:</label>
       <select class="form-control" id="resources" name="resources" multiple>
-        <option th:each="resource : ${resources}" th:value="${resource.id}" th:text="${resource.name}">Sample Resource</option>
+        <option th:each="resource : ${resources}" th:value="${resource.id}" th:text="${resource.type}">Sample Resource</option>
       </select>
     </div>
     <button type="submit" class="btn btn-primary">Search</button>
@@ -223,7 +229,7 @@
       <li class="list-group-item" th:each="hub : ${searchResults}">
         <h3 th:text="${hub.name}">Sample Hub Name</h3>
         <p>Location: <span th:text="${hub.location.name}">Sample Location</span></p>
-        <p>Resources: <span th:each="resource : ${hub.resources}" th:text="${resource.name}">Sample Resource</span></p>
+        <p>Resources: <span th:each="resource : ${hub.resources}" th:text="${resource.type}">Sample Resource</span></p>
       </li>
     </ul>
   </div>
@@ -235,11 +241,41 @@
   <div class="footer-content py-4">
     <div class="footer-logo">
       <h2>NODES</h2>
-      <p>&copy; 2024 All Rights Reserved</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <div class="footer-links row">
+      <div class="footer-column col-md-4">
+        <h3>COMPANY</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Legal Information</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Blogs</a></li>
+        </ul>
+      </div>
+      <div class="footer-column col-md-4">
+        <h3>HELP CENTER</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">Find a Property</a></li>
+          <li><a href="#">How To Host?</a></li>
+          <li><a href="#">Why Us?</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Rental Guides</a></li>
+        </ul>
+      </div>
+      <div class="footer-column col-md-4">
+        <h3>CONTACT INFO</h3>
+        <p>Phone: 1234567890</p>
+        <p>Email: company@email.com</p>
+        <p>Location: 100 Smart Street, LA, USA</p>
+      </div>
     </div>
   </div>
+  <div class="footer-bottom py-2">
+    <a href="#">PlayStore</a>
+    <a href="#">AppleStore</a>
+  </div>
 </footer>
-
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -1,7 +1,6 @@
 package com.example.nodes.service;
 
 import com.example.nodes.entity.Hub;
-import com.example.nodes.entity.Resource;
 import com.example.nodes.repository.HubRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +14,10 @@ public class HubService {
 
     public List<Hub> findAllHubs() {
         return hubRepository.findAll();
+    }
+
+    public Hub getHubById(Long id) {
+        return hubRepository.findById(id).orElse(null);
     }
 
     public List<Hub> searchHubs(Long location, List<Long> competences, List<Long> interests, List<Long> resources) {

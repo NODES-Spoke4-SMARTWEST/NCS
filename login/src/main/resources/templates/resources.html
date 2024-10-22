@@ -3,14 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Search</title>
+  <title>Resources</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
-  <style>
-    #map {
-      height: 400px;
-    }
-  </style>
 </head>
 <body>
 <header>
@@ -33,12 +27,55 @@
   </nav>
 </header>
 <div class="container mt-5">
-  <h1>Search</h1>
-  <div id="map"></div>
-  <form action="/resources" method="get" class="mt-4">
-    <input type="hidden" name="hubId" th:value="${hub.id}">
-    <button type="submit" class="btn btn-primary">View Resources</button>
-  </form>
+  <h1>Available Resources</h1>
+  <div class="row">
+    <div class="col-md-4" th:each="resource : ${resources}">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title" th:text="${resource.type}">Resource Type</h5>
+          <p class="card-text" th:text="${resource.description}">Resource Description</p>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal" th:data-resource-id="${resource.id}">Select</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-secondary mt-3" onclick="history.back()">Go Back</button>
+</div-->
+
+<!-- Payment Modal -->
+<!--div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="paymentModalLabel">Payment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="paymentForm" action="/payment" method="post">
+          <div class="form-group">
+            <label for="cardNumber">Card Number</label>
+            <input type="text" class="form-control" id="cardNumber" name="cardNumber" required>
+          </div>
+          <div class="form-group">
+            <label for="cardName">Cardholder Name</label>
+            <input type="text" class="form-control" id="cardName" name="cardName" required>
+          </div>
+          <div class="form-group">
+            <label for="expiryDate">Expiry Date</label>
+            <input type="text" class="form-control" id="expiryDate" name="expiryDate" placeholder="MM/YY" required>
+          </div>
+          <div class="form-group">
+            <label for="cvv">CVV</label>
+            <input type="text" class="form-control" id="cvv" name="cvv" required>
+          </div>
+          <input type="hidden" id="resourceId" name="resourceId">
+          <button type="submit" class="btn btn-primary">Pay</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 <footer class="bg-light text-center mt-5">
   <div class="footer-content py-4">
@@ -82,17 +119,13 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
-  var hubLat = [[${hub.latitude}]];
-  var hubLng = [[${hub.longitude}]];
-  var map = L.map('map').setView([hubLat, hubLng], 13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-  }).addTo(map);
-  L.marker([hubLat, hubLng]).addTo(map)
-          .bindPopup('Selected Hub: [[${hub.name}]])')
-          .openPopup();
+  $('#paymentModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var resourceId = button.data('resource-id'); // Extract info from data-* attributes
+    var modal = $(this);
+    modal.find('#resourceId').val(resourceId); // Update the modal's content.
+  });
 </script>
 </body>
 </html-->
@@ -102,14 +135,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Search</title>
+  <title>Resources</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
-  <style>
-    #map {
-      height: 400px;
-    }
-  </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -131,47 +158,54 @@
   </div>
 </nav>
 <div class="container mt-5">
-  <h1>Search</h1>
-  <div id="map"></div>
-  <form action="/resources" method="get" class="mt-4">
-    <div class="form-group">
-      <label for="resource">Choose a Resource Type:</label>
-      <select class="form-control" id="resource" name="type">
-        <option th:each="type : ${resourceTypes}" th:value="${type}" th:text="${type}">Resource</option>
-      </select>
+  <h1>Available Resources</h1>
+  <div class="row">
+    <div class="col-md-4" th:each="resource : ${resources}">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title" th:text="${resource.type}">Resource Type</h5>
+          <p class="card-text" th:text="${resource.description}">Resource Description</p>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#bookingModal" th:data-resource-id="${resource.id}">Select</button>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="quantity">Quantity</label>
-      <input type="number" class="form-control" id="quantity" name="quantity" required>
-    </div>
-    <div class="form-group">
-      <label for="startDate">Start Date</label>
-      <input type="datetime-local" class="form-control" id="startDate" name="startDate" required>
-    </div>
-    <div class="form-group">
-      <label for="endDate">End Date</label>
-      <input type="datetime-local" class="form-control" id="endDate" name="endDate" required>
-    </div>
-    <input type="hidden" name="hubId" th:value="${hub.id}">
-    <button type="submit" class="btn btn-primary">View Resources</button>
-  </form>
-
+  </div>
+  <button class="btn btn-secondary mt-3" onclick="history.back()">Go Back</button>
 </div>
+
+<!-- Booking Modal -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bookingModalLabel">Book Resource</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="bookingForm" action="/addBooking" method="post">
+          <input type="hidden" id="resourceId" name="resourceId">
+          <input type="hidden" id="quantity" name="quantity" th:value="${quantity}">
+          <input type="hidden" id="startDate" name="startDate" th:value="${startDate}">
+          <input type="hidden" id="endDate" name="endDate" th:value="${endDate}">
+          <button type="submit" class="btn btn-primary">Confirm Booking</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
-  var hubLat = [[${hub.latitude}]];
-  var hubLng = [[${hub.longitude}]];
-  var map = L.map('map').setView([hubLat, hubLng], 13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-  }).addTo(map);
-  L.marker([hubLat, hubLng]).addTo(map)
-          .bindPopup('Selected Hub: [[${hub.name}]]')
-          .openPopup();
+  $('#bookingModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var resourceId = button.data('resource-id'); // Extract info from data-* attributes
+    var modal = $(this);
+    modal.find('#resourceId').val(resourceId); // Update the modal's content.
+  });
 </script>
 </body>
 </html>
-
