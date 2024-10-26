@@ -2,11 +2,11 @@ package com.example.nodes.controller;
 
 import com.example.nodes.entity.Hub;
 import com.example.nodes.entity.User;
-import com.example.nodes.service.HubService;
-import com.example.nodes.service.UserService;
+import com.example.nodes.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,11 +51,16 @@ public class AccountSettingsController {
 
     @Autowired
     private UserService userService;
-
     @Autowired
     private HubService hubService;
+    @Autowired
+    private CompetenceService competenceService;
+    @Autowired
+    private InterestService interestService;
+    @Autowired
+    private RoleService roleService;
 
-    @GetMapping("/settings")
+    /*@GetMapping("/settings")
     public String getAccountSettings(Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
         List<Hub> hubs = hubService.findAllHubs();
@@ -72,6 +77,31 @@ public class AccountSettingsController {
         user.setAvailability(updatedUser.isAvailability());
         userService.save(user);
         return "redirect:/account/settings?success=true";
+    }*/
+
+    @GetMapping("/settings")
+    public String showAccountSettings(Model model) {
+        model.addAttribute("user", userService.getCurrentUser());
+        model.addAttribute("hubs", hubService.findAllHubs());
+        model.addAttribute("allCompetences", competenceService.findAllCompetences());
+        model.addAttribute("allInterests", interestService.findAllInterests());
+        model.addAttribute("allRoles", roleService.findAll());
+        return "account-settings";
     }
+
+    @PostMapping("/settings")
+    public String updateAccountSettings(@ModelAttribute User user, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("hubs", hubService.findAllHubs());
+            model.addAttribute("allCompetences", competenceService.findAllCompetences());
+            model.addAttribute("allInterests", interestService.findAllInterests());
+            model.addAttribute("allRoles", roleService.findAll());
+            return "account-settings";
+        }
+        userService.updateUser(user);
+        model.addAttribute("success", "Profile updated successfully!");
+        return "home";
+    }
+
 }
 

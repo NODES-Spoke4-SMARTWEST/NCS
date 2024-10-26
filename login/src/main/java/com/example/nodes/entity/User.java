@@ -1,11 +1,14 @@
 package com.example.nodes.entity;
 
+import aj.org.objectweb.asm.commons.TryCatchBlockSorter;
 import jakarta.persistence.*;
 import java.awt.*;
 import org.locationtech.jts.geom.Point;
-import java.util.Collection;
-import java.util.Collections;
+
+import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.locationtech.jts.geom.Point;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -23,8 +26,18 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name="role", nullable = false)
-    private int role;
+    /*@ManyToMany
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
+
+     */
+    @ManyToOne
+    @JoinColumn(name = "role")
+    private Role role;
 
     @Column(name="name", nullable = false, unique = false)
     private String name;
@@ -160,7 +173,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("USER"));
+        return Collections.singletonList(new SimpleGrantedAuthority(role.getName()));
     }
 
     @Override
@@ -191,11 +204,20 @@ public class User implements UserDetails {
         this.location = location;
     }
 
-    public int getRole() {
+    /*public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+     */
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(int role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

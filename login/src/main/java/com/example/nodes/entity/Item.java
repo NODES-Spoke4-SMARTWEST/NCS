@@ -18,10 +18,10 @@ public class Item {
     private String description;
 
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
+    private LocalDateTime startDate;
 
     @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime;
+    private LocalDateTime endDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
@@ -29,6 +29,14 @@ public class Item {
 
     @Column(name = "type", nullable = false)
     private String type; // "booking" or "initiative"
+
+    public Item() {}
+
+    public Item(String description, LocalDateTime startDate, LocalDateTime endDate) {
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 
     // Getters and setters
     public Long getId() {
@@ -55,20 +63,20 @@ public class Item {
         this.description = description;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public LocalDateTime getStartDate() {
+        return startDate;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+    public void setStartDate(LocalDateTime startTime) {
+        this.startDate = startTime;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
+    public LocalDateTime getEndDate() {
+        return endDate;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+    public void setEndDate(LocalDateTime endTime) {
+        this.endDate = endTime;
     }
 
     public User getUser() {

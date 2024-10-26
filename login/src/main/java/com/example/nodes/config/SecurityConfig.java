@@ -28,8 +28,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                /*.authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/signup", "/login").permitAll()
+                        .anyRequest().authenticated()
+                )*/
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/signup", "/login").permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("admin")
+                        .requestMatchers("/business/**").hasAuthority("business")
+                        .requestMatchers("/agent/**").hasAuthority("agent")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin

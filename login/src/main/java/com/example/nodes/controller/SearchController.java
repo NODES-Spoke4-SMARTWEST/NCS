@@ -87,16 +87,6 @@ public class SearchController {
         return "search";
     }
 
-    /*@GetMapping("/resources")
-    public String showResources(@RequestParam Long hubId, Model model) {
-        Hub hub = hubService.getHubById(hubId);
-        if (hub != null) {
-            List<Resource> resources = resourceService.getResourcesByHub(hub);
-            model.addAttribute("resources", resources);
-        }
-        return "resources";
-    }*/
-
     @GetMapping("/resources")
     public String showResources(@RequestParam Long hubId,
                                 @RequestParam String type,
@@ -114,17 +104,6 @@ public class SearchController {
         }
         return "resources";
     }
-
-/*
-    @GetMapping("/resources")
-    public String showResources(@RequestParam Long hubId, Model model) {
-        Hub hub = hubService.getHubById(hubId);
-        List<Resource> resources = resourceService.getResourcesByLocation(hub.getId());
-        model.addAttribute("resources", resources);
-        return "resources";
-    }
-
-     */
 }
 
 

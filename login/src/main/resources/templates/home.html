@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,6 +16,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <div class="navbar-nav ml-auto">
+        <a class="nav-item nav-link" href="/manage-initiative">Manage Initiatives</a>
         <a class="nav-item nav-link" href="/booking">Booking</a>
         <a class="nav-item nav-link" href="/calendar">My Calendar</a>
         <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
@@ -23,6 +24,11 @@
         <a class="nav-item nav-link" href="/notifications">Notifications</a>
         <a class="nav-item nav-link" href="/search-users">Search Users</a>
         <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
+
+
+        <li class="nav-item" sec:authorize="hasAuthority('admin')">
+          <a class="nav-link" href="/manage-users">Manage Users</a>
+        </li>
       </div>
       <div class="navbar-user dropdown ml-3">
         <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

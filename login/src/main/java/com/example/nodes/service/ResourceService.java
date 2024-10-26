@@ -78,6 +78,10 @@ public class ResourceService {
     public List<String> getAllDistinctTypes() {
         return resourceRepository.findDistinctTypes();
     }
+
+    public List<Hub> findHubsByResourceType(String type) {
+        return resourceRepository.findHubsByResourceType(type);
+    }
 }
 
 

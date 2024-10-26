@@ -112,24 +112,25 @@
   </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/home">NODES</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item"><a class="nav-link" href="/booking">Booking</a></li>
-      <li class="nav-item"><a class="nav-link" href="/calendar">My Calendar</a></li>
-      <li class="nav-item"><a class="nav-link" href="/bulletin">Bulletin Board</a></li>
-      <li class="nav-item"><a class="nav-link" href="/chat">Chat</a></li>
-      <li class="nav-item"><a class="nav-link" href="/notifications">Notifications</a></li>
-      <li class="nav-item"><a class="nav-link" href="/account/settings">Account Settings</a></li>
-      <li class="nav-item"><a class="nav-link" href="/search-users">Search Users</a></li>
-      <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
-    </ul>
-  </div>
-</nav>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/home">NODES</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="navbar-nav ml-auto">
+        <a class="nav-item nav-link" href="/booking">Booking</a>
+        <a class="nav-item nav-link" href="/calendar">My Calendar</a>
+        <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
+        <a class="nav-item nav-link" href="/chat">Chat</a>
+        <a class="nav-item nav-link" href="/notifications">Notifications</a>
+        <a class="nav-item nav-link" href="/search-users">Search Users</a>
+        <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
+      </div>
+    </div>
+  </nav>
+</header>
 <div class="container mt-5">
   <h1>Search</h1>
   <div id="map"></div>
@@ -155,8 +156,46 @@
     <input type="hidden" name="hubId" th:value="${hub.id}">
     <button type="submit" class="btn btn-primary">View Resources</button>
   </form>
-
 </div>
+<footer class="bg-light text-center mt-5">
+  <div class="footer-content py-4">
+    <div class="footer-logo">
+      <h2>NODES</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <div class="footer-links row">
+      <div class="footer-column col-md-4">
+        <h3>COMPANY</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Legal Information</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Blogs</a></li>
+        </ul>
+      </div>
+      <div class="footer-column col-md-4">
+        <h3>HELP CENTER</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">Find a Property</a></li>
+          <li><a href="#">How To Host?</a></li>
+          <li><a href="#">Why Us?</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Rental Guides</a></li>
+        </ul>
+      </div>
+      <div class="footer-column col-md-4">
+        <h3>CONTACT INFO</h3>
+        <p>Phone: 1234567890</p>
+        <p>Email: company@email.com</p>
+        <p>Location: 100 Smart Street, LA, USA</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom py-2">
+    <a href="#">PlayStore</a>
+    <a href="#">AppleStore</a>
+  </div>
+</footer>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

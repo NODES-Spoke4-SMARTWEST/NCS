@@ -41,6 +41,7 @@ public class BookingController {
 package com.example.nodes.controller;
 
 import com.example.nodes.entity.Booking;
+import com.example.nodes.entity.Hub;
 import com.example.nodes.entity.Resource;
 import com.example.nodes.service.BookingService;
 import com.example.nodes.service.HubService;
@@ -54,6 +55,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Controller
 public class BookingController {
@@ -66,6 +68,8 @@ public class BookingController {
 
     @GetMapping("/booking")
     public String showBookingForm(Model model) {
+        List<String> resourceTypes = resourceService.getAllDistinctTypes();
+        model.addAttribute("resourceTypes", resourceTypes);
         model.addAttribute("hubs", hubService.findAllHubs());
         return "booking";
     }
@@ -99,57 +103,60 @@ public class BookingController {
         }
         return "booking-confirmation";
     }
-    /*
-    public String bookResource(
-            @RequestParam Long resourceId,
-            @RequestParam int quantity,
-            @RequestParam String startDate,
-            @RequestParam String endDate,
+
+    @PostMapping("/search-resources")
+    public String searchResources(
+            @RequestParam("type") String type,
+            @RequestParam("quantity") int quantity,
+            @RequestParam("startDate") String startDate,
+            @RequestParam("endDate") String endDate,
             Model model) {
+        model.addAttribute("type", type);
+        model.addAttribute("quantity", quantity);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+        List<Hub> hubs = resourceService.findHubsByResourceType(type);
+        model.addAttribute("hubs", hubs);
+        return "search-resources";
+    }
 
-        Resource resource = resourceService.getResourceById(resourceId);
-        if (resource != null) {
-            Booking booking = new Booking();
-            booking.setId(1L);
-            booking.setResource(resource);
-            booking.setQuantity(quantity);
-            booking.setStartDate(LocalDateTime.parse(startDate));
-            booking.setEndDate(LocalDateTime.parse(endDate));
+    //calendar
 
-            bookingService.saveBooking(booking);
-            model.addAttribute("message", "Booking successful");
-        } else {
-            model.addAttribute("message", "Resource not found");
-        }
-        return "booking-confirmation";
-    }*/
+    @GetMapping("/calendar")
+    public String getCalendar(Model model) {
+        List<Booking> bookings = bookingService.getAllBookings();
+        model.addAttribute("bookings", bookings);
+        return "calendar";
+    }
 
+    @GetMapping("/")
+    public String index(Model model) {
+        List<Booking> events = bookingService.getAllBookings();
+        model.addAttribute("events", events);
+        return "calendar";
+    }
 
-    /*
-    @PostMapping("/booking")
-    public String bookResource(
-            @RequestParam Long resourceId,
-            @RequestParam int quantity,
-            @RequestParam String startDate,
-            @RequestParam String endDate,
-            Model model) {
+    /*@PostMapping("/addBooking")
+    public String addBooking(@RequestParam String title,
+                             @RequestParam LocalDateTime startDate,
+                             @RequestParam LocalDateTime endDate,
+                             @RequestParam int quantity) {
+        Booking booking = new Booking();
+        booking.setTitle(title); // Assuming Booking has a title field; otherwise, adjust as necessary
+        booking.setStartDate(startDate);
+        booking.setEndDate(endDate);
+        booking.setQuantity(quantity);
+        bookingService.saveBooking(booking);
+        return "redirect:/calendar";
+    }
 
-        Resource resource = resourceService.getResourceById(resourceId);
-        if (resource != null) {
-            Booking booking = new Booking();
-            booking.setResource(resource);
-            booking.setQuantity(quantity);
-            booking.setStartDate(LocalDateTime.parse(startDate));
-            booking.setEndDate(LocalDateTime.parse(endDate));
-
-            bookingService.saveBooking(booking);
-            model.addAttribute("message", "Booking successful");
-        } else {
-            model.addAttribute("message", "Resource not found");
-        }
-        return "booking-confirmation";
+    @PostMapping("/deleteBooking")
+    public String deleteBooking(@RequestParam Long id) {
+        bookingService.deleteBooking(id);
+        return "redirect:/calendar";
     }
 
      */
+
 }
 

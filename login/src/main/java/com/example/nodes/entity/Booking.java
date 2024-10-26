@@ -7,7 +7,7 @@ import org.locationtech.jts.geom.Point;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "booking")
+@Table(name = "booking_test")
 @TypeDef(name = "point", typeClass = Point.class)
 public class Booking {
 
@@ -22,6 +22,10 @@ public class Booking {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resource")
     private Resource resource;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "initiative_id")
+    private Initiative initiative;
 
     // Getters and setters
     public Long getId() {
@@ -62,5 +66,13 @@ public class Booking {
 
     public Resource getResource() {
         return resource;
+    }
+
+    public Initiative getInitiative() {
+        return initiative;
+    }
+
+    public void setInitiative(Initiative initiative) {
+        this.initiative = initiative;
     }
 }

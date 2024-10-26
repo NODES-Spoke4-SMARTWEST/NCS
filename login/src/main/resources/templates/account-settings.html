@@ -1,56 +1,3 @@
-<!--DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account Settings</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/css/profile-editor.css">
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/home">Home</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="/logout">Logout</a>
-      </li>
-    </ul>
-  </div>
-</nav>
-
-<div class="container mt-5">
-  <h1 class="mb-4">Account Settings</h1>
-  <form action="/account/settings" method="post">
-    <div class="form-group">
-      <label for="name">Name:</label>
-      <input type="text" class="form-control" id="name" name="name" value="${user.name}" required>
-    </div>
-    <div class="form-group">
-      <label for="location">Location:</label>
-      <input type="text" class="form-control" id="location" name="location" value="${user.location}" required>
-    </div>
-    <div class="form-group form-check">
-      <input type="checkbox" class="form-check-input" id="availability" name="availability" ${user.availability ? 'checked' : ''}>
-      <label class="form-check-label" for="availability">Availability</label>
-    </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-  </form>
-
-  <div class="mt-3" th:if="${success}">
-    <p class="alert alert-success" th:text="${success}"></p>
-  </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html-->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -83,11 +30,54 @@
       <input type="text" class="form-control" id="name" name="name" th:value="${user.name ?: 'Enter your name'}" required>
     </div>
     <div class="form-group">
+      <label for="description">Description:</label>
+      <textarea class="form-control" id="description" name="description" rows="3" required th:text="${user.description ?: 'Enter your description'}"></textarea>
+    </div>
+    <div class="form-group">
       <label for="location">Location:</label>
       <select class="form-control" id="location" name="location.id" required>
         <option th:each="hub : ${hubs}" th:value="${hub.id}" th:text="${hub.name}" th:selected="${hub.id} == ${user.location?.id}">Select a hub</option>
       </select>
     </div>
+
+    <div class="form-group">
+      <label for="competences">Competences:</label>
+      <select multiple class="form-control" id="competences" name="competences">
+        <option th:each="competence : ${allCompetences}" th:value="${competence.id}" th:text="${competence.name}" th:selected="${#lists.contains(user.competences, competence)}"></option>
+      </select>
+    </div>
+    <div>
+      <h5>Current Competences</h5>
+      <ul>
+        <li th:each="competence : ${user.competences}" th:text="${competence.name}"></li>
+      </ul>
+    </div>
+
+    <div class="form-group">
+      <label for="interests">Interests:</label>
+      <select multiple class="form-control" id="interests" name="interests">
+        <option th:each="interest : ${allInterests}" th:value="${interest.id}" th:text="${interest.name}" th:selected="${#lists.contains(user.interests, interest)}"></option>
+      </select>
+    </div>
+    <div>
+      <h5>Current Interests</h5>
+      <ul>
+        <li th:each="interest : ${user.interests}" th:text="${interest.name}"></li>
+      </ul>
+    </div>
+
+    <!-- Single Role Selection -->
+    <div class="form-group">
+      <label for="role">Role:</label>
+      <select class="form-control" id="role" name="role.id" required>
+        <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.name}" th:selected="${role.id} == ${user.role?.id}">Select a role</option>
+      </select>
+    </div>
+    <div>
+      <h5>Current Role</h5>
+      <p th:text="${user.role?.name ?: 'No role assigned'}"></p>
+    </div>
+
     <div class="form-group form-check">
       <input type="checkbox" class="form-check-input" id="availability" name="availability" th:checked="${user.availability}">
       <label class="form-check-label" for="availability">Availability</label>
@@ -105,3 +95,4 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
