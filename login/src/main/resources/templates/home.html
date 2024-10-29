@@ -16,18 +16,32 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <div class="navbar-nav ml-auto">
-        <a class="nav-item nav-link" href="/manage-initiative">Manage Initiatives</a>
-        <a class="nav-item nav-link" href="/booking">Booking</a>
-        <a class="nav-item nav-link" href="/calendar">My Calendar</a>
+        <!-- Links visible to all users -->
         <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
         <a class="nav-item nav-link" href="/chat">Chat</a>
         <a class="nav-item nav-link" href="/notifications">Notifications</a>
         <a class="nav-item nav-link" href="/search-users">Search Users</a>
         <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
 
+        <!-- Links visible to users with the role 'agent' -->
+        <li class="nav-item" sec:authorize="hasAuthority('agent')">
+          <a class="nav-link" href="/booking">Booking</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('agent')">
+          <a class="nav-link" href="/calendar">My Calendar</a>
+        </li>
 
+        <!-- Links visible to users with the role 'admin' -->
+        <li class="nav-item" sec:authorize="hasAuthority('admin')">
+          <a class="nav-link" href="/manage-calendar">Manage Calendar</a>
+        </li>
         <li class="nav-item" sec:authorize="hasAuthority('admin')">
           <a class="nav-link" href="/manage-users">Manage Users</a>
+        </li>
+
+        <!-- Links visible to users with the role 'business' -->
+        <li class="nav-item" sec:authorize="hasAuthority('business')">
+          <a class="nav-link" href="/manage-calendar">Manage Calendar</a>
         </li>
       </div>
       <div class="navbar-user dropdown ml-3">

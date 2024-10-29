@@ -1,6 +1,8 @@
 package com.example.nodes.repository;
 
+import com.example.nodes.entity.Competence;
 import com.example.nodes.entity.Hub;
+import com.example.nodes.entity.Interest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,6 +27,15 @@ public interface HubRepository extends JpaRepository<Hub, Long> {
                              @Param("competences") List<Long> competences,
                              @Param("interests") List<Long> interests,
                              @Param("resources") List<Long> resources);
+
+    @Query("SELECT h FROM Hub h JOIN h.districts d JOIN d.competences c JOIN d.interests i WHERE "
+            + "(COALESCE(:competences, NULL) IS NULL OR c.id IN :competences) AND "
+            + "(COALESCE(:interests, NULL) IS NULL OR i.id IN :interests)")
+    List<Hub> findByMyCriteria(@Param("interests") Interest interests, @Param("competences") Competence competences);
+
+    @Query("SELECT h FROM Hub h JOIN h.resources r WHERE "
+            + "(COALESCE(:resources, NULL) IS NULL OR r.id IN :resources)")
+    List<Hub> findByResources(long resources);
 
 
 

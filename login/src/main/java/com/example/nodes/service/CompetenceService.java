@@ -17,6 +17,10 @@ public class CompetenceService {
         return competenceRepository.findAll();
     }
 
+    public Competence findById(long competence) {
+        return competenceRepository.findById(competence);
+    }
+
     // Additional competence-related business logic can be added here
 }
 

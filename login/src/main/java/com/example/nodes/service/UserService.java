@@ -78,10 +78,12 @@ public class UserService {
     }
 
     public List<User> searchUsers(String username, String competence, String interest) {
+        Competence c = null;
+        Interest i = null;
         if(username=="") username = null;
-        if(competence=="") competence = null;
-        if(interest=="") interest = null;
-        return userRepository.searchUsers(username, competence, interest);
+        if(competence!="") c = competenceRepository.findByName(competence);
+        if(interest!="") i = interestRepository.findByName(interest);
+        return userRepository.searchUsers(username, c, i);
     }
 
 

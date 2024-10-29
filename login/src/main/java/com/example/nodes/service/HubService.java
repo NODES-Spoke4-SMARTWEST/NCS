@@ -1,6 +1,8 @@
 package com.example.nodes.service;
 
+import com.example.nodes.entity.Competence;
 import com.example.nodes.entity.Hub;
+import com.example.nodes.entity.Interest;
 import com.example.nodes.repository.HubRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,14 @@ public class HubService {
     public List<Hub> searchHubs(Long location, List<Long> competences, List<Long> interests, List<Long> resources) {
         // TODO Implement search logic here
         return hubRepository.findByCriteria(location, competences, interests, resources);
+    }
+
+    public List<Hub> findHubsByCriteria(Interest interests, Competence competences) {
+        return hubRepository.findByMyCriteria(interests, competences);
+    }
+
+    public List<Hub> findHubsByResources(long resources) {
+        return hubRepository.findByResources(resources);
     }
 }
 

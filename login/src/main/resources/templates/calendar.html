@@ -1,136 +1,3 @@
-<!--DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calendar</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/home">NODES</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ml-auto">
-      <!-- Links visible to all users ->
-      <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
-      <a class="nav-item nav-link" href="/chat">Chat</a>
-      <a class="nav-item nav-link" href="/notifications">Notifications</a>
-      <a class="nav-item nav-link" href="/search-users">Search Users</a>
-      <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
-
-      <!-- Links visible to users with the ROLE_USER ->
-      <li class="nav-item" sec:authorize="hasAuthority('agent')">
-        <a class="nav-link" href="/booking">Booking</a>
-      </li>
-      <li class="nav-item" sec:authorize="hasAuthority('agent')">
-        <a class="nav-link" href="/calendar">My Calendar</a>
-      </li>
-
-      <!-- Links visible to users with the ROLE_ADMIN ->
-      <li class="nav-item" sec:authorize="hasAuthority('admin')">
-        <a class="nav-link" href="/dashboard">Admin Dashboard</a>
-      </li>
-      <li class="nav-item" sec:authorize="hasAuthority('admin')">
-        <a class="nav-link" href="/manage-users">Manage Users</a>
-      </li>
-
-      <!-- Links visible to users with the ROLE_MODERATOR ->
-      <li class="nav-item" sec:authorize="hasAuthority('business')">
-        <a class="nav-link" href="/approvals">Approvals</a>
-      </li>
-
-    </ul>
-  </div>
-</nav>
-<div class="container mt-5">
-  <h1>My Calendar</h1>
-  <ul class="list-group" id="itemList">
-    <!-- Items will be injected here by JavaScript ->
-    <li class="list-group-item" th:each="item : ${items}" th:data-description="${item.description}" th:data-start="${item.startDate}" th:data-end="${item.endDate}">
-      <span th:text="${item.startDate} + ' - ' + ${item.endDate}">Item Date Range</span>
-      <button class="btn btn-info btn-sm float-right" onclick="showDescription(this)">View Description</button>
-    </li>
-  </ul>
-</div>
-
-<!-- Description Modal ->
-<div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="descriptionModalLabel">Item Description</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" id="descriptionContent">
-        <!- Description will be injected here by JavaScript ->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<footer class="bg-light text-center mt-5">
-  <div class="footer-content py-4">
-    <div class="footer-logo">
-      <h2>NODES</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    </div>
-    <div class="footer-links row">
-      <div class="footer-column col-md-4">
-        <h3>COMPANY</h3>
-        <ul class="list-unstyled">
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Legal Information</a></li>
-          <li><a href="#">Contact Us</a></li>
-          <li><a href="#">Blogs</a></li>
-        </ul>
-      </div>
-      <div class="footer-column col-md-4">
-        <h3>HELP CENTER</h3>
-        <ul class="list-unstyled">
-          <li><a href="#">Find a Property</a></li>
-          <li><a href="#">How To Host?</a></li>
-          <li><a href="#">Why Us?</a></li>
-          <li><a href="#">FAQs</a></li>
-          <li><a href="#">Rental Guides</a></li>
-        </ul>
-      </div>
-      <div class="footer-column col-md-4">
-        <h3>CONTACT INFO</h3>
-        <p>Phone: 1234567890</p>
-        <p>Email: company@email.com</p>
-        <p>Location: 100 Smart Street, LA, USA</p>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom py-2">
-    <a href="#">PlayStore</a>
-    <a href="#">AppleStore</a>
-  </div>
-</footer>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
-  function showDescription(button) {
-    var listItem = button.closest('li');
-    var description = listItem.getAttribute('data-description');
-    var startDate = listItem.getAttribute('data-start');
-    var endDate = listItem.getAttribute('data-end');
-    var modalContent = document.getElementById('descriptionContent');
-    modalContent.innerHTML = `<p><strong>Start Date:</strong> ${startDate}</p><p><strong>End Date:</strong> ${endDate}</p><p>${description}</p>`;
-    $('#descriptionModal').modal('show');
-  }
-</script>
-</body>
-</html-->
-
 <!DOCTYPE html>
 <html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
@@ -154,7 +21,7 @@
       <a class="nav-item nav-link" href="/search-users">Search Users</a>
       <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
 
-      <!-- Links visible to users with the ROLE_USER -->
+      <!-- Links visible to users with the role 'agent' -->
       <li class="nav-item" sec:authorize="hasAuthority('agent')">
         <a class="nav-link" href="/booking">Booking</a>
       </li>
@@ -162,17 +29,17 @@
         <a class="nav-link" href="/calendar">My Calendar</a>
       </li>
 
-      <!-- Links visible to users with the ROLE_ADMIN -->
+      <!-- Links visible to users with the role 'admin' -->
       <li class="nav-item" sec:authorize="hasAuthority('admin')">
-        <a class="nav-link" href="/dashboard">Admin Dashboard</a>
+        <a class="nav-link" href="/manage-calendar">Manage Calendar</a>
       </li>
       <li class="nav-item" sec:authorize="hasAuthority('admin')">
         <a class="nav-link" href="/manage-users">Manage Users</a>
       </li>
 
-      <!-- Links visible to users with the ROLE_MODERATOR -->
+      <!-- Links visible to users with the role 'business' -->
       <li class="nav-item" sec:authorize="hasAuthority('business')">
-        <a class="nav-link" href="/approvals">Approvals</a>
+        <a class="nav-link" href="/manage-calendar">Manage Calendar</a>
       </li>
 
     </ul>

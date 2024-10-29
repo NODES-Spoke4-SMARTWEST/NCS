@@ -44,6 +44,7 @@ package com.example.nodes.controller;
         import com.example.nodes.service.BookingService;
         import com.example.nodes.service.InitiativeService;
         import com.example.nodes.repository.HubRepository;
+        import com.example.nodes.service.UserService;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.stereotype.Controller;
         import org.springframework.ui.Model;
@@ -59,12 +60,12 @@ public class InitiativeController {
 
     @Autowired
     private InitiativeService initiativeService;
-
     @Autowired
     private BookingService bookingService;
-
     @Autowired
     private HubRepository hubRepository;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/manage-initiative")
     public String manageInitiative(Model model) {
@@ -94,6 +95,7 @@ public class InitiativeController {
 
         // Create and save Booking with start and end dates
         Booking booking = new Booking();
+        booking.setUser(userService.getCurrentUser());
         booking.setInitiative(savedInitiative);
         booking.setStartDate(LocalDateTime.parse(startDate));
         booking.setEndDate(LocalDateTime.parse(endDate));

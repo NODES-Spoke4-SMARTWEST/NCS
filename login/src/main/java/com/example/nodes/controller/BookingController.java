@@ -46,6 +46,7 @@ import com.example.nodes.entity.Resource;
 import com.example.nodes.service.BookingService;
 import com.example.nodes.service.HubService;
 import com.example.nodes.service.ResourceService;
+import com.example.nodes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -65,6 +66,8 @@ public class BookingController {
     private BookingService bookingService;
     @Autowired
     private ResourceService resourceService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/booking")
     public String showBookingForm(Model model) {
@@ -90,6 +93,7 @@ public class BookingController {
         Resource resource = resourceService.getResourceById(resourceId);
         if (resource != null) {
             Booking booking = new Booking();
+            booking.setUser(userService.getCurrentUser());
             booking.setResource(resource);
             booking.setQuantity(quantity);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");

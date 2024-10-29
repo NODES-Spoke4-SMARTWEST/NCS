@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "(:username IS NULL OR u.name LIKE %:username%) AND " +
             "(:competence IS NULL OR :competence MEMBER OF u.competences) AND " +
             "(:interest IS NULL OR :interest MEMBER OF u.interests)")
-    List<User> searchUsers(String username, String competence, String interest);
+    List<User> searchUsers(String username, Competence competence, Interest interest);
 
     @Transactional
     @Modifying

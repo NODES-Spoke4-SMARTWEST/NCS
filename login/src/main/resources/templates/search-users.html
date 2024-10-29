@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,28 +8,43 @@
   <link rel="stylesheet" href="/css/home.css">
 </head>
 <body>
-<header>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/home">NODES</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <div class="navbar-nav ml-auto">
-        <a class="nav-item nav-link" href="/booking">Booking</a>
-        <a class="nav-item nav-link" href="/calendar">My Calendar</a>
-        <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
-        <a class="nav-item nav-link" href="/chat">Chat</a>
-        <a class="nav-item nav-link" href="/notifications">Notifications</a>
-        <a class="nav-item nav-link" href="/search-users">Search Users</a>
-        <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
-      </div>
-    </div>
-  </nav>
-</header>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/home">NODES</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
+      <a class="nav-item nav-link" href="/chat">Chat</a>
+      <a class="nav-item nav-link" href="/notifications">Notifications</a>
+      <a class="nav-item nav-link" href="/search-users">Search Users</a>
+      <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
+
+      <!-- Links visible to users with different roles -->
+      <li class="nav-item" sec:authorize="hasAuthority('agent')">
+        <a class="nav-link" href="/booking">Booking</a>
+      </li>
+      <li class="nav-item" sec:authorize="hasAuthority('agent')">
+        <a class="nav-link" href="/calendar">My Calendar</a>
+      </li>
+      <li class="nav-item" sec:authorize="hasAuthority('admin')">
+        <a class="nav-link" href="/manage-calendar">Manage Calendar</a>
+      </li>
+      <li class="nav-item" sec:authorize="hasAuthority('admin')">
+        <a class="nav-link" href="/manage-users">Manage Users</a>
+      </li>
+      <li class="nav-item" sec:authorize="hasAuthority('business')">
+        <a class="nav-link" href="/manage-calendar">Manage Calendar</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
 <div class="container">
   <h1 class="mt-5">Search Users</h1>
-  <form id="searchForm" class="mt-3">
+  <!-- Form uses POST to submit and reload page with search results -->
+  <form id="searchForm" class="mt-3" method="post" action="/search-users-results">
     <div class="mb-3">
       <label for="username" class="form-label">Username</label>
       <input type="text" class="form-control" id="username" name="username">
@@ -52,12 +67,22 @@
         </th:block>
       </select>
     </div>
-    <button type="button" class="btn btn-primary" onclick="searchUsers()">Search</button>
+    <button type="submit" class="btn btn-primary">Search</button>
   </form>
 
+  <!-- Display search results passed from server -->
   <h2 class="mt-5">Search Results</h2>
-  <ul id="userList" class="list-group mt-3"></ul>
+  <ul id="userList" class="list-group mt-3">
+    <th:block th:if="${users != null}">
+      <th:block th:each="user : ${users}">
+        <li class="list-group-item">
+          <a th:href="@{/user/{id}(id=${user.id})}" th:text="${user.username}"></a>
+        </li>
+      </th:block>
+    </th:block>
+  </ul>
 </div>
+
 <footer class="bg-light text-center mt-5">
   <div class="footer-content py-4">
     <div class="footer-logo">
@@ -97,26 +122,6 @@
     <a href="#">AppleStore</a>
   </div>
 </footer>
-
-<script>
-  function searchUsers() {
-    const username = document.getElementById('username').value;
-    const competence = document.getElementById('competence').value;
-    const interest = document.getElementById('interest').value;
-
-    fetch(`/api/search-users?username=${username}&competence=${competence}&interest=${interest}`)
-            .then(response => response.json())
-            .then(data => {
-              const userList = document.getElementById('userList');
-              userList.innerHTML = '';
-              data.forEach(user => {
-                const li = document.createElement('li');
-                li.className = 'list-group-item';
-                li.innerHTML = `<a href="/user/${user.id}">${user.username}</a>`;
-                userList.appendChild(li);
-              });
-            });
-  }
-</script>
 </body>
 </html>
+

@@ -27,6 +27,10 @@ public class Booking {
     @JoinColumn(name = "initiative_id")
     private Initiative initiative;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = true)
+    private User user;
+
     // Getters and setters
     public Long getId() {
         return id;
@@ -74,5 +78,13 @@ public class Booking {
 
     public void setInitiative(Initiative initiative) {
         this.initiative = initiative;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
