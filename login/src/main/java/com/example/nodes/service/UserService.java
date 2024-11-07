@@ -131,8 +131,12 @@ public class UserService {
         Boolean availability = user.isAvailability();
         Role role = user.getRole() != null ? user.getRole() : old.getRole();
         Hub location = user.getLocation() != null ? user.getLocation() : old.getLocation();
-        if(user.getDescription() == "Enter your description") old.getDescription();
+        if (user.getDescription() == "Enter your description") old.getDescription();
         userRepository.uupdateUser(userId, role, availability, location, description);
+    }
+
+    public int updateUserCompetencesAndInterests(User user) {
+        return userRepository.updateUserCompetencesAndInterests(user.getId(), user.getCompetences(), user.getInterests());
     }
 
     public User getCurrentUser() {

@@ -26,6 +26,9 @@ public class Hub{
     @Column(name="active", nullable = false)
     private boolean active;
 
+    @Column(name="type")
+    private String type;
+
     @ManyToMany
     @JoinTable(
             name = "hub_district",
@@ -42,6 +45,10 @@ public class Hub{
 
     @OneToMany(mappedBy = "hub_id", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resource> resources;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private User creator;
 
     // Getters and setters
     public Long getId() {
@@ -106,5 +113,21 @@ public class Hub{
 
     public void setResources(List<Resource> resources) {
         this.resources = resources;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
     }
 }

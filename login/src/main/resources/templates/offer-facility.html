@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offer Facility</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+  <style>
+    #map {
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/home">NODES</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="navbar-nav ml-auto">
+        <!-- Links visible to all users -->
+        <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
+        <a class="nav-item nav-link" href="/chat">Chat</a>
+        <a class="nav-item nav-link" href="/notifications">Notifications</a>
+        <a class="nav-item nav-link" href="/search-users">Search Users</a>
+        <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
+
+        <!-- Links visible to users with the role 'agent' -->
+        <li class="nav-item" sec:authorize="hasAuthority('agent')">
+          <a class="nav-link" href="/booking">Booking</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('agent')">
+          <a class="nav-link" href="/calendar">My Calendar</a>
+        </li>
+
+        <!-- Links visible to users with the role 'admin' -->
+        <li class="nav-item" sec:authorize="hasAuthority('admin')">
+          <a class="nav-link" href="/manage-calendar">Manage Calendar</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('admin')">
+          <a class="nav-link" href="/manage-users">Manage Users</a>
+        </li>
+
+        <!-- Links visible to users with the role 'business' -->
+        <li class="nav-item" sec:authorize="hasAuthority('business')">
+          <a class="nav-link" href="/manage-calendar">Manage Calendar</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('business')">
+          <a class="nav-link" href="/offer-facility">Offer Facility</a>
+        </li>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="container mt-5">
+  <h1>Offer Facility</h1>
+  <form th:action="@{/offer-facility}" th:object="${hub}" method="post">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" class="form-control" id="name" th:field="*{name}" required>
+    </div>
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <textarea class="form-control" id="description" th:field="*{description}" rows="3" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="type">Type:</label>
+      <input type="text" class="form-control" id="type" th:field="*{type}" required>
+    </div>
+    <div class="form-group">
+      <label for="map">Location:</label>
+      <div id="map"></div>
+      <input type="hidden" th:field="*{latitude}" id="latitude">
+      <input type="hidden" th:field="*{longitude}" id="longitude">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+  var map = L.map('map').setView([51.505, -0.09], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19
+  }).addTo(map);
+
+  var marker;
+
+  map.on('click', function(e) {
+    if (marker) {
+      map.removeLayer(marker);
+    }
+    marker = L.marker(e.latlng).addTo(map);
+    document.getElementById('latitude').value = e.latlng.lat;
+    document.getElementById('longitude').value = e.latlng.lng;
+  });
+</script>
+</body>
+</html>

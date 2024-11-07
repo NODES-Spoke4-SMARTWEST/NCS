@@ -1,12 +1,16 @@
 package com.example.nodes.service;
 
+import com.example.nodes.dto.HubDTO;
 import com.example.nodes.entity.Competence;
 import com.example.nodes.entity.Hub;
 import com.example.nodes.entity.Interest;
+import com.example.nodes.repository.CompetenceRepository;
 import com.example.nodes.repository.HubRepository;
+import com.example.nodes.repository.InterestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class HubService {
@@ -14,8 +18,37 @@ public class HubService {
     @Autowired
     private HubRepository hubRepository;
 
+    @Autowired
+    private CompetenceRepository competenceRepository;
+
+    @Autowired
+    private InterestRepository interestRepository;
+
+    double truncateDouble(double number, int numDigits) {
+        double result = number;
+        String arg = "" + number;
+        int idx = arg.indexOf('.');
+        if (idx!=-1) {
+            if (arg.length() > idx+numDigits) {
+                arg = arg.substring(0,idx+numDigits+1);
+                result  = Double.parseDouble(arg);
+            }
+        }
+        return result ;
+    }
+
+    public Hub saveHub(Hub hub) {
+        hub.setLatitude(truncateDouble(hub.getLatitude(), 4));
+        hub.setLongitude(truncateDouble(hub.getLongitude(), 4));
+        return hubRepository.save(hub);
+    }
+
     public List<Hub> findAllHubs() {
         return hubRepository.findAll();
+    }
+
+    public List<Hub> getLast4Hubs() {
+        return hubRepository.findLast4Hubs();
     }
 
     public Hub getHubById(Long id) {
@@ -33,6 +66,38 @@ public class HubService {
 
     public List<Hub> findHubsByResources(long resources) {
         return hubRepository.findByResources(resources);
+    }
+
+    public List<Hub> getHubsByResourceType(String resourceType) {
+        return hubRepository.findByResourceType(resourceType);
+    }
+
+    public List<HubDTO> findAllHubDto() {
+        List<Hub> hubs = hubRepository.findAll();
+        return hubs.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    public HubDTO convertToDTO(Hub hub) {
+        HubDTO dto = new HubDTO();
+        dto.setName(hub.getName());
+        dto.setDescription(hub.getDescription());
+        dto.setLatitude(hub.getLatitude());
+        dto.setLongitude(hub.getLongitude());
+        dto.setResources(hub.getResources().stream()
+                .map(resource -> {
+                    HubDTO.ResourceDTO resourceDTO = new HubDTO.ResourceDTO();
+                    resourceDTO.setType(resource.getType());
+                    return resourceDTO;
+                }).collect(Collectors.toList()));
+        return dto;
+    }
+
+    public List<Hub> findHubsByCompetence(long competence) {
+        return hubRepository.findByCompetence(competence);
+    }
+
+    public List<Hub> findHubsByInterest(long interest) {
+        return hubRepository.findByInterest(interest);
     }
 }
 

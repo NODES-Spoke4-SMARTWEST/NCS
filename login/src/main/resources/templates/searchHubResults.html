@@ -1,0 +1,147 @@
+<!--DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Results</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/home">NODES</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="navbar-nav ml-auto">
+        <a class="nav-item nav-link" href="/booking">Booking</a>
+        <a class="nav-item nav-link" href="/calendar">My Calendar</a>
+        <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
+        <a class="nav-item nav-link" href="/chat">Chat</a>
+        <a class="nav-item nav-link" href="/notifications">Notifications</a>
+        <a class="nav-item nav-link" href="/search-users">Search Users</a>
+        <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="container mt-5">
+  <h1 class="mb-4">Search Results</h1>
+  <ul class="list-group" id="search-results-list">
+    <li class="list-group-item" th:each="hub : ${searchResults}">
+      <h3 th:text="${hub.name}">Sample Hub Name</h3>
+      <button class="btn btn-secondary mt-2" onclick="toggleDescription(this)">Show Description</button>
+      <div class="hub-description mt-2" style="display: none;">
+        <p th:text="${hub.description}">Sample Hub Description</p>
+        <h5>Resources:</h5>
+        <ul>
+          <li th:each="resource : ${hub.resources}" th:text="${resource.type}">Sample Resource</li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<footer class="bg-light text-center mt-5">
+</footer>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  function toggleDescription(button) {
+    const description = button.nextElementSibling;
+    description.style.display = description.style.display === 'none' ? 'block' : 'none';
+    button.textContent = button.textContent === 'Show Description' ? 'Hide Description' : 'Show Description';
+  }
+</script>
+</body>
+</html-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Results</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css">
+</head>
+<body>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/home">NODES</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="navbar-nav ml-auto">
+        <a class="nav-item nav-link" href="/booking">Booking</a>
+        <a class="nav-item nav-link" href="/calendar">My Calendar</a>
+        <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
+        <a class="nav-item nav-link" href="/chat">Chat</a>
+        <a class="nav-item nav-link" href="/notifications">Notifications</a>
+        <a class="nav-item nav-link" href="/search-users">Search Users</a>
+        <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="container mt-5">
+  <h1 class="mb-4">Search Results</h1>
+  <ul class="list-group" id="search-results-list">
+    <!-- List items will be added here by JavaScript -->
+  </ul>
+  <div id="map" style="height: 500px;" class="mt-4"></div>
+</div>
+
+<footer class="bg-light text-center mt-5">
+  <!-- Footer Content Here -->
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+<script>
+  function toggleDescription(button) {
+    const description = button.nextElementSibling;
+    description.style.display = description.style.display === 'none' ? 'block' : 'none';
+    button.textContent = button.textContent === 'Show Description' ? 'Hide Description' : 'Show Description';
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const map = L.map('map').setView([0, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    fetch('/api/jsonHubs')
+            .then(response => response.json())
+            .then(hubs => {
+              if (hubs.length > 0) {
+                const bounds = [];
+                hubs.forEach(hub => {
+                  const marker = L.marker([hub.latitude, hub.longitude]).addTo(map);
+                  marker.bindPopup(`<b>${hub.name}</b><br>${hub.description}`).openPopup();
+                  bounds.push([hub.latitude, hub.longitude]);
+
+                  // Add hub to the list
+                  const listItem = document.createElement('li');
+                  listItem.className = 'list-group-item';
+                  listItem.innerHTML = `<h3>${hub.name}</h3>
+                                  <button class="btn btn-secondary mt-2" onclick="toggleDescription(this)">Show Description</button>
+                                  <div class="hub-description mt-2" style="display: none;">
+                                    <p>${hub.description}</p>
+                                    <h5>Resources:</h5>
+                                    <ul>${hub.resources.map(resource => `<li>${resource.type}</li>`).join('')}</ul>
+                                  </div>`;
+                  document.getElementById('search-results-list').appendChild(listItem);
+                });
+                map.fitBounds(bounds);
+              } else {
+                map.setView([0, 0], 2);
+              }
+            })
+            .catch(error => console.error('Error fetching hubs:', error));
+  });
+</script>
+</body>
+</html>

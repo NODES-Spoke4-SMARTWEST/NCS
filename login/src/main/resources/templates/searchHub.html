@@ -301,7 +301,7 @@
 </html-->
 
 
-<!DOCTYPE html>
+<!--DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -334,7 +334,7 @@
 <div class="container mt-5">
   <h1 class="mb-4">Search Hubs</h1>
   <form id="searchForm" method="post">
-    <!-- Hubs Dropdown -->
+    <!- Hubs Dropdown ->
     <div class="form-group">
       <label for="location">Location:</label>
       <select class="form-control" id="location" name="location">
@@ -344,7 +344,7 @@
       <button type="button" class="btn btn-primary mt-3" onclick="postSearch('searchByHubs')">Search by Hubs</button>
     </div>
 
-    <!-- Competences Dropdown -->
+    <!- Competences Dropdown ->
     <div class="form-group">
       <label for="competences">Competence:</label>
       <select class="form-control" id="competences" name="competences">
@@ -353,7 +353,7 @@
       </select>
     </div>
 
-    <!-- Interests Dropdown -->
+    <!- Interests Dropdown ->
     <div class="form-group">
       <label for="interests">Interest:</label>
       <select class="form-control" id="interests" name="interests">
@@ -363,7 +363,7 @@
       <button type="button" class="btn btn-secondary mt-3" onclick="postSearch('searchByInterests')">Search by Interests & Competences</button>
     </div>
 
-    <!-- Resources Dropdown -->
+    <!- Resources Dropdown ->
     <div class="form-group">
       <label for="resources">Resource:</label>
       <select class="form-control" id="resources" name="resources">
@@ -388,7 +388,7 @@
 </div>
 
 <footer class="bg-light text-center mt-5">
-  <!-- Footer Content Here -->
+  <!- Footer Content Here ->
 </footer>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -450,4 +450,93 @@
 </script>
 
 </body>
+</html-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Hub</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/home">NODES</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="navbar-nav ml-auto">
+        <a class="nav-item nav-link" href="/booking">Booking</a>
+        <a class="nav-item nav-link" href="/calendar">My Calendar</a>
+        <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
+        <a class="nav-item nav-link" href="/chat">Chat</a>
+        <a class="nav-item nav-link" href="/notifications">Notifications</a>
+        <a class="nav-item nav-link" href="/search-users">Search Users</a>
+        <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="container mt-5">
+  <h1 class="mb-4">Search Hubs</h1>
+  <form id="searchForm" method="post" action="/searchHub/results">
+    <!-- Hubs Dropdown -->
+    <div class="form-group">
+      <label for="hub">Hub:</label>
+      <select class="form-control" id="hub" name="hubId">
+        <option value="">Select Hub</option>
+        <option th:each="hub : ${hubs}" th:value="${hub.id}" th:text="${hub.name}">Sample Hub Name</option>
+      </select>
+    </div>
+
+    <!-- Competences Dropdown -->
+    <div class="form-group">
+      <label for="competences">Competence:</label>
+      <select class="form-control" id="competences" name="competences">
+        <option value="">Select Competence</option>
+        <option th:each="competence : ${competences}" th:value="${competence.id}" th:text="${competence.name}">Sample Competence</option>
+      </select>
+    </div>
+
+    <!-- Interests Dropdown -->
+    <div class="form-group">
+      <label for="interests">Interest:</label>
+      <select class="form-control" id="interests" name="interests">
+        <option value="">Select Interest</option>
+        <option th:each="interest : ${interests}" th:value="${interest.id}" th:text="${interest.name}">Sample Interest</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="resourceType">Resource Type:</label>
+      <select class="form-control" id="resourceType" name="resourceType">
+        <option value="">Select Resource Type</option>
+        <option th:each="resourceType : ${resourceTypes}" th:value="${resourceType}" th:text="${resourceType}">Sample Resource Type</option>
+      </select>
+    </div>
+
+    <input type="hidden" name="searchType" id="searchType">
+
+    <button type="button" class="btn btn-primary mt-3" onclick="setSearchTypeAndSubmit('searchByHubs')">Search by Hubs</button>
+    <button type="button" class="btn btn-secondary mt-3" onclick="setSearchTypeAndSubmit('searchByResources')">Search by Resources</button>
+    <button type="button" class="btn btn-secondary mt-3" onclick="setSearchTypeAndSubmit('searchByCriteria')">Search by Interests & Competences</button>
+  </form>
+</div>
+
+<footer class="bg-light text-center mt-5">
+  <!-- Footer Content Here -->
+</footer>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  function setSearchTypeAndSubmit(searchType) {
+    document.getElementById('searchType').value = searchType;
+    document.getElementById('searchForm').submit();
+  }
+</script>
+</body>
 </html>
+
+

@@ -20,8 +20,8 @@ body {
     max-width: 900px;
 }
 
-.left-panel {
-    background-image: url('../images/login.jpg'); /* Update with the path to your image */
+/*.left-panel {
+    background-image: url('../images/login.jpg');
     background-size: cover;
     background-position: center;
     flex: 1;
@@ -31,7 +31,60 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}*/
+
+
+.left-panel {
+    background-image: url('../images/login.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
+
+.left-panel h1, .left-panel p {
+    color: white;
+}
+
+.right-panel {
+    padding: 20px;
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.tab {
+    cursor: pointer;
+    padding: 10px 20px;
+    border-bottom: 2px solid transparent;
+}
+
+.tab.active {
+    border-bottom: 2px solid #007bff;
+}
+
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-footer a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
 
 .right-panel {
     flex: 1;

@@ -17,11 +17,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE " +
             "(:username IS NULL OR u.name LIKE %:username%) AND " +
-            "(:competence IS NULL OR :competence MEMBER OF u.competences) AND " +
-            "(:interest IS NULL OR :interest MEMBER OF u.interests)")
-    List<User> searchUsers(String username, Competence competence, Interest interest);
+            "(:competence IS NULL OR :competence IN ELEMENTS(u.competences)) AND " +
+            "(:interest IS NULL OR :interest IN ELEMENTS(u.interests))")
+    List<User> searchUsers(@Param("username") String username,
+                           @Param("competence") Competence competence,
+                           @Param("interest") Interest interest);
 
-    @Transactional
+    /*@Transactional
     @Modifying
     @Query("UPDATE User u SET u.role = :role, u.availability = :availability, " +
             "u.competences = :competences, u.interests = :interests, u.location = :location_id " +
@@ -31,7 +33,26 @@ public interface UserRepository extends JpaRepository<User, Long> {
                    @Param("availability") boolean availability,
                    @Param("competences") List<Competence> competences,
                    @Param("interests") List<Interest> interests,
-                   @Param("location_id") Hub location_id);
+                   @Param("location_id") Hub location_id);*/
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.role = :role, u.availability = :availability, " +
+            "u.competences = :competences, u.interests = :interests, u.location = :location " +
+            "WHERE u.id = :id")
+    int updateUser(@Param("id") Long id,
+                   @Param("role") Role role,
+                   @Param("availability") boolean availability,
+                   @Param("competences") List<Competence> competences,
+                   @Param("interests") List<Interest> interests,
+                   @Param("location") Hub location);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.competences = :competences, u.interests = :interests WHERE u.id = :id")
+    int updateUserCompetencesAndInterests(@Param("id") Long id,
+                                          @Param("competences") List<Competence> competences,
+                                          @Param("interests") List<Interest> interests);
+
 
     @Transactional
     @Modifying

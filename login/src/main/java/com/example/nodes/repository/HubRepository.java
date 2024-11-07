@@ -37,7 +37,19 @@ public interface HubRepository extends JpaRepository<Hub, Long> {
             + "(COALESCE(:resources, NULL) IS NULL OR r.id IN :resources)")
     List<Hub> findByResources(long resources);
 
+    @Query(value = "SELECT * FROM hub ORDER BY id DESC LIMIT 4", nativeQuery = true)
+    List<Hub> findLast4Hubs();
 
+    @Query("SELECT DISTINCT h FROM Hub h JOIN h.resources r WHERE r.type = :resourceType")
+    List<Hub> findByResourceType(String resourceType);
+
+    @Query("SELECT h FROM Hub h JOIN h.districts d JOIN d.competences c WHERE "
+            + "(COALESCE(:competences, NULL) IS NULL OR c.id IN :competences)")
+    List<Hub> findByCompetence(@Param("competences") Long competence);
+
+    @Query("SELECT h FROM Hub h JOIN h.districts d JOIN d.interests i WHERE "
+            + "(COALESCE(:interests, NULL) IS NULL OR i.id IN :interests)")
+    List<Hub> findByInterest(@Param("interests") Long interest);
 
     /*@Query("SELECT h FROM Hub h JOIN h.competences c JOIN h.interests i JOIN h.resources r WHERE " +
             "(:location IS NULL OR h.name LIKE %:location%) " +

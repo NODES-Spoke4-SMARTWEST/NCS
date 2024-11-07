@@ -1,6 +1,8 @@
 package com.example.nodes.controller;
 
+import com.example.nodes.entity.Competence;
 import com.example.nodes.entity.Hub;
+import com.example.nodes.entity.Interest;
 import com.example.nodes.entity.User;
 import com.example.nodes.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +101,12 @@ public class AccountSettingsController {
             return "account-settings";
         }
         userService.updateUser(user);
+
+        /*List<Competence> c = user.getCompetences();
+        List<Interest> i = user.getInterests();
+        userService.updateUserCompetencesAndInterests(user);
+         */
+
         model.addAttribute("success", "Profile updated successfully!");
         return "home";
     }

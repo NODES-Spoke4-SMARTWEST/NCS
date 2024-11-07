@@ -3,20 +3,19 @@ package com.example.nodes.controller;
 import com.example.nodes.entity.Competence;
 import com.example.nodes.entity.Hub;
 import com.example.nodes.entity.Interest;
+import com.example.nodes.entity.User;
 import com.example.nodes.service.CompetenceService;
 import com.example.nodes.service.HubService;
 import com.example.nodes.service.InterestService;
 import com.example.nodes.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /*@Controller
 public class HubController {
@@ -70,7 +69,7 @@ public class HubController {
     @Autowired
     private ResourceService resourceService;
 
-    @GetMapping("/searchHub")
+    @GetMapping("/searchHubb")
     public String showSearchPage(Model model) {
         List<Hub> searchResults = new ArrayList<>();
         model.addAttribute("hubs", hubService.findAllHubs());
@@ -121,7 +120,7 @@ public class HubController {
 
      */
 
-    @PostMapping("/searchHub/results")
+    @PostMapping("/searchHub/resultss")
     public String searchResults(@RequestParam Map<String, String> params, Model model) {
         String searchType = params.get("searchType");
         List<Hub> searchResults = new ArrayList<>();
@@ -140,7 +139,7 @@ public class HubController {
             if(params.get("interests")!=null) i = interestService.findById(Long.parseLong(params.get("interest")));
             searchResults = hubService.findHubsByCriteria(i, c);
         } else if ("searchByResources".equals(searchType)) {
-            if(params.get("competence")!=null) searchResults = hubService.findHubsByResources(Long.parseLong(params.get("resources")));
+            if(params.get("resources")!=null) searchResults = hubService.findHubsByResources(Long.parseLong(params.get("resources")));
         }
 
         /*model.addAttribute("hubs", hubService.findAllHubs());
@@ -153,4 +152,87 @@ public class HubController {
         return "searchHub";
     }
 
+    @PostMapping("/searchHubb/results")
+    public List<Hub> searchHubs(@RequestParam("location") Long locationId) {
+        List<Hub> searchResults = new ArrayList<>();
+        searchResults.add(hubService.getHubById(locationId));
+        return searchResults;
+    }
+
+    @GetMapping("/searchHub")
+    public String showSearchHubPage(Model model) {
+        List<Hub> hubs = hubService.findAllHubs();
+        List<String> resourceTypes = resourceService.getAllDistinctTypes();
+        model.addAttribute("hubs", hubs);
+        model.addAttribute("resourceTypes", resourceTypes);
+        model.addAttribute("competences", competenceService.findAllCompetences());
+        model.addAttribute("interests", interestService.findAllInterests());
+        return "searchHub";
+    }
+
+    @PostMapping("/searchHub/results")
+    public String searchHubs(@RequestParam(required = false) Long hubId,
+                             @RequestParam(required = false) String resourceType,
+                             @RequestParam(required = false) Long competences,
+                             @RequestParam(required = false) Long interests,
+                             @RequestParam("searchType") String searchType,
+                             Model model) {
+        List<Hub> searchResults;
+
+        if ("searchByHubs".equals(searchType) && hubId != null) {
+            searchResults = List.of(hubService.getHubById(hubId));
+        } else if ("searchByResources".equals(searchType) && resourceType != null) {
+            searchResults = hubService.getHubsByResourceType(resourceType);
+        } else if ("searchByCriteria".equals(searchType) && (competences != null || interests != null)) {
+            Competence c = null;
+            if(competences!=null) c = competenceService.findById(competences);
+            Interest i = null;
+            if(interests!=null) i = interestService.findById(interests);
+            searchResults = hubService.findHubsByCriteria(i, c);
+        } else {
+            searchResults = List.of();
+        }
+
+        model.addAttribute("searchResults", searchResults);
+        return "searchHubResults";
+    }
+
+    @GetMapping("/all-hubs")
+    public String showAllHubsPage(Model model) {
+        List<Hub> hubs = hubService.findAllHubs();
+        model.addAttribute("hubs", hubs);
+        return "all-hubs";
+    }
+
+    /*@PostMapping("/searchHub/results")
+    public List<Hub> searchHubs(@RequestParam("location") Long locationId, Model model) {
+        List<Hub> searchResults = new ArrayList<>();
+        searchResults.add(hubService.getHubById(locationId));
+        model.addAttribute("searchResults", searchResults);
+        return searchResults;
+    }*/
+
+    @GetMapping("/offer-facility")
+    public String showOfferFacilityForm(Model model) {
+        model.addAttribute("hub", new Hub());
+        return "offer-facility";
+    }
+
+    @PostMapping("/offer-facility")
+    public String submitHub(@ModelAttribute Hub hub, @AuthenticationPrincipal User user) {
+        hub.setCreator(user);
+        hubService.saveHub(hub);
+        return "redirect:/home";
+    }
+
+    @GetMapping("/search-hubs")
+    public String searchHubPage(Model model) {
+        List<Hub> hubs = hubService.findAllHubs();
+        List<String> resourceTypes = resourceService.getAllDistinctTypes();
+        model.addAttribute("hubs", hubs);
+        model.addAttribute("resourceTypes", resourceTypes);
+        model.addAttribute("competences", competenceService.findAllCompetences());
+        model.addAttribute("interests", interestService.findAllInterests());
+        return "search-hubs";
+    }
 }

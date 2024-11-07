@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--DOCTYPE html>
 <html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
@@ -16,14 +16,14 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <div class="navbar-nav ml-auto">
-        <!-- Links visible to all users -->
+        <!- Links visible to all users ->
         <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
         <a class="nav-item nav-link" href="/chat">Chat</a>
         <a class="nav-item nav-link" href="/notifications">Notifications</a>
         <a class="nav-item nav-link" href="/search-users">Search Users</a>
         <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
 
-        <!-- Links visible to users with the role 'agent' -->
+        <!- Links visible to users with the role 'agent' ->
         <li class="nav-item" sec:authorize="hasAuthority('agent')">
           <a class="nav-link" href="/booking">Booking</a>
         </li>
@@ -31,7 +31,7 @@
           <a class="nav-link" href="/calendar">My Calendar</a>
         </li>
 
-        <!-- Links visible to users with the role 'admin' -->
+        <!- Links visible to users with the role 'admin' ->
         <li class="nav-item" sec:authorize="hasAuthority('admin')">
           <a class="nav-link" href="/manage-calendar">Manage Calendar</a>
         </li>
@@ -39,14 +39,17 @@
           <a class="nav-link" href="/manage-users">Manage Users</a>
         </li>
 
-        <!-- Links visible to users with the role 'business' -->
+        <!- Links visible to users with the role 'business' ->
         <li class="nav-item" sec:authorize="hasAuthority('business')">
           <a class="nav-link" href="/manage-calendar">Manage Calendar</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('business')">
+          <a class="nav-link" href="/offer-facility">Offer Facility</a>
         </li>
       </div>
       <div class="navbar-user dropdown ml-3">
         <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          &#9776; <!-- Burger menu icon -->
+          &#9776;
         </button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" href="/account/settings">Account Settings</a>
@@ -176,28 +179,160 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="/js/main.js"></script>
 </body>
-</html>
+</html-->
 
 
-<!--!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home</title>
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/home.css">
+  <style>
+    .hub-details {
+      display: none;
+    }
+    .banner-image {
+      width: 100%;
+      height: auto;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-  <div class="jumbotron mt-5">
-    <h1 class="display-4">Welcome, <span id="username"></span>!</h1>
-    <p class="lead">You have successfully logged in.</p>
-    <hr class="my-4">
-    <a class="btn btn-primary btn-lg" href="/logout" role="button">Logout</a>
-  </div>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/home">NODES</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="navbar-nav ml-auto">
+        <!-- Links visible to all users -->
+        <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
+        <a class="nav-item nav-link" href="/chat">Chat</a>
+        <a class="nav-item nav-link" href="/notifications">Notifications</a>
+        <a class="nav-item nav-link" href="/search-users">Search Users</a>
+        <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
+        <a class="nav-item nav-link" href="/search-hubs">New Search Hub</a>
+
+        <!-- Links visible to users with the role 'agent' -->
+        <li class="nav-item" sec:authorize="hasAuthority('agent')">
+          <a class="nav-link" href="/booking">Booking</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('agent')">
+          <a class="nav-link" href="/calendar">My Calendar</a>
+        </li>
+
+        <!-- Links visible to users with the role 'admin' -->
+        <li class="nav-item" sec:authorize="hasAuthority('admin')">
+          <a class="nav-link" href="/manage-calendar">Manage Calendar</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('admin')">
+          <a class="nav-link" href="/manage-users">Manage Users</a>
+        </li>
+
+        <!-- Links visible to users with the role 'business' -->
+        <li class="nav-item" sec:authorize="hasAuthority('business')">
+          <a class="nav-link" href="/manage-calendar">Manage Calendar</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('business')">
+          <a class="nav-link" href="/offer-facility">Offer Facility</a>
+        </li>
+      </div>
+      <div class="navbar-user dropdown ml-3">
+        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          &#9776; <!-- Burger menu icon -->
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="/account/settings">Account Settings</a>
+          <a class="dropdown-item" href="/logout">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div>
+  <img src="../images/main.jpg" alt="Banner" class="banner-image">
 </div>
+
+<main class="container mt-5">
+  <section class="latest-hub-listing mb-5">
+    <h2>Latest on the Hub Listing</h2>
+    <div class="row">
+      <div class="col-md-3 hub-card" th:each="hub : ${hubs}">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title" th:text="${hub.name}">Hub Name</h3>
+            <button class="btn btn-primary" onclick="toggleDetails(this)">Show Details</button>
+            <div class="hub-details mt-2">
+              <p class="card-text" th:text="${hub.description}">Hub Description</p>
+              <p class="card-text">Location: <span th:text="${hub.latitude}"></span>, <span th:text="${hub.longitude}"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="bg-light text-center mt-5">
+  <div class="footer-content py-4">
+    <div class="footer-logo">
+      <h2>NODES</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <div class="footer-links row">
+      <div class="footer-column col-md-4">
+        <h3>NODES</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Legal Information</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Blogs</a></li>
+        </ul>
+      </div>
+      <div class="footer-column col-md-4">
+        <h3>HELP CENTER</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">Find a Hub</a></li>
+          <li><a href="#">How To Host?</a></li>
+          <li><a href="#">Why Us?</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Rental Guides</a></li>
+        </ul>
+      </div>
+      <div class="footer-column col-md-4">
+        <h3>CONTACT INFO</h3>
+        <p>Phone: 1234567890</p>
+        <p>Email: company@email.com</p>
+        <p>Location: Street</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom py-2">
+    <a href="#">PlayStore</a>
+    <a href="#">AppleStore</a>
+  </div>
+</footer>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
 <script>
-  document.getElementById('username').innerText = localStorage.getItem('username');
+  function toggleDetails(button) {
+    var details = button.nextElementSibling;
+    if (details.style.display === "none" || details.style.display === "") {
+      details.style.display = "block";
+      button.textContent = "Hide Details";
+    } else {
+      details.style.display = "none";
+      button.textContent = "Show Details";
+    }
+  }
 </script>
 </body>
-</html-->
+</html>
+
+
