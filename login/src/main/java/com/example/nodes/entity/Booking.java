@@ -31,6 +31,9 @@ public class Booking {
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
+    @Column(name = "canceled", nullable = false)
+    private boolean canceled = false;
+
     // Getters and setters
     public Long getId() {
         return id;
@@ -86,5 +89,13 @@ public class Booking {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    public void setCanceled(boolean canceled) {
+        this.canceled = canceled;
     }
 }

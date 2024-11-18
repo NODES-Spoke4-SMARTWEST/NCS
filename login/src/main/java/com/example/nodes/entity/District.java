@@ -24,12 +24,14 @@ public class District {
     @Column(name="name", nullable = false)
     private String name;
 
+    @Column(name="color")
+    private String color;
+
     @Column(name="active", nullable = false)
     private boolean active;
 
-    /*@ManyToMany(mappedBy = "districts")
+    @ManyToMany(mappedBy = "districts")
     private List<Hub> hubs;
-     */
 
     @ManyToMany
     @JoinTable(
@@ -88,4 +90,19 @@ public class District {
         this.interests = interests;
     }
 
+    public List<Hub> getHubs() {
+        return hubs;
+    }
+
+    public void setHubs(List<Hub> hubs) {
+        this.hubs = hubs;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
 }

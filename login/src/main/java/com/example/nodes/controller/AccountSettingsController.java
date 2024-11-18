@@ -102,10 +102,8 @@ public class AccountSettingsController {
         }
         userService.updateUser(user);
 
-        /*List<Competence> c = user.getCompetences();
-        List<Interest> i = user.getInterests();
-        userService.updateUserCompetencesAndInterests(user);
-         */
+        //userService.updateUserCompetencesAndInterests(user);
+
 
         model.addAttribute("success", "Profile updated successfully!");
         return "home";

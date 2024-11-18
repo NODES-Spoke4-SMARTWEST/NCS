@@ -38,7 +38,7 @@ public class InitiativeController {
 
 package com.example.nodes.controller;
 
-        import com.example.nodes.entity.Booking;
+import com.example.nodes.entity.Booking;
         import com.example.nodes.entity.Hub;
         import com.example.nodes.entity.Initiative;
         import com.example.nodes.service.BookingService;
@@ -88,6 +88,7 @@ public class InitiativeController {
 
         // Create and save Initiative
         Initiative initiative = new Initiative();
+        initiative.setCreator(userService.getCurrentUser());
         initiative.setSubject(subject);
         initiative.setLocation(location);
         initiative.setApproved(false);  // Set to false by default

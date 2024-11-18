@@ -1,53 +1,10 @@
-/*package com.example.nodes.controller;
-
-import com.example.nodes.entity.Booking;
-import com.example.nodes.entity.Resource;
-import com.example.nodes.service.BookingService;
-import com.example.nodes.service.ResourceService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-
-@Controller
-public class BookingController {
-    @Autowired
-    private BookingService bookingService;
-    @Autowired
-    private ResourceService resourceService;
-
-    @GetMapping("/booking")
-    public String showBookingForm() {
-        return "booking";
-    }
-
-    @PostMapping("/booking")
-    public String handleBooking(Booking booking, Model model) {
-        bookingService.saveBooking(booking);
-        model.addAttribute("message", "Booking successful");
-        return "redirect:/search";
-    }
-
-    /*@GetMapping("/booking")
-    public String showBookingForm(Model model) {
-        model.addAttribute("locations", resourceService.getAllResources().stream().map(Resource::getLocation).distinct().toList());
-        model.addAttribute("types", resourceService.getAllResources().stream().map(Resource::getType).distinct().toList());
-        return "booking";
-    }*//*
-}*/
-
-
 package com.example.nodes.controller;
 
-import com.example.nodes.entity.Booking;
-import com.example.nodes.entity.Hub;
-import com.example.nodes.entity.Resource;
-import com.example.nodes.service.BookingService;
-import com.example.nodes.service.HubService;
-import com.example.nodes.service.ResourceService;
-import com.example.nodes.service.UserService;
+import com.example.nodes.dto.HubDTO;
+import com.example.nodes.entity.*;
+import com.example.nodes.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -66,6 +24,8 @@ public class BookingController {
     private BookingService bookingService;
     @Autowired
     private ResourceService resourceService;
+    @Autowired
+    private InitiativeService initiativeService;
     @Autowired
     private UserService userService;
 
@@ -120,13 +80,36 @@ public class BookingController {
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
         List<Hub> hubs = resourceService.findHubsByResourceType(type);
-        model.addAttribute("hubs", hubs);
+        List<HubDTO> hubDto = new ArrayList<>();
+        for (Hub h: hubs) {
+            hubDto.add(hubService.convertToDTO(h));
+        }
+
+        model.addAttribute("hubs", hubDto);
         return "search-resources";
     }
 
     //calendar
 
     @GetMapping("/calendar")
+    public String getCalendar(@AuthenticationPrincipal User user, Model model) {
+        List<Booking> bookings = new ArrayList<>();
+        List<Booking> events = new ArrayList<>();
+        bookings = bookings;
+        if (userService.getCurrentUser().getRole().getName().equals("agent")) {
+            bookings = bookingService.getBookingsForAgent(user);
+        } else if (userService.getCurrentUser().getRole().getName().equals("business")) {
+            bookings = bookingService.getBookingsForBusiness(user);
+            events = bookingService.getBookingsForAgent(user);
+        } else {
+            bookings = bookingService.getAllBookings();
+        }
+        model.addAttribute("bookings", bookings);
+        model.addAttribute("events", events);
+        return "calendar";
+    }
+
+    /*@GetMapping("/calendar")
     public String getCalendar(Model model) {
         List<Booking> bookings = bookingService.getAllBookings();
         model.addAttribute("bookings", bookings);
@@ -138,29 +121,40 @@ public class BookingController {
         List<Booking> events = bookingService.getAllBookings();
         model.addAttribute("events", events);
         return "calendar";
+    }*/
+
+    @PostMapping("/cancelBooking")
+    public String cancelBooking(@RequestParam Long id) {
+        Booking booking = bookingService.getBookingById(id);
+        if (booking != null) {
+            booking.setCanceled(!booking.isCanceled());
+            bookingService.cancelBooking(booking);
+        }
+        return "redirect:/calendar";
     }
 
-    /*@PostMapping("/addBooking")
-    public String addBooking(@RequestParam String title,
-                             @RequestParam LocalDateTime startDate,
-                             @RequestParam LocalDateTime endDate,
-                             @RequestParam int quantity) {
-        Booking booking = new Booking();
-        booking.setTitle(title); // Assuming Booking has a title field; otherwise, adjust as necessary
-        booking.setStartDate(startDate);
-        booking.setEndDate(endDate);
-        booking.setQuantity(quantity);
-        bookingService.saveBooking(booking);
+    @GetMapping("/manage-calendar")
+    public String manageCalendar(Model model) {
+        List<Booking> bookings = bookingService.getAllBookings();
+        model.addAttribute("bookings", bookings);
+        model.addAttribute("events", bookings);
+        return "manage-calendar";
+    }
+
+    @PostMapping("/approveInitiative")
+    public String approveInitiative(@RequestParam Long initiativeId) {
+        Initiative initiative = initiativeService.findById(initiativeId);
+        if (initiative != null) {
+            initiative.setApproved(!initiative.isApproved());
+            initiativeService.approveInitiative(initiative);
+        }
         return "redirect:/calendar";
     }
 
     @PostMapping("/deleteBooking")
     public String deleteBooking(@RequestParam Long id) {
-        bookingService.deleteBooking(id);
+        //bookingService.deleteBooking(id);
         return "redirect:/calendar";
     }
-
-     */
-
 }
 

@@ -3,6 +3,7 @@ package com.example.nodes.dto;
 import java.util.List;
 
 public class HubDTO {
+    private Long id;
     private String name;
     private String description;
     private double latitude;
@@ -11,6 +12,13 @@ public class HubDTO {
 
     // Getters and Setters
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public double getLongitude() {
         return longitude;

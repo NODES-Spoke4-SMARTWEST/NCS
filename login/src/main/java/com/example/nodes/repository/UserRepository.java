@@ -50,8 +50,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User u SET u.competences = :competences, u.interests = :interests WHERE u.id = :id")
     int updateUserCompetencesAndInterests(@Param("id") Long id,
-                                          @Param("competences") List<Competence> competences,
-                                          @Param("interests") List<Interest> interests);
+                                          @Param("competences") Competence competence,
+                                          @Param("interests") Interest interest);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.competences = :competences WHERE u.id = :id")
+    int updateUserCompetence(@Param("id") Long id, @Param("competences") Competence competence);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.interests = :interests WHERE u.id = :id")
+    int updateUserInterest(@Param("id") Long id, @Param("interests") Interest interests);
 
 
     @Transactional
@@ -69,6 +79,26 @@ public interface UserRepository extends JpaRepository<User, Long> {
     int updateUser(@Param("availability") boolean availability);
 
      */
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM user_competence WHERE user_id = :userId", nativeQuery = true)
+    void removeUserCompetences(@Param("userId") Long userId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM user_interest WHERE user_id = :userId", nativeQuery = true)
+    void removeUserInterests(@Param("userId") Long userId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO user_competence (user_id, competence_id) VALUES (:userId, :competenceId)", nativeQuery = true)
+    void addUserCompetence(@Param("userId") Long userId, @Param("competenceId") Long competenceId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO user_interest (user_id, interest_id) VALUES (:userId, :interestId)", nativeQuery = true)
+    void addUserInterest(@Param("userId") Long userId, @Param("interestId") Long interestId);
 }
 
 

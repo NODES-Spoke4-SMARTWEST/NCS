@@ -21,6 +21,10 @@ public class Initiative {
     @Column(name="approved", nullable = false)
     private boolean approved;
 
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private User creator;
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -52,6 +56,14 @@ public class Initiative {
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
     }
 }
 

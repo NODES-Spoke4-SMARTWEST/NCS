@@ -34,6 +34,9 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
     @Query("SELECT DISTINCT r.hub_id FROM Resource r WHERE r.type = :type")
     List<Hub> findHubsByResourceType(String type);
 
+    @Query("SELECT r.id FROM Resource r JOIN r.hub_id h WHERE h.creator.id = :creatorId")
+    List<Long> findResourceIdsByCreator(Long creatorId);
+
     /*
     List<Resource> findAllByLocation(String location);
 

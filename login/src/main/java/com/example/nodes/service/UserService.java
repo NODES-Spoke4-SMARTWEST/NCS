@@ -133,10 +133,24 @@ public class UserService {
         Hub location = user.getLocation() != null ? user.getLocation() : old.getLocation();
         if (user.getDescription() == "Enter your description") old.getDescription();
         userRepository.uupdateUser(userId, role, availability, location, description);
+
+        updateUserCompetencesAndInterests(user);
     }
 
-    public int updateUserCompetencesAndInterests(User user) {
-        return userRepository.updateUserCompetencesAndInterests(user.getId(), user.getCompetences(), user.getInterests());
+    public void updateUserCompetencesAndInterests(User user) {
+        User old = getCurrentUser();
+
+        Long userId = old.getId();
+        List<Competence> competences = user.getCompetences() != null ? user.getCompetences() : old.getCompetences();
+        List<Interest> interests = user.getInterests() != null ? user.getInterests() : old.getInterests();
+        userRepository.removeUserCompetences(userId);
+        userRepository.removeUserInterests(userId);
+        for (Competence c: competences) {
+            userRepository.addUserCompetence(userId, c.getId());
+        }
+        for (Interest i: interests) {
+            userRepository.addUserInterest(userId, i.getId());
+        }
     }
 
     public User getCurrentUser() {

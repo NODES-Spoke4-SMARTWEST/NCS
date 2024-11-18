@@ -4,10 +4,7 @@ import com.example.nodes.entity.Competence;
 import com.example.nodes.entity.Hub;
 import com.example.nodes.entity.Interest;
 import com.example.nodes.entity.User;
-import com.example.nodes.service.CompetenceService;
-import com.example.nodes.service.HubService;
-import com.example.nodes.service.InterestService;
-import com.example.nodes.service.ResourceService;
+import com.example.nodes.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
+import java.security.Principal;
 import java.util.*;
 
 /*@Controller
@@ -68,6 +66,8 @@ public class HubController {
     private InterestService interestService;
     @Autowired
     private ResourceService resourceService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/searchHubb")
     public String showSearchPage(Model model) {
@@ -201,7 +201,8 @@ public class HubController {
     public String showAllHubsPage(Model model) {
         List<Hub> hubs = hubService.findAllHubs();
         model.addAttribute("hubs", hubs);
-        return "all-hubs";
+        return "redirect:/districtsCriteria";
+        //return "all-hubs";
     }
 
     /*@PostMapping("/searchHub/results")
@@ -234,5 +235,44 @@ public class HubController {
         model.addAttribute("competences", competenceService.findAllCompetences());
         model.addAttribute("interests", interestService.findAllInterests());
         return "search-hubs";
+    }
+
+    @GetMapping("/districtsCriteria")
+    public String districtPage(Model model) {
+        List<Hub> hubs = hubService.findAllHubs();
+        List<String> resourceTypes = resourceService.getAllDistinctTypes();
+        model.addAttribute("hubs", hubs);
+        model.addAttribute("resourceTypes", resourceTypes);
+        model.addAttribute("competences", competenceService.findAllCompetences());
+        model.addAttribute("interests", interestService.findAllInterests());
+        return "districtsCriteria";
+    }
+
+
+
+    @GetMapping("/my-hubs")
+    public String viewMyHubs(Model model, Principal principal) {
+        User user = userService.getCurrentUser();
+        List<Hub> hubs = hubService.findHubsByCreator(user);
+        model.addAttribute("hubs", hubs);
+        return "my-hubs";
+    }
+
+    @PostMapping("/my-hubs/update-description")
+    public String updateHubDescription(@RequestParam Long id, @RequestParam String description) {
+        hubService.updateHubDescription(id, description);
+        return "redirect:/my-hubs";
+    }
+
+    @PostMapping("/my-hubs/add-resource")
+    public String addResource(@RequestParam Long hubId, @RequestParam String resourceName, @RequestParam String resourceDescription) {
+        hubService.addResourceToHub(hubId, resourceName, resourceDescription);
+        return "redirect:/my-hubs";
+    }
+
+    @PostMapping("/my-hubs/remove-resource")
+    public String removeResource(@RequestParam Long hubId, @RequestParam Long resourceId) {
+        hubService.flagResourceAsDeleted(hubId, resourceId);
+        return "redirect:/my-hubs";
     }
 }

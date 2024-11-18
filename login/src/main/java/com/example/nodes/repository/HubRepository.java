@@ -1,13 +1,14 @@
 package com.example.nodes.repository;
 
-import com.example.nodes.entity.Competence;
-import com.example.nodes.entity.Hub;
-import com.example.nodes.entity.Interest;
+import com.example.nodes.entity.*;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -50,6 +51,28 @@ public interface HubRepository extends JpaRepository<Hub, Long> {
     @Query("SELECT h FROM Hub h JOIN h.districts d JOIN d.interests i WHERE "
             + "(COALESCE(:interests, NULL) IS NULL OR i.id IN :interests)")
     List<Hub> findByInterest(@Param("interests") Long interest);
+
+
+
+
+    @Query("SELECT DISTINCT d FROM District d")
+    List<District> findAllDistricts();
+
+    @Query("SELECT DISTINCT h FROM Hub h WHERE h.creator = :user")
+    List<Hub> findByCreator(User user);
+
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO hub_resource (hub_id, resource_id) VALUES (:hubId, :resourceId)", nativeQuery = true)
+    void addHubResource(@Param("hubId") Long hubId, @Param("resourceId") Long resourceId);
+
+    /*@Query("SELECT d FROM District d WHERE (:location IS NULL OR :location MEMBER OF d.hubs.location) AND " +
+            "(:competence IS NULL OR :competence MEMBER OF d.competences) AND " +
+            "(:interest IS NULL OR :interest MEMBER OF d.interests) AND " +
+            "(:resource IS NULL OR :resource MEMBER OF d.hubs.resources.type)")
+    List<District> findDistrictsByCriteria(String location, String competence, String interest, String resource);
+
+     */
 
     /*@Query("SELECT h FROM Hub h JOIN h.competences c JOIN h.interests i JOIN h.resources r WHERE " +
             "(:location IS NULL OR h.name LIKE %:location%) " +

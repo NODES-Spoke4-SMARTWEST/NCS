@@ -14,4 +14,10 @@ public class InitiativeService {
     public Initiative saveInitiative(Initiative initiative) {
         return initiativeRepository.save(initiative);
     }
+
+    public Initiative findById(Long id) {return initiativeRepository.findById(id).orElse(null);}
+
+    public void approveInitiative(Initiative initiative) {
+        initiativeRepository.approveInitiative(initiative.getId(), initiative.isApproved());
+    }
 }

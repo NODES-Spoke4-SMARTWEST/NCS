@@ -30,6 +30,9 @@ public class Resource implements Serializable {
     @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings;
 
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
+
     // Getters and setters
     public Long getId() {
         return id;
@@ -69,5 +72,13 @@ public class Resource implements Serializable {
 
     public void setBookings(List<Booking> bookings) {
         this.bookings = bookings;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

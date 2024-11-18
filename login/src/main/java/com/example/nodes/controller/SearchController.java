@@ -104,6 +104,25 @@ public class SearchController {
         }
         return "resources";
     }
+
+    @GetMapping("/resourcesBis")
+    public String showResourcesBis(@RequestParam Long hubId,
+                                @RequestParam String type,
+                                @RequestParam String quantity,
+                                @RequestParam String startDate,
+                                @RequestParam String endDate,
+                                Model model) {
+        int quantityInt = Integer.parseInt(quantity);
+        Hub hub = hubService.getHubById(hubId);
+        if (hub != null) {
+            List<Resource> resources = resourceService.getResourcesByHubAndType(hub, type);
+            model.addAttribute("resources", resources);
+            model.addAttribute("quantity", quantityInt);
+            model.addAttribute("startDate", startDate);
+            model.addAttribute("endDate", endDate);
+        }
+        return "resources";
+    }
 }
 
 
