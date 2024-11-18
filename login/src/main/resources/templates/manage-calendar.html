@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Booking</title>
+  <title>My Calendar</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/home.css">
 </head>
@@ -73,37 +73,51 @@
 </header>
 
 <div class="container mt-5">
-  <h1>Booking</h1>
-  <form action="/booking" method="post">
-    <div class="form-group">
-      <label for="hub">Choose a Hub:</label>
-      <select class="form-control" id="hub" name="hubId">
-        <option th:each="hub : ${hubs}" th:value="${hub.id}" th:text="${hub.name}">Hub</option>
-      </select>
+  <h1>My Calendar</h1>
+  <ul class="list-group" id="bookingList">
+    <!-- Booking items injected here -->
+    <li class="list-group-item" th:each="booking : ${bookings}"
+        th:data-id="${booking.id}"
+        th:data-title="${booking.resource != null ? booking.resource.type : (booking.initiative != null ? booking.initiative.subject : 'No Title')}"
+        th:data-start="${booking.startDate}"
+        th:data-end="${booking.endDate}"
+        th:data-initiative-id="${booking.initiative != null ? booking.initiative.id : 'null'}"
+        th:data-approved="${booking.initiative != null ? booking.initiative.approved : 'false'}"
+        th:data-canceled="${booking.canceled}">
+      <span th:text="${booking.startDate} + ' - ' + ${booking.endDate}">Booking Date Range</span>
+      <span th:if="${booking.resource != null}" th:text="'Resource: ' + ${booking.resource.type}">Resource Type</span>
+      <span th:if="${booking.initiative != null}" th:text="'Initiative: ' + ${booking.initiative.subject}">Initiative Subject</span>
+      <button class="btn btn-info btn-sm float-right" onclick="showDescription(this)">View Details</button>
+    </li>
+  </ul>
+</div>
+
+<!-- Description Modal -->
+<div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="descriptionModalLabel">Booking Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="descriptionContent">
+        <!-- Booking details go here -->
+      </div>
+      <div class="modal-footer">
+        <form id="cancelForm" method="post" action="/cancelBooking">
+          <input type="hidden" name="id" id="cancelBookingId">
+          <button type="submit" class="btn btn-warning" id="cancelButton">Cancel Booking</button>
+        </form>
+        <form id="approveForm" method="post" action="/approveInitiative" sec:authorize="hasAuthority('admin')">
+          <input type="hidden" name="initiativeId" id="approveInitiativeId">
+          <button type="submit" class="btn btn-success" id="approveButton">Approve Initiative</button>
+        </form>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
     </div>
-    <button type="submit" class="btn btn-primary">Next</button>
-  </form>
-  <form action="/search-resources" method="post">
-    <div class="form-group">
-      <label for="type">Choose a Resource Type:</label>
-      <select class="form-control" id="type" name="type">
-        <option th:each="type : ${resourceTypes}" th:value="${type}" th:text="${type}">Resource</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="quantity">Quantity:</label>
-      <input type="number" class="form-control" id="quantity" name="quantity" required>
-    </div>
-    <div class="form-group">
-      <label for="startDate">Start Date:</label>
-      <input type="datetime-local" class="form-control" id="startDate" name="startDate" required>
-    </div>
-    <div class="form-group">
-      <label for="endDate">End Date:</label>
-      <input type="datetime-local" class="form-control" id="endDate" name="endDate" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Search</button>
-  </form>
+  </div>
 </div>
 
 <footer class="bg-light text-center mt-5">
@@ -146,12 +160,40 @@
     <a href="#">AppleStore</a>
   </div>
 </footer>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  function showDescription(button) {
+    var listItem = button.closest('li');
+    var title = listItem.getAttribute('data-title');
+    var startDate = listItem.getAttribute('data-start');
+    var endDate = listItem.getAttribute('data-end');
+    var canceled = listItem.getAttribute('data-canceled') === 'true';
+    var initiativeId = listItem.getAttribute('data-initiative-id');
+    var approved = listItem.getAttribute('data-approved') === 'true';
+
+    var modalContent = document.getElementById('descriptionContent');
+    modalContent.innerHTML = `<p><strong>Title:</strong> ${title}</p><p><strong>Start Date:</strong> ${startDate}</p><p><strong>End Date:</strong> ${endDate}</p>`;
+
+    var cancelButton = document.getElementById('cancelButton');
+    cancelButton.textContent = canceled ? 'Uncancel Booking' : 'Cancel Booking';
+
+    var cancelBookingId = document.getElementById('cancelBookingId');
+    cancelBookingId.value = listItem.getAttribute('data-id');
+
+    var approveButton = document.getElementById('approveButton');
+    var approveInitiativeId = document.getElementById('approveInitiativeId');
+
+    if (initiativeId && initiativeId !== 'null') {
+      approveButton.style.display = 'block';
+      approveButton.textContent = approved ? 'Unapprove Initiative' : 'Approve Initiative';
+      approveInitiativeId.value = initiativeId;
+    } else {
+      approveButton.style.display = 'none';
+    }
+
+    $('#descriptionModal').modal('show');
+  }
+</script>
 </body>
 </html>
-
-
-
-

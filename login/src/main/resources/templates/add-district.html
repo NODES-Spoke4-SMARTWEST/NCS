@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Booking</title>
+  <title>Add District</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/css/home.css">
 </head>
 <body>
 <header>
@@ -73,44 +72,50 @@
 </header>
 
 <div class="container mt-5">
-  <h1>Booking</h1>
-  <form action="/booking" method="post">
+  <h1 class="mb-4">Add District</h1>
+  <form action="/district/add" method="post">
     <div class="form-group">
-      <label for="hub">Choose a Hub:</label>
-      <select class="form-control" id="hub" name="hubId">
-        <option th:each="hub : ${hubs}" th:value="${hub.id}" th:text="${hub.name}">Hub</option>
-      </select>
+      <label for="name">Name:</label>
+      <input type="text" class="form-control" id="name" name="name" required>
     </div>
-    <button type="submit" class="btn btn-primary">Next</button>
+    <div class="form-group">
+      <label for="color">Color:</label>
+      <input type="text" class="form-control" id="color" name="color">
+    </div>
+    <div class="form-group form-check">
+      <input type="checkbox" class="form-check-input" id="active" name="active">
+      <label class="form-check-label" for="active">Active</label>
+    </div>
+    <div class="form-group">
+      <label for="hubs">Hubs:</label>
+      <div class="form-check" th:each="hub : ${hubs}">
+        <input class="form-check-input" type="checkbox" th:id="${'hub-' + hub.id}" th:name="hubs" th:value="${hub.id}">
+        <label class="form-check-label" th:for="${'hub-' + hub.id}" th:text="${hub.name}"></label>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Add District</button>
   </form>
-  <form action="/search-resources" method="post">
-    <div class="form-group">
-      <label for="type">Choose a Resource Type:</label>
-      <select class="form-control" id="type" name="type">
-        <option th:each="type : ${resourceTypes}" th:value="${type}" th:text="${type}">Resource</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="quantity">Quantity:</label>
-      <input type="number" class="form-control" id="quantity" name="quantity" required>
-    </div>
-    <div class="form-group">
-      <label for="startDate">Start Date:</label>
-      <input type="datetime-local" class="form-control" id="startDate" name="startDate" required>
-    </div>
-    <div class="form-group">
-      <label for="endDate">End Date:</label>
-      <input type="datetime-local" class="form-control" id="endDate" name="endDate" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Search</button>
-  </form>
+
+  <div class="mt-3" th:if="${success}">
+    <p class="alert alert-success" th:text="${success}"></p>
+  </div>
+
+  <div class="mt-5">
+    <h2>Existing Districts</h2>
+    <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-between align-items-center" th:each="district : ${districts}">
+        <span th:text="${district.name}"></span>
+        <button class="btn btn-secondary" th:classappend="${district.active ? 'btn-danger' : 'btn-success'}" th:onclick="'location.href=\'/district/toggle-active/' + ${district.id} + '\''" th:text="${district.active ? 'Make Inactive' : 'Make Active'}"></button>
+      </li>
+    </ul>
+  </div>
 </div>
 
 <footer class="bg-light text-center mt-5">
   <div class="footer-content py-4">
     <div class="footer-logo">
-      <h2>HUB NODES S.c.a.r.l</h2>
-      <p>Entra a far parte della community di NODES per essere tra i primi a ricevere aggiornamenti e novità sulle opportunità dell’ecosistema dell’innovazione.</p>
+      <h2>NODES</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     </div>
     <div class="footer-links row">
       <div class="footer-column col-md-4">
@@ -134,24 +139,19 @@
       </div>
       <div class="footer-column col-md-4">
         <h3>CONTACT INFO</h3>
-        <p>PEC. nodes@pec.it</p>
-        <p>Email: info@ecs-nodes.eu</p>
-        <p>Sede legale: C.so Duca degli Abruzzi 24 - 10129 Torino</p>
+        <p>Phone: 1234567890</p>
+        <p>Email: company@email.com</p>
+        <p>Location: Street</p>
       </div>
     </div>
   </div>
   <div class="footer-bottom py-2">
-    <img src="../images/bandiere.jpg" alt="Top Left Image" style="height: 50px; margin-right: 20px;"> <!-- Move the image here -->
     <a href="#">PlayStore</a>
     <a href="#">AppleStore</a>
   </div>
 </footer>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-
-
-

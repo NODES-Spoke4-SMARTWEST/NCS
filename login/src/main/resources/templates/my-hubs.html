@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Booking</title>
+  <title>My Hubs</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="/css/my-hubs.css">
 </head>
 <body>
 <header>
@@ -73,37 +73,51 @@
 </header>
 
 <div class="container mt-5">
-  <h1>Booking</h1>
-  <form action="/booking" method="post">
-    <div class="form-group">
-      <label for="hub">Choose a Hub:</label>
-      <select class="form-control" id="hub" name="hubId">
-        <option th:each="hub : ${hubs}" th:value="${hub.id}" th:text="${hub.name}">Hub</option>
-      </select>
+  <h1 class="mb-4">My Hubs</h1>
+  <div th:if="${hubs.isEmpty()}">
+    <p>You haven't created any hubs yet.</p>
+  </div>
+  <div th:each="hub : ${hubs}">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title" th:text="${hub.name}">Hub Name</h5>
+        <form th:action="@{/my-hubs/update-description}" method="post">
+          <input type="hidden" name="id" th:value="${hub.id}">
+          <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" name="description" th:text="${hub.description}"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Update Description</button>
+        </form>
+        <h6 class="mt-4">Resources</h6>
+        <ul class="list-group mb-3">
+          <li th:each="resource : ${hub.resources}" th:if="${!resource.deleted}" class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <span th:text="${resource.type}">Resource Name</span>
+              <small class="text-muted" th:text="${resource.description}">Resource Description</small>
+            </div>
+            <form th:action="@{/my-hubs/remove-resource}" method="post" class="ml-2">
+              <input type="hidden" name="hubId" th:value="${hub.id}">
+              <input type="hidden" name="resourceId" th:value="${resource.id}">
+              <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+            </form>
+          </li>
+        </ul>
+        <form th:action="@{/my-hubs/add-resource}" method="post" class="form-inline">
+          <input type="hidden" name="hubId" th:value="${hub.id}">
+          <div class="form-group mb-2">
+            <label for="resourceName" class="sr-only">Resource Name</label>
+            <input type="text" class="form-control" id="resourceName" name="resourceName" placeholder="Resource Name">
+          </div>
+          <div class="form-group mb-2 ml-2">
+            <label for="resourceDescription" class="sr-only">Resource Description</label>
+            <input type="text" class="form-control" id="resourceDescription" name="resourceDescription" placeholder="Resource Description">
+          </div>
+          <button type="submit" class="btn btn-primary mb-2 ml-2">Add Resource</button>
+        </form>
+      </div>
     </div>
-    <button type="submit" class="btn btn-primary">Next</button>
-  </form>
-  <form action="/search-resources" method="post">
-    <div class="form-group">
-      <label for="type">Choose a Resource Type:</label>
-      <select class="form-control" id="type" name="type">
-        <option th:each="type : ${resourceTypes}" th:value="${type}" th:text="${type}">Resource</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="quantity">Quantity:</label>
-      <input type="number" class="form-control" id="quantity" name="quantity" required>
-    </div>
-    <div class="form-group">
-      <label for="startDate">Start Date:</label>
-      <input type="datetime-local" class="form-control" id="startDate" name="startDate" required>
-    </div>
-    <div class="form-group">
-      <label for="endDate">End Date:</label>
-      <input type="datetime-local" class="form-control" id="endDate" name="endDate" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Search</button>
-  </form>
+  </div>
 </div>
 
 <footer class="bg-light text-center mt-5">
@@ -147,11 +161,7 @@
   </div>
 </footer>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-
-
-

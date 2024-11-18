@@ -1,478 +1,72 @@
-<!--DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Search Hub</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/home.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <style>
-    #map {
-      height: 400px; /* Set height for the map */
-      width: 100%;   /* Full width */
-      margin-top: 20px; /* Space above the map */
-    }
-  </style>
 </head>
 <body>
 <header>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/home">NODES</a>
+    <a class="navbar-brand d-flex align-items-center" href="/home">
+      <img src="../images/logo.png" alt="Logo" style="height: 40px; margin-right: 10px; border-radius: 5px 5px 5px 5px;">
+      <span style="font-size: 32px; font-weight: bold; color: #004996; font-family: 'Arial Narrow'">NODES</span>
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <div class="navbar-nav ml-auto">
-        <a class="nav-item nav-link" href="/booking">Booking</a>
-        <a class="nav-item nav-link" href="/calendar">My Calendar</a>
+        <!-- Links visible to all users -->
         <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
         <a class="nav-item nav-link" href="/chat">Chat</a>
         <a class="nav-item nav-link" href="/notifications">Notifications</a>
         <a class="nav-item nav-link" href="/search-users">Search Users</a>
-        <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
+        <a class="nav-item nav-link" href="/all-hubs">Search Hub</a>
+
+        <!-- Links visible to users with the role 'agent' -->
+        <li class="nav-item" sec:authorize="hasAuthority('agent')">
+          <a class="nav-link" href="/booking">Booking</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('agent')">
+          <a class="nav-link" href="/calendar">My Calendar</a>
+        </li>
+
+        <!-- Links visible to users with the role 'admin' -->
+        <li class="nav-item" sec:authorize="hasAuthority('admin')">
+          <a class="nav-link" href="/manage-calendar">Manage Calendar</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('admin')">
+          <a class="nav-link" href="/manage-users">Manage Users</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('admin')">
+          <a class="nav-link" href="/district/add">Manage Districts</a>
+        </li>
+
+        <!-- Links visible to users with the role 'business' -->
+        <li class="nav-item" sec:authorize="hasAuthority('business')">
+          <a class="nav-link" href="/calendar">Manage Calendar</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('business')">
+          <a class="nav-link" href="/offer-facility">Offer Facility</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('business')">
+          <a class="nav-link" href="/manage-initiative">Manage Initiatives</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('business')">
+          <a class="nav-link" href="/my-hubs">My Hubs</a>
+        </li>
       </div>
-    </div>
-  </nav>
-</header>
-
-<div class="container mt-5">
-  <h1>Search Hubs</h1>
-  <form id="searchForm" class="mt-3">
-    <div class="form-group">
-      <label for="location">Location</label>
-      <select class="form-control" id="location" name="location">
-        <option value="">Select a location</option>-->
-        <!-- Dynamically populate locations from the database --><!--
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="criteria">Criteria (Competences / Interests)</label>
-      <input type="text" class="form-control" id="criteria" name="criteria" placeholder="Enter Competence or Interest">
-    </div>
-
-    <div class="form-group">
-      <label for="resources">Resources Offered</label>
-      <select class="form-control" id="resources" name="resources">
-        <option value="">Select Resource</option>
-        --><!-- Dynamically populate resources from the database --><!--
-      </select>
-    </div>
-
-    <button type="button" class="btn btn-primary" onclick="searchHubs()">Search</button>
-  </form>
-
-  <h2 class="mt-5">Search Results</h2>
-  <ul id="hubList" class="list-group mt-3"></ul>
-  <div id="map"></div>
-</div>
-
-<footer class="bg-light text-center mt-5">
-  <div class="footer-content py-4">
-    <div class="footer-logo">
-      <h2>NODES</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    </div>
-    <div class="footer-links row">
-      <div class="footer-column col-md-4">
-        <h3>COMPANY</h3>
-        <ul class="list-unstyled">
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Legal Information</a></li>
-          <li><a href="#">Contact Us</a></li>
-          <li><a href="#">Blogs</a></li>
-        </ul>
-      </div>
-      <div class="footer-column col-md-4">
-        <h3>HELP CENTER</h3>
-        <ul class="list-unstyled">
-          <li><a href="#">Find a Property</a></li>
-          <li><a href="#">How To Host?</a></li>
-          <li><a href="#">Why Us?</a></li>
-          <li><a href="#">FAQs</a></li>
-          <li><a href="#">Rental Guides</a></li>
-        </ul>
-      </div>
-      <div class="footer-column col-md-4">
-        <h3>CONTACT INFO</h3>
-        <p>Phone: 1234567890</p>
-        <p>Email: company@email.com</p>
-        <p>Location: 100 Smart Street, LA, USA</p>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom py-2">
-    <a href="#">PlayStore</a>
-    <a href="#">AppleStore</a>
-  </div>
-</footer>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-<script>
-  function searchHubs() {
-    const location = document.getElementById('location').value;
-    const criteria = document.getElementById('criteria').value;
-    const resources = document.getElementById('resources').value;
-
-    fetch(`/api/search-hubs?location=${location}&criteria=${criteria}&resources=${resources}`)
-            .then(response => response.json())
-            .then(data => {
-              const hubList = document.getElementById('hubList');
-              hubList.innerHTML = '';
-              const map = L.map('map').setView([20.0, 0.0], 2); // Default center
-
-              // Clear existing markers
-              const markers = L.markerClusterGroup();
-
-              data.forEach(hub => {
-                const li = document.createElement('li');
-                li.className = 'list-group-item';
-                li.innerHTML = `<h5>${hub.name}</h5><p>${hub.description}</p>`;
-                hubList.appendChild(li);
-
-                // Add marker for each hub on the map
-                const marker = L.marker([hub.latitude, hub.longitude])
-                        .bindPopup(`<b>${hub.name}</b><br>${hub.description}`);
-                markers.addLayer(marker);
-              });
-
-              // Add markers to the map
-              map.addLayer(markers);
-
-              // Set map view to the bounds of the markers
-              if (markers.getLayers().length > 0) {
-                const group = new L.featureGroup(markers.getLayers());
-                map.fitBounds(group.getBounds());
-              }
-
-              // Set the OpenStreetMap layer
-              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              }).addTo(map);
-            });
-  }
-</script>
-</body>
-</html>-->
-
-<!--DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Search Hubs</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css">
-  <link rel="stylesheet" href="/css/search-hub.css">
-</head>
-<body>
-<header>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/home">NODES</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <div class="navbar-nav ml-auto">
-        <a class="nav-item nav-link" href="/booking">Booking</a>
-        <a class="nav-item nav-link" href="/calendar">My Calendar</a>
-        <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
-        <a class="nav-item nav-link" href="/chat">Chat</a>
-        <a class="nav-item nav-link" href="/notifications">Notifications</a>
-        <a class="nav-item nav-link" href="/search-users">Search Users</a>
-        <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
-      </div>
-    </div>
-  </nav>
-</header>
-
-<div class="container mt-5">
-  <h1 class="mb-4">Search Hubs</h1>
-  <form action="/searchHub/results" method="get">
-    <div class="form-group">
-      <label for="location">Location:</label>
-      <select class="form-control" id="location" name="location">
-        <option value="">Select Location</option>
-        <option th:each="hub : ${hubs}" th:value="${hub.id}" th:text="${hub.name}">Sample Hub Name</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="competences">Competences:</label>
-      <select class="form-control" id="competences" name="competences" multiple>
-        <option th:each="competence : ${competences}" th:value="${competence.id}" th:text="${competence.name}">Sample Competence</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="interests">Interests:</label>
-      <select class="form-control" id="interests" name="interests" multiple>
-        <option th:each="interest : ${interests}" th:value="${interest.id}" th:text="${interest.name}">Sample Interest</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="resources">Resources:</label>
-      <select class="form-control" id="resources" name="resources" multiple>
-        <option th:each="resource : ${resources}" th:value="${resource.id}" th:text="${resource.type}">Sample Resource</option>
-      </select>
-    </div>
-    <button type="submit" class="btn btn-primary">Search</button>
-  </form>
-
-  <div id="search-results" class="mt-5" th:if="${searchResults}">
-    <h2>Search Results</h2>
-    <ul class="list-group">
-      <li class="list-group-item" th:each="hub : ${searchResults}">
-        <h3 th:text="${hub.name}">Sample Hub Name</h3>
-        <p>Location: <span th:text="${hub.location.name}">Sample Location</span></p>
-        <p>Resources: <span th:each="resource : ${hub.resources}" th:text="${resource.type}">Sample Resource</span></p>
-      </li>
-    </ul>
-  </div>
-
-  <div id="map" class="mt-5" style="height: 400px;" th:if="${searchResults}"></div>
-</div>
-
-<footer class="bg-light text-center mt-5">
-  <div class="footer-content py-4">
-    <div class="footer-logo">
-      <h2>NODES</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    </div>
-    <div class="footer-links row">
-      <div class="footer-column col-md-4">
-        <h3>COMPANY</h3>
-        <ul class="list-unstyled">
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Legal Information</a></li>
-          <li><a href="#">Contact Us</a></li>
-          <li><a href="#">Blogs</a></li>
-        </ul>
-      </div>
-      <div class="footer-column col-md-4">
-        <h3>HELP CENTER</h3>
-        <ul class="list-unstyled">
-          <li><a href="#">Find a Property</a></li>
-          <li><a href="#">How To Host?</a></li>
-          <li><a href="#">Why Us?</a></li>
-          <li><a href="#">FAQs</a></li>
-          <li><a href="#">Rental Guides</a></li>
-        </ul>
-      </div>
-      <div class="footer-column col-md-4">
-        <h3>CONTACT INFO</h3>
-        <p>Phone: 1234567890</p>
-        <p>Email: company@email.com</p>
-        <p>Location: 100 Smart Street, LA, USA</p>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom py-2">
-    <a href="#">PlayStore</a>
-    <a href="#">AppleStore</a>
-  </div>
-</footer>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
-<script th:inline="javascript">
-  /*<![CDATA[*/
-  var searchResults = /*[[${searchResults}]]*/ [];
-  if (searchResults.length > 0) {
-    var map = L.map('map').setView([0, 0], 2);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    searchResults.forEach(function(hub) {
-      L.marker([hub.latitude, hub.longitude]).addTo(map)
-              .bindPopup(hub.name)
-              .openPopup();
-    });
-  }
-  /*]]>*/
-</script>
-</body>
-</html-->
-
-
-<!--DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Search Hubs</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css">
-</head>
-<body>
-<header>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/home">NODES</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <div class="navbar-nav ml-auto">
-        <a class="nav-item nav-link" href="/booking">Booking</a>
-        <a class="nav-item nav-link" href="/calendar">My Calendar</a>
-        <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
-        <a class="nav-item nav-link" href="/chat">Chat</a>
-        <a class="nav-item nav-link" href="/notifications">Notifications</a>
-        <a class="nav-item nav-link" href="/search-users">Search Users</a>
-        <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
-      </div>
-    </div>
-  </nav>
-</header>
-
-<div class="container mt-5">
-  <h1 class="mb-4">Search Hubs</h1>
-  <form id="searchForm" method="post">
-    <!- Hubs Dropdown ->
-    <div class="form-group">
-      <label for="location">Location:</label>
-      <select class="form-control" id="location" name="location">
-        <option value="">Select Location</option>
-        <option th:each="hub : ${hubs}" th:value="${hub.id}" th:text="${hub.name}">Sample Hub Name</option>
-      </select>
-      <button type="button" class="btn btn-primary mt-3" onclick="postSearch('searchByHubs')">Search by Hubs</button>
-    </div>
-
-    <!- Competences Dropdown ->
-    <div class="form-group">
-      <label for="competences">Competence:</label>
-      <select class="form-control" id="competences" name="competences">
-        <option value="">Select Competence</option>
-        <option th:each="competence : ${competences}" th:value="${competence.id}" th:text="${competence.name}">Sample Competence</option>
-      </select>
-    </div>
-
-    <!- Interests Dropdown ->
-    <div class="form-group">
-      <label for="interests">Interest:</label>
-      <select class="form-control" id="interests" name="interests">
-        <option value="">Select Interest</option>
-        <option th:each="interest : ${interests}" th:value="${interest.id}" th:text="${interest.name}">Sample Interest</option>
-      </select>
-      <button type="button" class="btn btn-secondary mt-3" onclick="postSearch('searchByInterests')">Search by Interests & Competences</button>
-    </div>
-
-    <!- Resources Dropdown ->
-    <div class="form-group">
-      <label for="resources">Resource:</label>
-      <select class="form-control" id="resources" name="resources">
-        <option value="">Select Resource</option>
-        <option th:each="resource : ${resources}" th:value="${resource.id}" th:text="${resource.type}">Sample Resource</option>
-      </select>
-      <button type="button" class="btn btn-info mt-3" onclick="postSearch('searchByResources')">Search by Resources</button>
-    </div>
-  </form>
-
-  <div th:if="${searchResults}">
-    <h2>Search Results</h2>
-    <ul class="list-group">
-      <li class="list-group-item" th:each="hub : ${searchResults}">
-        <h3 th:text="${hub.name}">Sample Hub Name</h3>
-        <p>Resources: <span th:each="resource : ${hub.resources}" th:text="${resource.type}">Sample Resource</span></p>
-      </li>
-    </ul>
-  </div>
-
-  <div id="map" class="mt-5" style="height: 400px;" th:if="${searchResults}"></div>
-</div>
-
-<footer class="bg-light text-center mt-5">
-  <!- Footer Content Here ->
-</footer>
-
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
-<script>
-  function postSearch(searchType) {
-    const form = document.getElementById('searchForm');
-    const formData = new FormData(form);
-    formData.append('searchType', searchType);
-
-    fetch('/searchHub/results', {
-      method: 'POST',
-      body: new URLSearchParams(formData),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-Requested-With': 'XMLHttpRequest'
-      }
-    })
-            .then(response => response.text())
-            .then(html => {
-              document.getElementById('search-results').innerHTML = html;
-              updateMapMarkers();
-            })
-            .catch(error => console.error('Error:', error));
-  }
-
-  function updateMapMarkers() {
-    const searchResults = [[${searchResults != null ? searchResults : '[]'}]];
-
-    // Initialize the map if not already created
-    if (typeof map === 'undefined') {
-      map = L.map('map').setView([0, 0], 2);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-      }).addTo(map);
-    }
-
-    // Clear any existing markers
-    map.eachLayer(layer => {
-      if (layer instanceof L.Marker) {
-        map.removeLayer(layer);
-      }
-    });
-
-    if (searchResults.length > 0) {
-      const bounds = [];
-
-      searchResults.forEach(hub => {
-        const marker = L.marker([hub.latitude, hub.longitude]).addTo(map);
-        marker.bindPopup(`<b>${hub.name}</b><br>${hub.description}`);
-        bounds.push([hub.latitude, hub.longitude]);
-      });
-
-      map.fitBounds(bounds);
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', initMap);
-</script>
-
-</body>
-</html-->
-
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Search Hub</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-<header>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/home">NODES</a>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <div class="navbar-nav ml-auto">
-        <a class="nav-item nav-link" href="/booking">Booking</a>
-        <a class="nav-item nav-link" href="/calendar">My Calendar</a>
-        <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
-        <a class="nav-item nav-link" href="/chat">Chat</a>
-        <a class="nav-item nav-link" href="/notifications">Notifications</a>
-        <a class="nav-item nav-link" href="/search-users">Search Users</a>
-        <a class="nav-item nav-link" href="/searchHub">Search Hub</a>
+      <div class="navbar-user dropdown ml-3">
+        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          &#9776; <!-- Burger menu icon -->
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="/account/settings">Account Settings</a>
+          <a class="dropdown-item" href="/logout">Logout</a>
+        </div>
       </div>
     </div>
   </nav>
@@ -525,7 +119,44 @@
 </div>
 
 <footer class="bg-light text-center mt-5">
-  <!-- Footer Content Here -->
+  <div class="footer-content py-4">
+    <div class="footer-logo">
+      <h2>HUB NODES S.c.a.r.l</h2>
+      <p>Entra a far parte della community di NODES per essere tra i primi a ricevere aggiornamenti e novità sulle opportunità dell’ecosistema dell’innovazione.</p>
+    </div>
+    <div class="footer-links row">
+      <div class="footer-column col-md-4">
+        <h3>NODES</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Legal Information</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Blogs</a></li>
+        </ul>
+      </div>
+      <div class="footer-column col-md-4">
+        <h3>HELP CENTER</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">Find a Hub</a></li>
+          <li><a href="#">How To Host?</a></li>
+          <li><a href="#">Why Us?</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Rental Guides</a></li>
+        </ul>
+      </div>
+      <div class="footer-column col-md-4">
+        <h3>CONTACT INFO</h3>
+        <p>PEC. nodes@pec.it</p>
+        <p>Email: info@ecs-nodes.eu</p>
+        <p>Sede legale: C.so Duca degli Abruzzi 24 - 10129 Torino</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom py-2">
+    <img src="../images/bandiere.jpg" alt="Top Left Image" style="height: 50px; margin-right: 20px;"> <!-- Move the image here -->
+    <a href="#">PlayStore</a>
+    <a href="#">AppleStore</a>
+  </div>
 </footer>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
