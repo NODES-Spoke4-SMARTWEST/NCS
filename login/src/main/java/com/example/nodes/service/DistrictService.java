@@ -17,8 +17,13 @@ public class DistrictService {
     @Autowired
     private HubRepository hubRepository;
 
-    public District saveDistrict(District district) {
-        return districtRepository.save(district);
+    public void saveDistrict(District district) {
+        districtRepository.save(district);
+        List<Hub> hubs = district.getHubs();
+        for (Hub hub : hubs) {
+            districtRepository.saveHubs(district.getId(), hub.getId());
+        }
+
     }
 
     public List<District> findAllDistricts() {

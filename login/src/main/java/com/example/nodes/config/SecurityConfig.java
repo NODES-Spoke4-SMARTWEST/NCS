@@ -33,7 +33,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )*/
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/signup", "/login").permitAll()
+                        .requestMatchers("/signup", "/login", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("admin")
                         .requestMatchers("/business/**").hasAuthority("business")
                         .requestMatchers("/agent/**").hasAuthority("agent")

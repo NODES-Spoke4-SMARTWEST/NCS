@@ -65,26 +65,4 @@ public interface HubRepository extends JpaRepository<Hub, Long> {
     @Transactional
     @Query(value = "INSERT INTO hub_resource (hub_id, resource_id) VALUES (:hubId, :resourceId)", nativeQuery = true)
     void addHubResource(@Param("hubId") Long hubId, @Param("resourceId") Long resourceId);
-
-    /*@Query("SELECT d FROM District d WHERE (:location IS NULL OR :location MEMBER OF d.hubs.location) AND " +
-            "(:competence IS NULL OR :competence MEMBER OF d.competences) AND " +
-            "(:interest IS NULL OR :interest MEMBER OF d.interests) AND " +
-            "(:resource IS NULL OR :resource MEMBER OF d.hubs.resources.type)")
-    List<District> findDistrictsByCriteria(String location, String competence, String interest, String resource);
-
-     */
-
-    /*@Query("SELECT h FROM Hub h JOIN h.competences c JOIN h.interests i JOIN h.resources r WHERE " +
-            "(:location IS NULL OR h.name LIKE %:location%) " +
-            "AND (:interest IS NULL OR i.name = :interest) " +
-            "AND (:competence IS NULL OR c.name = :competence) " +
-            "AND (:resource IS NULL OR r.name = :resource)")
-    List<Hub> searchHubs(@Param("location") String name,
-                         @Param("interest") String interest,
-                         @Param("competence") String competence,
-                         @Param("resource") String resource);
-
-    @Query("SELECT DISTINCT h.resources FROM Hub h")
-    List<String> findAllResources();
-*/
 }
