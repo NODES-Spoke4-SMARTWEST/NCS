@@ -73,11 +73,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <version>8.0.33</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
@@ -108,9 +110,19 @@
             <version>5.6.9.Final</version>
         </dependency>
 
+        <!-- Mark Tomcat as provided -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
    </dependencies>
 
-   <build>
+    <packaging>war</packaging>
+
+
+    <build>
        <plugins>
            <plugin>
                <groupId>org.springframework.boot</groupId>
