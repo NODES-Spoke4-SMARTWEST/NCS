@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat</title>
+  <link rel="stylesheet" href="css/chat.css">
+</head>
+<body>
+<div class="container">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>Chats</h2>
+    </div>
+    <ul class="chat-list">
+      <li class="chat-item active">
+        <img src="/images/user1.jpg" alt="User 1">
+        <div class="chat-info">
+          <h3>User 1</h3>
+          <p>Last message...</p>
+        </div>
+      </li>
+      <li class="chat-item">
+        <img src="/images/user2.jpg" alt="User 2">
+        <div class="chat-info">
+          <h3>User 2</h3>
+          <p>Last message...</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="chat-window">
+    <div class="chat-header">
+      <img src="/images/user1.jpg" alt="User 1">
+      <h2>User 1</h2>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="message received">
+        <p>Hello!</p>
+        <span>10:00 AM</span>
+      </div>
+      <div class="message sent">
+        <p>Hi there!</p>
+        <span>10:02 AM</span>
+      </div>
+    </div>
+    <div class="chat-footer">
+      <input type="text" id="messageInput" placeholder="Type a message">
+      <button id="sendButton">Send</button>
+    </div>
+  </div>
+  <!-- Home button -->
+  <a href="/home" id="homeButton">Home</a>
+</div>
+<script src="/js/chat.js"></script>
+</body>
+</html>

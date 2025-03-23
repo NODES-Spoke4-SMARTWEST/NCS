@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <title>Manage Initiative</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="navbar-brand d-flex align-items-center">
+      <img src="images/logo.png" alt="Logo" style="height: 40px; margin-right: 10px; border-radius: 5px 5px 5px 5px;">
+      <span style="font-size: 32px; font-weight: bold; color: #004996; font-family: 'Arial Narrow'">NODES</span>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="navbar-nav ml-auto">
+        <!-- Links visible to all users -->
+        <a class="nav-item nav-link" href="/bulletin">Bulletin Board</a>
+        <a class="nav-item nav-link" href="/chat">Chat</a>
+        <a class="nav-item nav-link" href="/notifications">Notifications</a>
+        <a class="nav-item nav-link" href="/search-users">Search Users</a>
+        <a class="nav-item nav-link" href="/all-hubs">Search Hub</a>
+
+        <!-- Links visible to users with the role 'agent' -->
+        <li class="nav-item" sec:authorize="hasAuthority('agent')">
+          <a class="nav-link" href="/booking">Booking</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('agent')">
+          <a class="nav-link" href="/calendar">My Calendar</a>
+        </li>
+
+        <!-- Links visible to users with the role 'admin' -->
+        <li class="nav-item" sec:authorize="hasAuthority('admin')">
+          <a class="nav-link" href="/manage-calendar">Manage Calendar</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('admin')">
+          <a class="nav-link" href="/manage-users">Manage Users</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('admin')">
+          <a class="nav-link" href="/district/add">Manage Districts</a>
+        </li>
+
+        <!-- Links visible to users with the role 'business' -->
+        <li class="nav-item" sec:authorize="hasAuthority('business')">
+          <a class="nav-link" href="/calendar">Manage Calendar</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('business')">
+          <a class="nav-link" href="/offer-facility">Offer Facility</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('business')">
+          <a class="nav-link" href="/manage-initiative">Manage Initiatives</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('business')">
+          <a class="nav-link" href="/my-hubs">My Hubs</a>
+        </li>
+      </div>
+      <div class="navbar-user dropdown ml-3">
+        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          &#9776; <!-- Burger menu icon -->
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="/account/settings">Account Settings</a>
+          <a class="dropdown-item" href="/logout">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="container mt-5">
+  <h2 class="mb-4">Add New Initiative</h2>
+  <form th:action="@{/manage-initiative}" method="post">
+    <div class="form-group mb-3">
+      <label for="subject">Subject:</label>
+      <input type="text" id="subject" name="subject" class="form-control" required>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="location">Location:</label>
+      <select id="location" name="locationId" class="form-control" required>
+        <option th:each="hub : ${hubs}" th:value="${hub.id}" th:text="${hub.name}">Hub</option>
+      </select>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="startDate">Start Date:</label>
+      <input type="datetime-local" id="startDate" name="startDate" class="form-control" required>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="endDate">End Date:</label>
+      <input type="datetime-local" id="endDate" name="endDate" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Initiative</button>
+    <a href="/home" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+
+<footer class="bg-light text-center mt-5">
+  <div class="footer-content py-4">
+    <div class="footer-logo">
+      <h2>HUB NODES S.c.a.r.l</h2>
+      <p>Entra a far parte della community di NODES per essere tra i primi a ricevere aggiornamenti e novità sulle opportunità dell’ecosistema dell’innovazione.</p>
+    </div>
+    <div class="footer-links row">
+      <div class="footer-column col-md-4">
+        <h3>NODES</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Legal Information</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Blogs</a></li>
+        </ul>
+      </div>
+      <div class="footer-column col-md-4">
+        <h3>HELP CENTER</h3>
+        <ul class="list-unstyled">
+          <li><a href="#">Find a Hub</a></li>
+          <li><a href="#">How To Host?</a></li>
+          <li><a href="#">Why Us?</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Rental Guides</a></li>
+        </ul>
+      </div>
+      <div class="footer-column col-md-4">
+        <h3>CONTACT INFO</h3>
+        <p>PEC. nodes@pec.it</p>
+        <p>Email: info@ecs-nodes.eu</p>
+        <p>Sede legale: C.so Duca degli Abruzzi 24 - 10129 Torino</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom py-2">
+    <img src="images/bandiere.jpg" alt="Top Left Image" style="height: 50px; margin-right: 20px;"> <!-- Move the image here -->
+    <a href="#">PlayStore</a>
+    <a href="#">AppleStore</a>
+  </div>
+</footer>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
