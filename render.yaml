@@ -1,0 +1,58 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    environment:
+      #MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_USER: s.tedeschi
+      MYSQL_PASSWORD: DqS8)2$m.9&1
+      MYSQL_DATABASE: nodes
+      MYSQL_ROOT_PASSWORD: m3924Tr3f(?;
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql_dump:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    networks:
+      - springmysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    depends_on:
+      - mariadb
+    restart: always
+    ports:
+      - 8081:80
+    environment:
+      PMA_HOST: mariadb
+#      MYSQL_ROOT_PASSWORD:
+#      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    networks:
+      - springmysql
+
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-container
+    ports:
+      - "8082:8080"
+    depends_on:
+      - mariadb
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/nodes?autoReconnect=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: s.tedeschi
+      SPRING_DATASOURCE_PASSWORD: DqS8)2$m.9&1
+#    deploy:
+#      restart_policy:
+#        condition: on-failure
+#        max_attempts: 10
+    networks:
+      - springmysql
+
+networks:
+  springmysql:
+    name: springmysql
+
+volumes:
+  mysql_data:
+    driver: local
