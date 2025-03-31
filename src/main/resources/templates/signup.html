@@ -12,8 +12,8 @@
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-6 left-panel">
-      <h1>NODES</h1>
-      <p>Nord Ovest Digitale E Sostenibile</p>
+      <h1>NCS</h1>
+      <p>An application made for the creation of coworking spaces.</p>
     </div>
     <div class="col-md-6 right-panel">
       <div class="tabs">
@@ -22,10 +22,10 @@
       </div>
       <h1>Welcome</h1>
       <p>Register to start enjoying the benefits of the co-working network. Everybody is welcome in this community!</p>
-      <form th:action="@{/login}" method="post">
+      <form th:action="@{/signup}" method="post">
         <div class="form-group">
-          <label for="username">User name</label>
-          <input type="text" id="username" name="username" class="form-control" required>
+          <label for="name">User name</label>
+          <input type="text" id="name" name="name" class="form-control" required>
         </div>
         <div class="form-group">
           <label for="password">Password</label>

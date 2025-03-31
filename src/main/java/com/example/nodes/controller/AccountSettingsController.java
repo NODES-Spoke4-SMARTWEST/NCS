@@ -62,25 +62,6 @@ public class AccountSettingsController {
     @Autowired
     private RoleService roleService;
 
-    /*@GetMapping("/settings")
-    public String getAccountSettings(Model model, Principal principal) {
-        User user = userService.findByUsername(principal.getName());
-        List<Hub> hubs = hubService.findAllHubs();
-        model.addAttribute("user", user);
-        model.addAttribute("hubs", hubs);
-        return "account-settings";
-    }
-
-    @PostMapping("/settings")
-    public String updateAccountSettings(@ModelAttribute User updatedUser, Principal principal) {
-        User user = userService.findByUsername(principal.getName());
-        user.setName(updatedUser.getName());
-        user.setLocation(updatedUser.getLocation());
-        user.setAvailability(updatedUser.isAvailability());
-        userService.save(user);
-        return "redirect:/account/settings?success=true";
-    }*/
-
     @GetMapping("/settings")
     public String showAccountSettings(Model model) {
         model.addAttribute("user", userService.getCurrentUser());

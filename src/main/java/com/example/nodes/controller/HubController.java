@@ -6,54 +6,18 @@ import com.example.nodes.entity.Interest;
 import com.example.nodes.entity.User;
 import com.example.nodes.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
 import java.util.*;
-
-/*@Controller
-public class HubController {
-
-    @Autowired
-    private HubService hubService;
-
-    @Autowired
-    private CompetenceService competenceService;
-
-    @Autowired
-    private InterestService interestService;
-
-    @Autowired
-    private ResourceService resourceService;
-
-    @GetMapping("/searchHub")
-    public String showSearchPage(Model model) {
-        model.addAttribute("hubs", hubService.findAllHubs());
-        model.addAttribute("competences", competenceService.findAllCompetences());
-        model.addAttribute("interests", interestService.findAllInterests());
-        model.addAttribute("resources", resourceService.findAllResources());
-        return "searchHub";
-    }
-
-    @GetMapping("/searchHub/results")
-    public String searchHubs(
-            @RequestParam(required = false) Long location,
-            @RequestParam(required = false) List<Long> competences,
-            @RequestParam(required = false) List<Long> interests,
-            @RequestParam(required = false) List<Long> resources,
-            Model model) {
-
-        List<Hub> searchResults = hubService.searchHubs(location, competences, interests, resources);
-        model.addAttribute("searchResults", searchResults);
-        return "searchHub";
-    }
-}
-
- */
 
 @Controller
 public class HubController {
@@ -80,45 +44,6 @@ public class HubController {
 
         return "searchHub";
     }
-
-    /*@PostMapping("/searchHub/results")
-    public List<Hub> searchHubs(@RequestParam Map<String, String> params) {
-        String searchType = params.get("searchType");
-        List<Hub> h = new ArrayList<Hub>();
-        if ("searchByHubs".equals(searchType)) {
-            h.add(hubService.getHubById(Long.parseLong(params.get("location"))));
-            return h;
-        } else if ("searchByInterests".equals(searchType)) {
-            return hubService.findHubsByInterestsAndCompetences(params.get("interests"), params.get("competences"));
-        } else if ("searchByResources".equals(searchType)) {
-            return hubService.findHubsByResources(params.get("resources"));
-        }
-
-        return List.of(); // Return an empty list if no search type matches
-    }
-
-     */
-
-    /*@PostMapping("/searchHub/results")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> searchResults(@RequestParam Map<String, String> params) {
-        String searchType = params.get("searchType");
-        List<Hub> searchResults = new ArrayList<Hub>();
-        if ("searchByHubs".equals(searchType)) {
-            searchResults.add(hubService.getHubById(Long.parseLong(params.get("location"))));
-        } else if ("searchByInterests".equals(searchType)) {
-            searchResults = hubService.findHubsByInterestsAndCompetences(params.get("interests"), params.get("competences"));
-        } else if ("searchByResources".equals(searchType)) {
-            searchResults = hubService.findHubsByResources(params.get("resources"));
-        }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("searchResults", searchResults);
-
-        return ResponseEntity.ok(response);
-    }
-
-     */
 
     @PostMapping("/searchHub/resultss")
     public String searchResults(@RequestParam Map<String, String> params, Model model) {
@@ -205,26 +130,90 @@ public class HubController {
         //return "all-hubs";
     }
 
-    /*@PostMapping("/searchHub/results")
-    public List<Hub> searchHubs(@RequestParam("location") Long locationId, Model model) {
-        List<Hub> searchResults = new ArrayList<>();
-        searchResults.add(hubService.getHubById(locationId));
-        model.addAttribute("searchResults", searchResults);
-        return searchResults;
-    }*/
-
     @GetMapping("/offer-facility")
     public String showOfferFacilityForm(Model model) {
         model.addAttribute("hub", new Hub());
         return "offer-facility";
     }
 
+
+
+    private static final long MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB limit
+    private static final byte[] DEFAULT_IMAGE = loadDefaultImage();
+
+    /*@PostMapping("/offer-facility")
+    public String offerFacility(@ModelAttribute Hub hub, @RequestParam("image") MultipartFile imageFile) {
+        int p = 0;
+        try {
+            if (!imageFile.isEmpty()) {
+                hub.setImage(imageFile.getBytes()); // Assuming you have an 'image' field in your entity
+            }
+            //hubService.saveHub(hub);
+            hubService.saveHub(hub, imageFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "redirect:/offer-facility";
+    }*/
+
+    @GetMapping("/image/{hubId}")
+    public ResponseEntity<byte[]> getHubImage(@PathVariable Long hubId) {
+        byte[] image = hubService.getHubImage(hubId);
+        if (image != null) {
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
     @PostMapping("/offer-facility")
-    public String submitHub(@ModelAttribute Hub hub, @AuthenticationPrincipal User user) {
+    public String offerFacility(@ModelAttribute Hub hub, @AuthenticationPrincipal User user) {
         hub.setCreator(user);
+        if (hub.getImage() != null) {
+            hub.setImage(Base64.getDecoder().decode(hub.getImage()));
+        }
         hubService.saveHub(hub);
         return "redirect:/home";
     }
+
+
+    /*@PostMapping("/offer-facility")
+    public String submitHub(@ModelAttribute Hub hub,
+                            //@RequestParam(value = "image", required = false) MultipartFile imageFile,
+                            @AuthenticationPrincipal User user) {
+        hub.setCreator(user);
+        int t = 0;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                if (!Objects.requireNonNull(imageFile.getContentType()).equals("image/jpeg")) {
+                    hub.setImage(DEFAULT_IMAGE);
+                } else if (imageFile.getSize() > MAX_IMAGE_SIZE) {
+                    hub.setImage(DEFAULT_IMAGE);
+                } else {
+                    hub.setImage(imageFile.getBytes());
+                }
+            } catch (IOException e) {
+                hub.setImage(DEFAULT_IMAGE);
+            }
+        } else {
+            hub.setImage(DEFAULT_IMAGE);
+        }
+
+        hubService.saveHub(hub);
+        return "redirect:/home";
+    }*/
+
+    private static byte[] loadDefaultImage() {
+        try (InputStream is = HubController.class.getResourceAsStream("/static/images/default.jpg")) {
+            return is != null ? is.readAllBytes() : new byte[0];
+        } catch (IOException e) {
+            return new byte[0];
+        }
+    }
+
+
+
 
     @GetMapping("/search-hubs")
     public String searchHubPage(Model model) {
@@ -247,8 +236,6 @@ public class HubController {
         model.addAttribute("interests", interestService.findAllInterests());
         return "districtsCriteria";
     }
-
-
 
     @GetMapping("/my-hubs")
     public String viewMyHubs(Model model, Principal principal) {

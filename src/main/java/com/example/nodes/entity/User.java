@@ -1,18 +1,24 @@
 package com.example.nodes.entity;
 
+import aj.org.objectweb.asm.commons.TryCatchBlockSorter;
 import jakarta.persistence.*;
+import java.awt.*;
+import org.locationtech.jts.geom.Point;
 
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import jakarta.persistence.Convert;
+import org.locationtech.jts.geom.Point;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "user")
-@Convert(attributeName = "point", converter = org.locationtech.jts.geom.Point.class)
+@TypeDef(name = "point", typeClass = org.locationtech.jts.geom.Point.class)
 public class User implements UserDetails {
 
     @Id

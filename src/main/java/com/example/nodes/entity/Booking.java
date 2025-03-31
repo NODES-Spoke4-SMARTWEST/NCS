@@ -1,13 +1,14 @@
 package com.example.nodes.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.TypeDef;
 import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "booking_test")
-@Convert(attributeName = "point", converter = Point.class)
+@TypeDef(name = "point", typeClass = Point.class)
 public class Booking {
 
     @Id

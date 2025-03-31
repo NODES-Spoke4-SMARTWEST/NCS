@@ -9,6 +9,9 @@ import com.example.nodes.repository.InterestRepository;
 import com.example.nodes.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +48,28 @@ public class HubService {
         hub.setLongitude(truncateDouble(hub.getLongitude(), 4));
         return hubRepository.save(hub);
     }
+
+
+
+    public Hub saveHub(Hub hub, MultipartFile imageFile) {
+        try {
+            if (imageFile != null && !imageFile.isEmpty()) {
+                hub.setImage(imageFile.getBytes());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to process image file", e);
+        }
+
+        hub.setLatitude(truncateDouble(hub.getLatitude(), 4));
+        hub.setLongitude(truncateDouble(hub.getLongitude(), 4));
+        return hubRepository.save(hub);
+    }
+
+    public byte[] getHubImage(Long hubId) {
+        return hubRepository.findImageByHubId(hubId);
+    }
+
+
 
     public List<Hub> findAllHubs() {
         return hubRepository.findAll();
@@ -103,18 +128,6 @@ public class HubService {
     public List<Hub> findHubsByInterest(long interest) {
         return hubRepository.findByInterest(interest);
     }
-
-
-
-
-
-
-    /*public List<HubDTO> findHubs(String location, String competence, String interest, String resource) {
-        List<Hub> hubs = hubRepository.findHubsByCriteria(location, competence, interest, resource);
-        return hubs.stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-     */
 
     public List<DistrictDTO> findDistricts() {
         // Mocked data: Implement your actual logic to fetch districts based on criteria

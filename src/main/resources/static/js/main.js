@@ -21,9 +21,27 @@ function toggleMenu() {
     }
 }
 
-document.addEventListener('click', function(event) {
+/*document.addEventListener('click', function(event) {
     const isClickInside = document.querySelector('.navbar-user').contains(event.target);
     if (!isClickInside) {
         document.querySelector('.dropdown-menu').style.display = 'none';
     }
+});*/
+
+document.addEventListener('click', function(event) {
+    const userButton = document.querySelector('.navbar-user');
+    const dropdown = document.querySelector('.dropdown-menu');
+
+    if (!userButton || !dropdown) return; // Ensure elements exist
+
+    const isClickInside = userButton.contains(event.target);
+
+    if (isClickInside) {
+        // Toggle dropdown
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    } else {
+        // Click outside, close dropdown
+        dropdown.style.display = 'none';
+    }
 });
+

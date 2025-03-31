@@ -48,8 +48,8 @@
       <p id="description" th:text="${user.description != null && user.description != '' ? user.description : 'No description available'}">Sample description text</p>
 
       <!-- Action buttons -->
-      <a href="/chat" class="btn btn-primary">Go to Chat</a>
-      <a href="/search-users" class="btn btn-secondary">Back to Search</a>
+      <a th:href="@{/chat}" class="btn btn-primary">Go to Chat</a>
+      <a th:href="@{/search-users}" class="btn btn-secondary">Back to Search</a>
     </div>
   </div>
 </div>

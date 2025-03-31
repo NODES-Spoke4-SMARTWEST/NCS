@@ -1,6 +1,7 @@
 package com.example.nodes.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.TypeDef;
 import org.locationtech.jts.geom.Point;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "district")
-@Convert(attributeName = "point", converter = Point.class)
+@TypeDef(name = "point", typeClass = Point.class)
 public class District {
 
     @Id
