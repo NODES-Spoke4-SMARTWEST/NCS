@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mar 25, 2025 alle 14:27
+-- Creato il: Mar 31, 2025 alle 12:12
 -- Versione del server: 10.4.25-MariaDB
 -- Versione PHP: 8.1.10
 
@@ -91,7 +91,9 @@ INSERT INTO `booking_test` (`id`, `canceled`, `end_date`, `quantity`, `start_dat
 (2, b'0', '2025-06-12 00:00:00.000000', 0, '2025-06-05 00:00:00.000000', 3, NULL, 13),
 (3, b'0', '2025-12-30 18:00:00.000000', 0, '2025-12-30 12:00:00.000000', 4, NULL, 15),
 (4, b'0', '2025-04-03 02:00:00.000000', 1, '2025-03-03 02:00:00.000000', NULL, 12, 1),
-(5, b'0', '2025-02-23 13:00:00.000000', 1, '2025-02-22 13:00:00.000000', NULL, 1, 1);
+(5, b'0', '2025-02-23 13:00:00.000000', 1, '2025-02-22 13:00:00.000000', NULL, 1, 1),
+(52, b'0', '0001-01-10 00:00:00.000000', 1, '0001-01-01 10:00:00.000000', NULL, 13, 52),
+(102, b'0', '2026-04-04 04:03:00.000000', 0, '2025-04-04 04:04:00.000000', 52, NULL, 11);
 
 -- --------------------------------------------------------
 
@@ -108,7 +110,7 @@ CREATE TABLE `booking_test_seq` (
 --
 
 INSERT INTO `booking_test_seq` (`next_val`) VALUES
-(101);
+(201);
 
 -- --------------------------------------------------------
 
@@ -126,7 +128,12 @@ CREATE TABLE `competence` (
 --
 
 INSERT INTO `competence` (`id`, `name`) VALUES
-(1, 'Financial modeling');
+(1, 'Financial modeling'),
+(2, 'Information Tecnologies'),
+(3, 'Teaching'),
+(4, '3D Art'),
+(5, 'Architecture'),
+(6, 'Design');
 
 -- --------------------------------------------------------
 
@@ -281,17 +288,19 @@ CREATE TABLE `initiative` (
   `approved` bit(1) NOT NULL,
   `subject` text NOT NULL,
   `creator_id` bigint(20) DEFAULT NULL,
-  `location_id` bigint(20) DEFAULT NULL
+  `location_id` bigint(20) DEFAULT NULL,
+  `title` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `initiative`
 --
 
-INSERT INTO `initiative` (`id`, `approved`, `subject`, `creator_id`, `location_id`) VALUES
-(2, b'0', 'AI & Automation Summit. A two-day conference in Aosta featuring AI pioneers and automation experts discussing the latest advancements in machine learning, robotics, and workflow automation. Live demonstrations of AI-driven business tools and networking sessions with industry leaders. Subject: Artificial intelligence, robotics, and business automation strategies.', 12, 4),
-(3, b'0', 'Cybersecurity Defense Week. A five-day hands-on workshop in Aosta where cybersecurity professionals, IT managers, and ethical hackers participate in live penetration testing challenges, discuss the latest cyber threats, and learn from ethical hacking experts. Includes CTF (Capture the Flag) competitions. Subject: Cybersecurity, ethical hacking, and digital protection strategies.', 13, 5),
-(4, b'0', 'Digital Branding Masterclass. A three-day immersive workshop in Aosta designed for marketers, graphic designers, and business owners. Topics include personal branding, content marketing, SEO, and social media strategy. Includes real-world case studies and one-on-one coaching sessions. Subject: Digital marketing, brand strategy, and online visibility.', 15, 2);
+INSERT INTO `initiative` (`id`, `approved`, `subject`, `creator_id`, `location_id`, `title`) VALUES
+(2, b'0', 'A two-day conference in Aosta featuring AI pioneers and automation experts discussing the latest advancements in machine learning, robotics, and workflow automation. Live demonstrations of AI-driven business tools and networking sessions with industry leaders. Subject: Artificial intelligence, robotics, and business automation strategies.', 12, 4, 'AI & Automation Summit.'),
+(3, b'0', 'A five-day hands-on workshop in Aosta where cybersecurity professionals, IT managers, and ethical hackers participate in live penetration testing challenges, discuss the latest cyber threats, and learn from ethical hacking experts. Includes CTF (Capture the Flag) competitions. Subject: Cybersecurity, ethical hacking, and digital protection strategies.', 13, 5, 'Cybersecurity Defense Week. '),
+(4, b'0', 'A three-day immersive workshop in Aosta designed for marketers, graphic designers, and business owners. Topics include personal branding, content marketing, SEO, and social media strategy. Includes real-world case studies and one-on-one coaching sessions. Subject: Digital marketing, brand strategy, and online visibility.', 15, 2, 'Digital Branding Masterclass. '),
+(52, b'0', 'description', 11, 3, 'test');
 
 -- --------------------------------------------------------
 
@@ -308,7 +317,7 @@ CREATE TABLE `initiative_seq` (
 --
 
 INSERT INTO `initiative_seq` (`next_val`) VALUES
-(101);
+(151);
 
 -- --------------------------------------------------------
 
@@ -326,7 +335,12 @@ CREATE TABLE `interest` (
 --
 
 INSERT INTO `interest` (`id`, `name`) VALUES
-(1, 'Football');
+(1, 'Football'),
+(2, 'Curling'),
+(3, 'Chess'),
+(4, 'Videogames'),
+(5, 'Hiking'),
+(6, 'Swimming');
 
 -- --------------------------------------------------------
 
@@ -471,7 +485,7 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id`, `active`, `availability`, `banned`, `description`, `name`, `password`, `location_id`, `role`) VALUES
 (1, b'0', b'1', b'0', 'A passionate software engineer specializing in AI development and cloud computing.', 'JamesCallahan', '$2a$10$niXQj.CdAsi2VSw/zh.m6uEd2fBUi3AWO20DxZA0tN5UBf2CtBipK', 2, 1),
-(2, b'0', b'1', b'0', 'Lead administrator overseeing platform security and user management.', 'EmilyZhan', '$2a$10$uI1wtYuoFaNtyNr9tI/zK.riB3qgTqHMHhOQm8XNu7RNMr9CY6V5.', NULL, 2),
+(2, b'0', b'1', b'0', 'Lead administrator overseeing platform security and user management.', 'EmilyZhan', '$2a$10$uI1wtYuoFaNtyNr9tI/zK.riB3qgTqHMHhOQm8XNu7RNMr9CY6V5.', 2, 2),
 (3, b'1', b'1', b'0', 'Corporate lawyer specializing in intellectual property and contract law.', 'DanielRodriguez', '$2a$10$Gx2eVIrb0zeq4Gdc7ofUkuLYG..5Fi2eyZo0cuaycMZViv69PLNSu', NULL, 1),
 (4, b'1', b'1', b'0', 'UX designer creating intuitive interfaces for SaaS platforms.', 'LauraBennett', '$2a$10$f7FLZKFLJRk8RBYZbLwC6.BgNSwicvNH2sk6F1yioQsJMw0bCQAci', NULL, 1),
 (5, b'1', b'1', b'0', 'Digital marketing strategist helping brands maximize online engagement.', 'RichardFreeman', '$2a$10$jm4D4uljAao2oYKR9tnrQugGII3RWzmh51xKxW1GnRbjY9gLvFSbi', NULL, 1),
@@ -485,7 +499,8 @@ INSERT INTO `user` (`id`, `active`, `availability`, `banned`, `description`, `na
 (13, b'1', b'1', b'0', 'Cybersecurity firm protecting businesses from digital threats.', 'SecureNetCyber', '$2a$10$frIAz5XN7RxR2W98kni2WuiP/zkL9AYzrOGrlciQuo6xefy7FmYLm', NULL, 0),
 (14, b'1', b'1', b'0', 'A consultancy firm helping startups and enterprises scale efficiently.', 'PrimeConsultingPro', '$2a$10$pR417bQnagnVNhNcVV.Jp.c2E77HxqxefWKis4eR1rUGj/oGo.FdK', NULL, 0),
 (15, b'1', b'1', b'0', 'A biotech company pioneering next-gen medical devices.', 'MedLifeTech', '$2a$10$w.oaoTJmjO4nyJ3gkZL0L.UOz8blMiEyKHXIaHS6sGcZyjl/Ivh1C', NULL, 0),
-(16, b'1', b'1', b'0', 'Data scientist focused on analytics and predictive modeling for business', 'AlexPeterson', '$2a$10$4wJPadq7M/ZQ8qkosfYorelpQ4rcSFBNeePgWOaBMPqDBzLgSr4/y', NULL, 1);
+(16, b'1', b'1', b'0', 'Data scientist focused on analytics and predictive modeling for business', 'AlexPeterson', '$2a$10$4wJPadq7M/ZQ8qkosfYorelpQ4rcSFBNeePgWOaBMPqDBzLgSr4/y', NULL, 1),
+(52, b'0', b'1', b'0', 'Enter your description', 'a', '$2a$10$2tvYs.kz7MtcQVhJDy7AuOB.jvDTX1J5sNhwlDO0/RI0eYgY2qIeW', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -503,7 +518,8 @@ CREATE TABLE `user_competence` (
 --
 
 INSERT INTO `user_competence` (`user_id`, `competence_id`) VALUES
-(1, 1);
+(1, 1),
+(52, 1);
 
 -- --------------------------------------------------------
 
@@ -542,7 +558,7 @@ CREATE TABLE `user_seq` (
 --
 
 INSERT INTO `user_seq` (`next_val`) VALUES
-(101);
+(151);
 
 --
 -- Indici per le tabelle scaricate
@@ -707,7 +723,7 @@ ALTER TABLE `announcement`
 -- AUTO_INCREMENT per la tabella `competence`
 --
 ALTER TABLE `competence`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT per la tabella `group_chat`
@@ -719,7 +735,7 @@ ALTER TABLE `group_chat`
 -- AUTO_INCREMENT per la tabella `interest`
 --
 ALTER TABLE `interest`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT per la tabella `item`
