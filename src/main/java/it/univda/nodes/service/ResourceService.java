@@ -1,7 +1,7 @@
-/*package com.example.nodes.service;
+/*package it.univda.nodes.service;
 
-import com.example.nodes.entity.Resource;
-import com.example.nodes.repository.ResourceRepository;
+import it.univda.nodes.entity.Resource;
+import it.univda.nodes.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

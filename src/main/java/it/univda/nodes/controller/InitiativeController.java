@@ -1,9 +1,9 @@
-/*package com.example.nodes.controller;
+/*package it.univda.nodes.controller;
 
-import com.example.nodes.entity.Initiative;
-import com.example.nodes.entity.Hub;
-import com.example.nodes.service.InitiativeService;
-import com.example.nodes.repository.HubRepository;
+import it.univda.nodes.entity.Initiative;
+import it.univda.nodes.entity.Hub;
+import it.univda.nodes.service.InitiativeService;
+import it.univda.nodes.repository.HubRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

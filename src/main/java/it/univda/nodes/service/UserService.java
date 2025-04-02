@@ -1,6 +1,5 @@
 package it.univda.nodes.service;
 
-import com.example.nodes.entity.*;
 import it.univda.nodes.entity.*;
 import it.univda.nodes.repository.CompetenceRepository;
 import it.univda.nodes.repository.InterestRepository;

@@ -1,6 +1,5 @@
 package it.univda.nodes.repository;
 
-import com.example.nodes.entity.*;
 import it.univda.nodes.entity.*;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;

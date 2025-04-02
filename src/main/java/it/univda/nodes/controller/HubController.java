@@ -4,7 +4,6 @@ import it.univda.nodes.entity.Competence;
 import it.univda.nodes.entity.Hub;
 import it.univda.nodes.entity.Interest;
 import it.univda.nodes.entity.User;
-import com.example.nodes.service.*;
 import it.univda.nodes.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

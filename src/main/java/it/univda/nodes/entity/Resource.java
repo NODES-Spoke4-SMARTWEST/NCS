@@ -1,7 +1,6 @@
 package it.univda.nodes.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.TypeDef;
 import org.locationtech.jts.geom.Point;
 
 import java.io.Serializable;
@@ -9,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "resource")
-@TypeDef(name = "point", typeClass = Point.class)
+@Convert(attributeName = "point", converter = Point.class)
 public class Resource implements Serializable {
 
     @Id

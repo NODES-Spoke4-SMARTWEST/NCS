@@ -1,7 +1,6 @@
 package it.univda.nodes.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.TypeDef;
 import org.locationtech.jts.geom.Point;
 
 import java.util.Base64;
@@ -10,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "hub")
-@TypeDef(name = "point", typeClass = Point.class)
+@Convert(attributeName = "point", converter = Point.class)
 public class Hub {
 
     @Id

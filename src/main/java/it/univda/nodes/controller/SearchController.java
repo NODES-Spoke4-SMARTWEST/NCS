@@ -1,7 +1,7 @@
-/*package com.example.nodes.controller;
+/*package it.univda.nodes.controller;
 
-import com.example.nodes.entity.Resource;
-import com.example.nodes.service.ResourceService;
+import it.univda.nodes.entity.Resource;
+import it.univda.nodes.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

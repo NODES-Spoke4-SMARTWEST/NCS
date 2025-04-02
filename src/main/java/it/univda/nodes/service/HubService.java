@@ -2,7 +2,6 @@ package it.univda.nodes.service;
 
 import it.univda.nodes.dto.DistrictDTO;
 import it.univda.nodes.dto.HubDTO;
-import com.example.nodes.entity.*;
 import it.univda.nodes.entity.*;
 import it.univda.nodes.repository.CompetenceRepository;
 import it.univda.nodes.repository.HubRepository;

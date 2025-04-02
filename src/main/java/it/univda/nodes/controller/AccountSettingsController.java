@@ -1,7 +1,6 @@
 package it.univda.nodes.controller;
 
 import it.univda.nodes.entity.User;
-import com.example.nodes.service.*;
 import it.univda.nodes.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

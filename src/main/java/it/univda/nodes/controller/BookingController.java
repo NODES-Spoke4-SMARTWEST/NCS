@@ -1,8 +1,6 @@
 package it.univda.nodes.controller;
 
 import it.univda.nodes.dto.HubDTO;
-import com.example.nodes.entity.*;
-import com.example.nodes.service.*;
 import it.univda.nodes.entity.*;
 import it.univda.nodes.service.*;
 import org.springframework.beans.factory.annotation.Autowired;

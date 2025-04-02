@@ -5,14 +5,14 @@ import jakarta.persistence.*;
 import java.util.*;
 import java.util.List;
 
-import org.hibernate.annotations.TypeDef;
+import jakarta.persistence.Convert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "user")
-@TypeDef(name = "point", typeClass = org.locationtech.jts.geom.Point.class)
+@Convert(attributeName = "point", converter = org.locationtech.jts.geom.Point.class)
 public class User implements UserDetails {
 
     @Id

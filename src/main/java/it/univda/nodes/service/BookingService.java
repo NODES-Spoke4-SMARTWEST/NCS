@@ -1,6 +1,6 @@
 package it.univda.nodes.service;
 
-//import com.example.nodes.repository.BookingRepository;
+//import it.univda.nodes.repository.BookingRepository;
 import it.univda.nodes.entity.Booking;
 import it.univda.nodes.entity.User;
 import it.univda.nodes.repository.BookingRepository;

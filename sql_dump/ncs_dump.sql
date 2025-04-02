@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mar 31, 2025 alle 13:41
+-- Creato il: Apr 02, 2025 alle 21:46
 -- Versione del server: 10.4.25-MariaDB
 -- Versione PHP: 8.1.10
 
@@ -18,8 +18,11 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `nodes2`
+-- Database: `nodes`
 --
+DROP DATABASE nodes;
+CREATE DATABASE nodes;
+
 
 -- --------------------------------------------------------
 
@@ -41,7 +44,8 @@ CREATE TABLE `announcement` (
 INSERT INTO `announcement` (`id`, `author`, `description`, `title`) VALUES
 (1, 15, 'Subject: How AI can optimize business operations, automate tasks, and enhance decision-making\r\nLocation: MontBlanc Innovation Hub, Courmayeur\r\nDuration: 2 days\r\nDates: September 14-15, 2025', 'AI for Business: Practical Applications'),
 (2, 15, '    Subject: Advanced data analysis techniques, predictive modeling, and AI in analytics.\r\n\r\n    Location: Valpelline ThinkTank, Valpelline.\r\n\r\n    Duration: 5 days.\r\n\r\n    Dates: June 23-27, 2025.\r\n\r\nDescription: A deep-dive training program designed for data scientists and business analysts. Attendees will work on real-world datasets, learn Python for data analysis, and practice predictive modeling techniques through hands-on projects.', 'Data Science & Analytics Bootcamp'),
-(3, 15, '    Subject: SEO, content marketing, and paid advertising strategies for online business growth.\r\n\r\n    Location: Digital Nomad Refuge, La Thuile\r\n\r\n    Duration: 2 days\r\n\r\n    Dates: July 5-6, 2025\r\n\r\nDescription: A cutting-edge digital marketing training event where professionals will learn how to leverage social media, Google Ads, and SEO trends to boost their online presence. Includes interactive workshops and real-time campaign audits.', 'Digital Marketing Strategy 2025');
+(3, 15, '    Subject: SEO, content marketing, and paid advertising strategies for online business growth.\r\n\r\n    Location: Digital Nomad Refuge, La Thuile\r\n\r\n    Duration: 2 days\r\n\r\n    Dates: July 5-6, 2025\r\n\r\nDescription: A cutting-edge digital marketing training event where professionals will learn how to leverage social media, Google Ads, and SEO trends to boost their online presence. Includes interactive workshops and real-time campaign audits.', 'Digital Marketing Strategy 2025'),
+(4, 103, 'In cerca di collaboratori.', 'Startup');
 
 -- --------------------------------------------------------
 
@@ -93,7 +97,9 @@ INSERT INTO `booking_test` (`id`, `canceled`, `end_date`, `quantity`, `start_dat
 (4, b'0', '2025-04-03 02:00:00.000000', 1, '2025-03-03 02:00:00.000000', NULL, 12, 1),
 (5, b'0', '2025-02-23 13:00:00.000000', 1, '2025-02-22 13:00:00.000000', NULL, 1, 1),
 (52, b'0', '0001-01-10 00:00:00.000000', 1, '0001-01-01 10:00:00.000000', NULL, 13, 52),
-(102, b'0', '2026-04-04 04:03:00.000000', 0, '2025-04-04 04:04:00.000000', 52, NULL, 11);
+(102, b'0', '2026-04-04 04:03:00.000000', 0, '2025-04-04 04:04:00.000000', 52, NULL, 11),
+(152, b'0', '2025-04-01 00:00:00.000000', 1, '2025-04-01 00:00:00.000000', NULL, 14, 102),
+(153, b'0', '2025-04-01 00:00:00.000000', 1, '2025-04-01 00:00:00.000000', NULL, 14, 103);
 
 -- --------------------------------------------------------
 
@@ -110,7 +116,7 @@ CREATE TABLE `booking_test_seq` (
 --
 
 INSERT INTO `booking_test_seq` (`next_val`) VALUES
-(201);
+(251);
 
 -- --------------------------------------------------------
 
@@ -521,7 +527,9 @@ INSERT INTO `user` (`id`, `active`, `availability`, `banned`, `description`, `na
 (14, b'1', b'1', b'0', 'A consultancy firm helping startups and enterprises scale efficiently.', 'PrimeConsultingPro', '$2a$10$pR417bQnagnVNhNcVV.Jp.c2E77HxqxefWKis4eR1rUGj/oGo.FdK', NULL, 0),
 (15, b'1', b'1', b'0', 'A biotech company pioneering next-gen medical devices.', 'MedLifeTech', '$2a$10$w.oaoTJmjO4nyJ3gkZL0L.UOz8blMiEyKHXIaHS6sGcZyjl/Ivh1C', NULL, 0),
 (16, b'1', b'1', b'0', 'Data scientist focused on analytics and predictive modeling for business', 'AlexPeterson', '$2a$10$4wJPadq7M/ZQ8qkosfYorelpQ4rcSFBNeePgWOaBMPqDBzLgSr4/y', NULL, 1),
-(52, b'0', b'1', b'0', 'Enter your description', 'a', '$2a$10$2tvYs.kz7MtcQVhJDy7AuOB.jvDTX1J5sNhwlDO0/RI0eYgY2qIeW', 2, 1);
+(52, b'0', b'1', b'0', 'Enter your description', 'a', '$2a$10$2tvYs.kz7MtcQVhJDy7AuOB.jvDTX1J5sNhwlDO0/RI0eYgY2qIeW', 2, 1),
+(102, b'0', b'1', b'0', 'Enter your description', 'MarioRossi', '$2a$10$4uknykkYkhtS/sGP6muHI.a5Iax/xXRaWIBjHzn1Hv9aMDBrUHkXa', 3, 1),
+(103, b'0', b'1', b'0', 'Startup in partenza contattatemi', 'MarioBianchi', '$2a$10$YOfZBGo9XcMK8qUBstEncevc0mLYucj2x4DXtHa8y4DKVD9qgzTVG', 3, 1);
 
 -- --------------------------------------------------------
 
@@ -557,7 +565,9 @@ INSERT INTO `user_competence` (`user_id`, `competence_id`) VALUES
 (9, 3),
 (9, 4),
 (10, 2),
-(10, 5);
+(10, 5),
+(102, 2),
+(103, 2);
 
 -- --------------------------------------------------------
 
@@ -603,7 +613,11 @@ INSERT INTO `user_interest` (`user_id`, `interest_id`) VALUES
 (9, 4),
 (9, 6),
 (10, 2),
-(10, 5);
+(10, 5),
+(102, 3),
+(102, 5),
+(103, 3),
+(103, 5);
 
 -- --------------------------------------------------------
 
@@ -620,7 +634,7 @@ CREATE TABLE `user_seq` (
 --
 
 INSERT INTO `user_seq` (`next_val`) VALUES
-(151);
+(201);
 
 --
 -- Indici per le tabelle scaricate
@@ -779,7 +793,7 @@ ALTER TABLE `user_interest`
 -- AUTO_INCREMENT per la tabella `announcement`
 --
 ALTER TABLE `announcement`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT per la tabella `competence`

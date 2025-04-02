@@ -1,6 +1,6 @@
 package it.univda.nodes.service;
 
-//import com.example.nodes.repository.BookingRepository;
+//import it.univda.nodes.repository.BookingRepository;
 import it.univda.nodes.entity.Role;
 import it.univda.nodes.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
