@@ -3,10 +3,10 @@ services:
     image: mariadb:latest
     environment:
       #MYSQL_ALLOW_EMPTY_PASSWORD: 1
-      MYSQL_USER: s.tedeschi
-      MYSQL_PASSWORD: DqS8)2$m.9&1
+      MYSQL_USER: "s.tedeschi"
+      MYSQL_PASSWORD: "DqS8)2$m.9&1"
       MYSQL_DATABASE: nodes
-      MYSQL_ROOT_PASSWORD: m3924Tr3f(?;
+      MYSQL_ROOT_PASSWORD: "m3924Tr3f(?;"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./sql_dump:/docker-entrypoint-initdb.d
@@ -40,8 +40,8 @@ services:
       - mariadb
     environment:
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/nodes?autoReconnect=true&useSSL=false
-      SPRING_DATASOURCE_USERNAME: s.tedeschi
-      SPRING_DATASOURCE_PASSWORD: DqS8)2$m.9&1
+      SPRING_DATASOURCE_USERNAME: "s.tedeschi"
+      SPRING_DATASOURCE_PASSWORD: "DqS8)2$m.9&1"
 #    deploy:
 #      restart_policy:
 #        condition: on-failure

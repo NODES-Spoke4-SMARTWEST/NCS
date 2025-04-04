@@ -13,7 +13,7 @@ public class Resource implements Serializable {
 
     @Id
     @Column(name="id", nullable = false, unique = true)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name="type", nullable = false, unique = false)

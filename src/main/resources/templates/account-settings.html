@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +24,7 @@
 
 <div class="container mt-5">
   <h1 class="mb-4">Account Settings</h1>
-  <form action="/account/settings" method="post">
+  <form th:action="@{/account/settings}" method="post">
     <div class="form-group">
       <label for="name">Name:</label>
       <input type="text" class="form-control" id="name" name="name" th:value="${user.name ?: 'Enter your name'}" required>
@@ -33,60 +33,54 @@
       <label for="description">Description:</label>
       <textarea class="form-control" id="description" name="description" rows="3" required th:text="${user.description ?: 'Enter your description'}"></textarea>
     </div>
-    <div class="form-group">
-      <label for="location">Location:</label>
-      <select class="form-control" id="location" name="location.id">
-        <option th:each="hub : ${hubs}" th:value="${hub.id}" th:text="${hub.name}" th:selected="${hub.id} == ${user.location?.id}">Select a hub</option>
-      </select>
-    </div>
+    <li class="item" sec:authorize="hasAuthority('agent')">
+      <div class="form-group">
+        <label for="location">Location:</label>
+        <select class="form-control" id="location" name="location.id">
+          <option th:each="hub : ${hubs}" th:value="${hub.id}" th:text="${hub.name}" th:selected="${hub.id} == ${user.location?.id}">Select a hub</option>
+        </select>
+      </div>
+    </li>
 
-    <div class="row">
-      <div class="col-md-6">
-        <div class="form-group">
-          <label for="competences">Competences:</label>
-          <div id="competences">
-            <div th:each="competence : ${allCompetences}">
-              <input type="checkbox" id="competence_${competence.id}" name="competences" th:value="${competence.id}" th:checked="${#lists.contains(user.competences, competence)}">
-              <label th:for="'competence_' + ${competence.id}" th:text="${competence.name}"></label>
+    <li class="item" sec:authorize="hasAuthority('agent')">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="competences">Competences:</label>
+            <div id="competences">
+              <div th:each="competence : ${allCompetences}">
+                <input type="checkbox" id="competence_${competence.id}" name="competences" th:value="${competence.id}" th:checked="${#lists.contains(user.competences, competence)}">
+                <label th:for="'competence_' + ${competence.id}" th:text="${competence.name}"></label>
+              </div>
             </div>
           </div>
         </div>
-        <!--div>
-          <h5>Current Competences</h5>
-          <ul>
-            <li th:each="competence : ${user.competences}" th:text="${competence.name}"></li>
-          </ul>
-        </div-->
-      </div>
-      <div class="col-md-6">
-        <div class="form-group">
-          <label for="interests">Interests:</label>
-          <div id="interests">
-            <div th:each="interest : ${allInterests}">
-              <input type="checkbox" id="interest_${interest.id}" name="interests" th:value="${interest.id}" th:checked="${#lists.contains(user.interests, interest)}">
-              <label th:for="'interest_' + ${interest.id}" th:text="${interest.name}"></label>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="interests">Interests:</label>
+            <div id="interests">
+              <div th:each="interest : ${allInterests}">
+                <input type="checkbox" id="interest_${interest.id}" name="interests" th:value="${interest.id}" th:checked="${#lists.contains(user.interests, interest)}">
+                <label th:for="'interest_' + ${interest.id}" th:text="${interest.name}"></label>
+              </div>
             </div>
           </div>
         </div>
-        <!--div>
-          <h5>Current Interests</h5>
-          <ul>
-            <li th:each="interest : ${user.interests}" th:text="${interest.name}"></li>
-          </ul>
-        </div-->
       </div>
-    </div>
+    </li>
 
-    <div class="form-group">
-      <label for="role">Role:</label>
-      <select class="form-control" id="role" name="role.id" required>
-        <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.name}" th:selected="${role.id} == ${user.role?.id}">Select a role</option>
-      </select>
-    </div>
-    <div>
-      <h5>Current Role</h5>
-      <p th:text="${user.role?.name ?: 'No role assigned'}"></p>
-    </div>
+    <li class="item" sec:authorize="hasAuthority('admin')">
+      <div class="form-group">
+        <label for="role">Role:</label>
+        <select class="form-control" id="role" name="role.id" required>
+          <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.name}" th:selected="${role.id} == ${user.role?.id}">Select a role</option>
+        </select>
+      </div>
+      <div>
+        <h5>Current Role</h5>
+        <p th:text="${user.role?.name ?: 'No role assigned'}"></p>
+      </div>
+    </li>
 
     <div class="form-group form-check">
       <input type="checkbox" class="form-check-input" id="availability" name="availability" th:checked="${user.availability}">

@@ -14,14 +14,14 @@
     </div>
     <ul class="chat-list">
       <li class="chat-item active">
-        <img src="/images/user1.jpg" alt="User 1">
+        <img th:action="@{/images/user1.jpg}" alt="User 1">
         <div class="chat-info">
           <h3>User 1</h3>
           <p>Last message...</p>
         </div>
       </li>
       <li class="chat-item">
-        <img src="/images/user2.jpg" alt="User 2">
+        <img th:src="@{/images/user2.jpg}" alt="User 2">
         <div class="chat-info">
           <h3>User 2</h3>
           <p>Last message...</p>
@@ -31,7 +31,7 @@
   </div>
   <div class="chat-window">
     <div class="chat-header">
-      <img src="/images/user1.jpg" alt="User 1">
+      <img th:src="@{/images/user1.jpg}" alt="User 1">
       <h2>User 1</h2>
     </div>
     <div class="chat-body" id="chatBody">
@@ -52,6 +52,6 @@
   <!-- Home button -->
   <a th:href="@{/home}" id="homeButton">Home</a>
 </div>
-<script src="/js/chat.js"></script>
+<script th:action="@{/js/chat.js}"></script>
 </body>
 </html>

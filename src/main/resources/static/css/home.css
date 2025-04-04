@@ -246,3 +246,79 @@ button:hover {
     background-color: #004996;
 }
 
+.hub-info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Hub Counter */
+#hub-count-container {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 18px;
+    font-weight: bold;
+    color: #004996;
+}
+
+/* District Legend */
+#district-legend {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    max-width: 300px;
+}
+
+#district-legend h5 {
+    font-size: 18px;
+    color: #004996;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#legend-list {
+    list-style: none;
+    padding: 0;
+}
+
+#legend-list li {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+#legend-list li:last-child {
+    border-bottom: none;
+}
+
+/* Color Indicator in Legend */
+#legend-list span {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+    .hub-info-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #hub-count-container,
+    #district-legend {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+}
