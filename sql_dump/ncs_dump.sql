@@ -104,16 +104,16 @@ INSERT INTO `booking_test` (`id`, `canceled`, `end_date`, `quantity`, `start_dat
 -- Struttura della tabella `booking_test_seq`
 --
 
-CREATE TABLE `booking_test_seq` (
-  `next_val` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- CREATE TABLE `booking_test_seq` (
+--   `next_val` bigint(20) DEFAULT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `booking_test_seq`
 --
 
-INSERT INTO `booking_test_seq` (`next_val`) VALUES
-(201);
+-- INSERT INTO `booking_test_seq` (`next_val`) VALUES
+-- (201);
 
 -- --------------------------------------------------------
 
@@ -208,16 +208,16 @@ INSERT INTO `district_interest` (`district_id`, `interest_id`) VALUES
 -- Struttura della tabella `district_seq`
 --
 
-CREATE TABLE `district_seq` (
-  `next_val` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- CREATE TABLE `district_seq` (
+--   `next_val` bigint(20) DEFAULT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `district_seq`
 --
 
-INSERT INTO `district_seq` (`next_val`) VALUES
-(101);
+-- INSERT INTO `district_seq` (`next_val`) VALUES
+-- (101);
 
 -- --------------------------------------------------------
 
@@ -290,16 +290,16 @@ INSERT INTO `hub_district` (`hub_id`, `district_id`) VALUES
 -- Struttura della tabella `hub_seq`
 --
 
-CREATE TABLE `hub_seq` (
-  `next_val` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- CREATE TABLE `hub_seq` (
+--   `next_val` bigint(20) DEFAULT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `hub_seq`
 --
 
-INSERT INTO `hub_seq` (`next_val`) VALUES
-(101);
+-- INSERT INTO `hub_seq` (`next_val`) VALUES
+-- (101);
 
 -- --------------------------------------------------------
 
@@ -332,16 +332,16 @@ INSERT INTO `initiative` (`id`, `approved`, `subject`, `creator_id`, `location_i
 -- Struttura della tabella `initiative_seq`
 --
 
-CREATE TABLE `initiative_seq` (
-  `next_val` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- CREATE TABLE `initiative_seq` (
+--   `next_val` bigint(20) DEFAULT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `initiative_seq`
 --
 
-INSERT INTO `initiative_seq` (`next_val`) VALUES
-(151);
+-- INSERT INTO `initiative_seq` (`next_val`) VALUES
+-- (151);
 
 -- --------------------------------------------------------
 
@@ -437,16 +437,16 @@ INSERT INTO `resource` (`id`, `deleted`, `description`, `type`, `hub_id`) VALUES
 -- Struttura della tabella `resource_seq`
 --
 
-CREATE TABLE `resource_seq` (
-  `next_val` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- CREATE TABLE `resource_seq` (
+--   `next_val` bigint(20) DEFAULT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `resource_seq`
 --
 
-INSERT INTO `resource_seq` (`next_val`) VALUES
-(101);
+-- INSERT INTO `resource_seq` (`next_val`) VALUES
+-- (101);
 
 -- --------------------------------------------------------
 
@@ -474,16 +474,16 @@ INSERT INTO `role` (`id`, `name`) VALUES
 -- Struttura della tabella `role_seq`
 --
 
-CREATE TABLE `role_seq` (
-  `next_val` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- CREATE TABLE `role_seq` (
+--   `next_val` bigint(20) DEFAULT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `role_seq`
 --
 
-INSERT INTO `role_seq` (`next_val`) VALUES
-(1);
+-- INSERT INTO `role_seq` (`next_val`) VALUES
+-- (1);
 
 -- --------------------------------------------------------
 
@@ -614,16 +614,16 @@ INSERT INTO `user_interest` (`user_id`, `interest_id`) VALUES
 -- Struttura della tabella `user_seq`
 --
 
-CREATE TABLE `user_seq` (
-  `next_val` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- CREATE TABLE `user_seq` (
+--   `next_val` bigint(20) DEFAULT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `user_seq`
 --
 
-INSERT INTO `user_seq` (`next_val`) VALUES
-(151);
+-- INSERT INTO `user_seq` (`next_val`) VALUES
+-- (151);
 
 --
 -- Indici per le tabelle scaricate
@@ -785,16 +785,40 @@ ALTER TABLE `announcement`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT per la tabella `booking_test`
+--
+ALTER TABLE `booking_test`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+
+--
 -- AUTO_INCREMENT per la tabella `competence`
 --
 ALTER TABLE `competence`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT per la tabella `district`
+--
+ALTER TABLE `district`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT per la tabella `group_chat`
 --
 ALTER TABLE `group_chat`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `hub`
+--
+ALTER TABLE `hub`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT per la tabella `initiative`
+--
+ALTER TABLE `initiative`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT per la tabella `interest`
@@ -814,8 +838,23 @@ ALTER TABLE `item`
 ALTER TABLE `notification`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+--
+-- AUTO_INCREMENT per la tabella `resource`
+--
+ALTER TABLE `resource`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT per la tabella `role`
+--
+ALTER TABLE `role`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT per la tabella `user`
+--
 ALTER TABLE `user`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- Limiti per le tabelle scaricate

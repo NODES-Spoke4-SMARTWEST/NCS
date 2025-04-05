@@ -15,7 +15,7 @@ public class Initiative {
     @JoinColumn(name = "location_id")
     private Hub location;
 
-    @Column(name="subject", nullable = false)
+    @Column(name="subject", nullable = false, columnDefinition = "text")
     private String subject;
 
     @Column(name="approved", nullable = false)

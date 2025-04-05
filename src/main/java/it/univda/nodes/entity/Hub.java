@@ -20,7 +20,7 @@ public class Hub {
     @Column(name="name", nullable = false, unique = false)
     private String name;
 
-    @Column(name="description", nullable = true)
+    @Column(name="description", nullable = true, columnDefinition = "text")
     private String description;
 
     @Column(name="active", nullable = false)

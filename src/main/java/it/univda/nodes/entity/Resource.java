@@ -19,7 +19,7 @@ public class Resource implements Serializable {
     @Column(name="type", nullable = false, unique = false)
     private String type;
 
-    @Column(name="description", nullable = true)
+    @Column(name="description", nullable = true, columnDefinition = "text")
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
