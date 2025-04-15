@@ -31,4 +31,10 @@ public class AdminController {
         userService.unbanUser(userId);
         return "redirect:/manage-users";
     }
+
+    @PostMapping("/toggle-role")
+    public String toggleUserRole(@RequestParam("userId") Long userId) {
+        userService.toggleUserRole(userId);
+        return "redirect:/manage-users";
+    }
 }

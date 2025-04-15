@@ -82,6 +82,8 @@
       <input type="checkbox" class="form-check-input" id="active" name="active">
       <label class="form-check-label" for="active">Active</label>
     </div>
+
+    <!-- Hubs -->
     <div class="form-group">
       <label for="hubs">Hubs:</label>
       <div class="form-check" th:each="hub : ${hubs}">
@@ -89,8 +91,28 @@
         <label class="form-check-label" th:for="${'hub-' + hub.id}" th:text="${hub.name}"></label>
       </div>
     </div>
+
+    <!-- Competences -->
+    <div class="form-group">
+      <label>Competences:</label>
+      <div class="form-check" th:each="competence : ${competences}">
+        <input class="form-check-input" type="checkbox" th:id="${'competence-' + competence.id}" th:name="competences" th:value="${competence.id}">
+        <label class="form-check-label" th:for="${'competence-' + competence.id}" th:text="${competence.name}"></label>
+      </div>
+    </div>
+
+    <!-- Interests -->
+    <div class="form-group">
+      <label>Interests:</label>
+      <div class="form-check" th:each="interest : ${interests}">
+        <input class="form-check-input" type="checkbox" th:id="${'interest-' + interest.id}" th:name="interests" th:value="${interest.id}">
+        <label class="form-check-label" th:for="${'interest-' + interest.id}" th:text="${interest.name}"></label>
+      </div>
+    </div>
+
     <button type="submit" class="btn btn-primary">Add District</button>
   </form>
+
 
   <div class="mt-3" th:if="${success}">
     <p class="alert alert-success" th:text="${success}"></p>
@@ -99,12 +121,22 @@
   <div class="mt-5">
     <h2>Existing Districts</h2>
     <ul class="list-group">
-      <li class="list-group-item d-flex justify-content-between align-items-center" th:each="district : ${districts}">
-        <span th:text="${district.name}"></span>
-        <button class="btn btn-secondary" th:classappend="${district.active ? 'btn-danger' : 'btn-success'}" th:onclick="'location.href=\'/district/toggle-active/' + ${district.id} + '\''" th:text="${district.active ? 'Make Inactive' : 'Make Active'}"></button>
+      <li class="list-group-item d-flex justify-content-between align-items-center flex-column flex-md-row" th:each="district : ${districts}">
+        <div>
+          <strong th:text="${district.name}"></strong>
+          <div class="text-muted mt-1">
+            Competences: <span th:text="${#lists.size(district.competences)}"></span> |
+            Interests: <span th:text="${#lists.size(district.interests)}"></span>
+          </div>
+        </div>
+        <button class="btn btn-secondary mt-2 mt-md-0"
+                th:classappend="${district.active ? 'btn-danger' : 'btn-success'}"
+                th:onclick="'location.href=\'/district/toggle-active/' + ${district.id} + '\''"
+                th:text="${district.active ? 'Make Inactive' : 'Make Active'}"></button>
       </li>
     </ul>
   </div>
+
 </div>
 
 <footer class="bg-light text-center mt-5">

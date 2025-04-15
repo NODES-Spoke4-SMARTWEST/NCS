@@ -155,4 +155,23 @@ public class UserService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return findByUsername(username);
     }
+
+    @Transactional
+    public void toggleUserRole(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Role businessRole = roleRepository.findByName("business");
+        Role agentRole = roleRepository.findByName("agent");
+
+        Role currentRole = user.getRole(); // Assuming user has a single role
+
+        if (currentRole.getName().equalsIgnoreCase("business")) {
+            user.setRole(agentRole);
+        } else if (currentRole.getName().equalsIgnoreCase("agent")) {
+            user.setRole(businessRole);
+        }
+
+        userRepository.save(user);
+    }
 }

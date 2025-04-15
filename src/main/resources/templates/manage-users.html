@@ -78,6 +78,7 @@
       <th>Description</th>
       <th>Banned Status</th>
       <th>Actions</th>
+      <th>Role</th>
     </tr>
     </thead>
     <tbody>
@@ -94,6 +95,13 @@
         <form th:action="@{/unban-user}" method="post" th:if="${user.banned}">
           <input type="hidden" name="userId" th:value="${user.id}"/>
           <button type="submit" class="btn btn-success btn-sm">Unban</button>
+        </form>
+      </td>
+      <td>
+        <form th:action="@{/toggle-role}" method="post">
+          <input type="hidden" name="userId" th:value="${user.id}" />
+          <button type="submit" class="btn btn-warning btn-sm"
+                  th:text="${user.role.name == 'business' ? 'Make Agent' : 'Make Business'}"></button>
         </form>
       </td>
     </tr>

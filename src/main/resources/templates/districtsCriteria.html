@@ -153,73 +153,12 @@
     let map;
     let markers = [];
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         map = L.map('map').setView([0, 0], 2);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
     });
-
-    /*function searchHubs() {
-        const location = document.getElementById('location').value;
-        const competence = document.getElementById('competences').value;
-        const interest = document.getElementById('interests').value;
-        const resource = document.getElementById('resources').value;
-
-        fetch(`/api/districtsCriteria?location=${location}&competence=${competence}&interest=${interest}&resource=${resource}`)
-            .then(response => response.json())
-            .then(data => {
-                clearMap();
-                const hubs = data.hubs;
-                const districts = data.districts;
-
-                const listElement = document.getElementById('hubs-list');
-                listElement.innerHTML = '';
-                const bounds = [];
-
-                hubs.forEach(hub => {
-                    const listItem = document.createElement('li');
-                    listItem.className = 'list-group-item';
-                    listItem.innerHTML = `<h3>${hub.name}</h3>
-                                          <button class="btn btn-secondary mt-2" onclick="toggleDescription(this)">Show Description</button>
-                                          <div class="hub-description mt-2" style="display: none;">
-                                            <p>${hub.description}</p>
-                                            <h5>Resources:</h5>
-                                            <ul>${hub.resources.map(resource => `<li>${resource.type}</li>`).join('')}</ul>
-                                          </div>`;
-                    listElement.appendChild(listItem);
-
-                    const marker = L.marker([hub.latitude, hub.longitude]).addTo(map);
-                    marker.bindPopup(`<b>${hub.name}</b><br>${hub.description}`);
-                    markers.push(marker);
-                    bounds.push([hub.latitude, hub.longitude]);
-                });
-
-                districts.forEach(district => {
-                    const latLngs = district.hubs.map(hub => [hub.latitude, hub.longitude]);
-                    const polygon = L.polygon(latLngs, {
-                        color: district.color,
-                        fillColor: district.color,
-                        fillOpacity: 0.3
-                    }).addTo(map);
-
-                    // Bind popup to show district name on click
-                    polygon.bindPopup(`<b>District: ${district.name}</b>`);
-
-                    markers.push(polygon);
-                    bounds.push(...latLngs);
-                });
-
-                if (bounds.length > 0) {
-                    map.fitBounds(bounds);
-                } else {
-                    map.setView([0, 0], 2);
-                }
-            })
-            .catch(error => console.error('Error fetching hubs:', error));
-    }
-
-     */
 
     function searchHubs() {
         const location = document.getElementById('location').value;
@@ -231,12 +170,12 @@
             .then(response => response.json())
             .then(data => {
                 clearMap();
-                const hubs = data.hubs;
-                const districts = data.districts;
+                const { hubs, districts } = data;
 
-                // Update the hub counter
+                // Update hub counter
                 document.getElementById('hub-count').textContent = hubs.length;
 
+                // Populate hub list
                 const listElement = document.getElementById('hubs-list');
                 listElement.innerHTML = '';
                 const bounds = [];
@@ -244,13 +183,14 @@
                 hubs.forEach(hub => {
                     const listItem = document.createElement('li');
                     listItem.className = 'list-group-item';
-                    listItem.innerHTML = `<h3>${hub.name}</h3>
-                                      <button class="btn btn-secondary mt-2" onclick="toggleDescription(this)">Show Description</button>
-                                      <div class="hub-description mt-2" style="display: none;">
-                                        <p>${hub.description}</p>
-                                        <h5>Resources:</h5>
-                                        <ul>${hub.resources.map(resource => `<li>${resource.type}</li>`).join('')}</ul>
-                                      </div>`;
+                    listItem.innerHTML = `
+                        <h3>${hub.name}</h3>
+                        <button class="btn btn-secondary mt-2" onclick="toggleDescription(this)">Show Description</button>
+                        <div class="hub-description mt-2" style="display: none;">
+                            <p>${hub.description}</p>
+                            <h5>Resources:</h5>
+                            <ul>${hub.resources.map(resource => `<li>${resource.type}</li>`).join('')}</ul>
+                        </div>`;
                     listElement.appendChild(listItem);
 
                     const marker = L.marker([hub.latitude, hub.longitude]).addTo(map);
@@ -259,17 +199,17 @@
                     bounds.push([hub.latitude, hub.longitude]);
                 });
 
-                // Update the district legend
+                // Populate district legend and draw polygons
                 const legendList = document.getElementById('legend-list');
-                legendList.innerHTML = ''; // Clear previous legend entries
+                legendList.innerHTML = '';
 
                 districts.forEach(district => {
-                    // Add to legend
                     const legendItem = document.createElement('li');
-                    legendItem.innerHTML = `<span style="display:inline-block; width: 15px; height: 15px; background-color:${district.color}; margin-right: 5px;"></span> ${district.name}`;
+                    legendItem.innerHTML = `
+                        <span style="display:inline-block; width: 15px; height: 15px; background-color:${district.color}; margin-right: 5px;"></span>
+                        ${district.name}`;
                     legendList.appendChild(legendItem);
 
-                    // Draw district polygon
                     const latLngs = district.hubs.map(hub => [hub.latitude, hub.longitude]);
                     const polygon = L.polygon(latLngs, {
                         color: district.color,
@@ -277,11 +217,29 @@
                         fillOpacity: 0.3
                     }).addTo(map);
 
-                    polygon.bindPopup(`<b>District: ${district.name}</b>`);
+                    // Compose popup with competences and interests
+                    let popupContent = `<b>District: ${district.name}</b><br><br>`;
+
+                    popupContent += `<strong>Competences:</strong>`;
+                    if (district.competences?.length) {
+                        popupContent += `<ul>${district.competences.map(c => `<li>${c.name}</li>`).join('')}</ul>`;
+                    } else {
+                        popupContent += ` None<br>`;
+                    }
+
+                    popupContent += `<strong>Interests:</strong>`;
+                    if (district.interests?.length) {
+                        popupContent += `<ul>${district.interests.map(i => `<li>${i.name}</li>`).join('')}</ul>`;
+                    } else {
+                        popupContent += ` None<br>`;
+                    }
+
+                    polygon.bindPopup(popupContent);
                     markers.push(polygon);
                     bounds.push(...latLngs);
                 });
 
+                // Adjust view
                 if (bounds.length > 0) {
                     map.fitBounds(bounds);
                 } else {
@@ -300,8 +258,9 @@
 
     function toggleDescription(button) {
         const description = button.nextElementSibling;
-        description.style.display = description.style.display === 'none' ? 'block' : 'none';
-        button.textContent = button.textContent === 'Show Description' ? 'Hide Description' : 'Show Description';
+        const isHidden = description.style.display === 'none';
+        description.style.display = isHidden ? 'block' : 'none';
+        button.textContent = isHidden ? 'Hide Description' : 'Show Description';
     }
 </script>
 

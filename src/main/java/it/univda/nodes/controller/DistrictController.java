@@ -1,7 +1,10 @@
 package it.univda.nodes.controller;
 
 import it.univda.nodes.entity.District;
+import it.univda.nodes.entity.Interest;
+import it.univda.nodes.service.CompetenceService;
 import it.univda.nodes.service.DistrictService;
+import it.univda.nodes.service.InterestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,11 +19,19 @@ public class DistrictController {
     @Autowired
     private DistrictService districtService;
 
+    @Autowired
+    private CompetenceService competenceService;
+
+    @Autowired
+    private InterestService interestService;
+
     @GetMapping("/district/add")
     public String showAddDistrictForm(Model model) {
         model.addAttribute("district", new District());
         model.addAttribute("hubs", districtService.findAllHubs());
         model.addAttribute("districts", districtService.findAllDistricts());
+        model.addAttribute("competences", competenceService.findAllCompetences());
+        model.addAttribute("interests", interestService.findAllInterests());
         return "add-district";
     }
 

@@ -1,9 +1,6 @@
 package it.univda.nodes.controller;
 
-import it.univda.nodes.entity.Competence;
-import it.univda.nodes.entity.Hub;
-import it.univda.nodes.entity.Interest;
-import it.univda.nodes.entity.User;
+import it.univda.nodes.entity.*;
 import it.univda.nodes.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -23,6 +20,9 @@ public class HubController {
 
     @Autowired
     private HubService hubService;
+
+    @Autowired
+    private DistrictService districtService;
     @Autowired
     private CompetenceService competenceService;
     @Autowired
@@ -40,7 +40,7 @@ public class HubController {
         model.addAttribute("interests", interestService.findAllInterests());
         model.addAttribute("resources", resourceService.findAllResources());
         model.addAttribute("searchResults", searchResults.isEmpty() ? new ArrayList<>() : searchResults);
-
+        model.addAttribute("districts", districtService.findAllDistricts());
         return "searchHub";
     }
 
@@ -71,7 +71,7 @@ public class HubController {
         model.addAttribute("interests", interestService.findAllInterests());
         model.addAttribute("resources", resourceService.findAllResources());*/
         model.addAttribute("searchResults", searchResults.isEmpty() ? new ArrayList<>() : searchResults);
-
+        model.addAttribute("districts", districtService.findAllDistricts());
         //return "fragments/search-results :: searchResults";
         return "searchHub";
     }
@@ -87,12 +87,28 @@ public class HubController {
     public String showSearchHubPage(Model model) {
         List<Hub> hubs = hubService.findAllHubs();
         List<String> resourceTypes = resourceService.getAllDistinctTypes();
+        List<District> districts = districtService.findAllDistricts();
+
+        // Assuming each District has getCompetences() and getInterests()
+        Map<Long, List<Competence>> districtCompetences = new HashMap<>();
+        Map<Long, List<Interest>> districtInterests = new HashMap<>();
+
+        for (District district : districts) {
+            districtCompetences.put(district.getId(), district.getCompetences());
+            districtInterests.put(district.getId(), district.getInterests());
+        }
+
         model.addAttribute("hubs", hubs);
         model.addAttribute("resourceTypes", resourceTypes);
         model.addAttribute("competences", competenceService.findAllCompetences());
         model.addAttribute("interests", interestService.findAllInterests());
+        model.addAttribute("districts", districts);
+        model.addAttribute("districtCompetences", districtCompetences);
+        model.addAttribute("districtInterests", districtInterests);
+
         return "searchHub";
     }
+
 
     @PostMapping("/searchHub/results")
     public String searchHubs(@RequestParam(required = false) Long hubId,
@@ -118,6 +134,7 @@ public class HubController {
         }
 
         model.addAttribute("searchResults", searchResults);
+        model.addAttribute("districts", districtService.findAllDistricts());
         return "searchHubResults";
     }
 
@@ -139,21 +156,6 @@ public class HubController {
 
     private static final long MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB limit
     private static final byte[] DEFAULT_IMAGE = loadDefaultImage();
-
-    /*@PostMapping("/offer-facility")
-    public String offerFacility(@ModelAttribute Hub hub, @RequestParam("image") MultipartFile imageFile) {
-        int p = 0;
-        try {
-            if (!imageFile.isEmpty()) {
-                hub.setImage(imageFile.getBytes()); // Assuming you have an 'image' field in your entity
-            }
-            //hubService.saveHub(hub);
-            hubService.saveHub(hub, imageFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "redirect:/offer-facility";
-    }*/
 
     @GetMapping("/image/{hubId}")
     public ResponseEntity<byte[]> getHubImage(@PathVariable Long hubId) {
@@ -222,6 +224,7 @@ public class HubController {
         model.addAttribute("resourceTypes", resourceTypes);
         model.addAttribute("competences", competenceService.findAllCompetences());
         model.addAttribute("interests", interestService.findAllInterests());
+        model.addAttribute("districts", districtService.findAllDistricts());
         return "search-hubs";
     }
 
@@ -233,6 +236,7 @@ public class HubController {
         model.addAttribute("resourceTypes", resourceTypes);
         model.addAttribute("competences", competenceService.findAllCompetences());
         model.addAttribute("interests", interestService.findAllInterests());
+        model.addAttribute("districts", districtService.findAllDistricts());
         return "districtsCriteria";
     }
 
