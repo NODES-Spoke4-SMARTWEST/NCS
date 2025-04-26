@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -51,6 +48,86 @@ public class TempController {
     }
 
     @GetMapping("/api/hubsCriteria")
+    public List<HubDTO> getFilteredHubs(
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String competence,
+            @RequestParam(required = false) String interest,
+            @RequestParam(required = false) String resource) {
+
+        List<HubDTO> searchResultsLocation = new ArrayList<>();
+        List<HubDTO> searchResultsCompetence = new ArrayList<>();
+        List<HubDTO> searchResultsInterest = new ArrayList<>();
+        List<HubDTO> searchResultsResource = new ArrayList<>();
+
+        if (location != null && !location.isEmpty()) {
+            Hub hub = hubService.getHubById(Long.parseLong(location));
+            if (hub != null) {
+                searchResultsLocation.add(hubService.convertToDTO(hub));
+            }
+        }
+
+        if (competence != null && !competence.isEmpty()) {
+            List<Hub> hubC = hubService.findHubsByCompetence(Long.parseLong(competence));
+            for (Hub h : hubC) {
+                searchResultsCompetence.add(hubService.convertToDTO(h));
+            }
+        }
+
+        if (interest != null && !interest.isEmpty()) {
+            List<Hub> hubI = hubService.findHubsByInterest(Long.parseLong(interest));
+            for (Hub h : hubI) {
+                searchResultsInterest.add(hubService.convertToDTO(h));
+            }
+        }
+
+        if (resource != null && !resource.isEmpty()) {
+            List<Hub> hubR = hubService.getHubsByResourceType(resource);
+            for (Hub h : hubR) {
+                searchResultsResource.add(hubService.convertToDTO(h));
+            }
+        }
+
+        // Intersect non-empty lists
+        List<List<HubDTO>> nonEmptyLists = new ArrayList<>();
+        if (!searchResultsLocation.isEmpty()) nonEmptyLists.add(searchResultsLocation);
+        if (!searchResultsCompetence.isEmpty()) nonEmptyLists.add(searchResultsCompetence);
+        if (!searchResultsInterest.isEmpty()) nonEmptyLists.add(searchResultsInterest);
+        if (!searchResultsResource.isEmpty()) nonEmptyLists.add(searchResultsResource);
+
+        List<HubDTO> searchResults = intersectHubs(nonEmptyLists);
+
+        return searchResults.isEmpty() ? hubService.findAllHubDto() : searchResults;
+    }
+
+    private List<HubDTO> intersectHubs(List<List<HubDTO>> lists) {
+        if (lists.isEmpty()) return new ArrayList<>();
+
+        Set<Long> commonIds = new HashSet<>();
+        for (HubDTO hub : lists.get(0)) {
+            commonIds.add(hub.getId());
+        }
+
+        for (int i = 1; i < lists.size(); i++) {
+            Set<Long> currentIds = new HashSet<>();
+            for (HubDTO hub : lists.get(i)) {
+                currentIds.add(hub.getId());
+            }
+            commonIds.retainAll(currentIds);
+        }
+
+        // Rebuild list of HubDTOs based on common IDs
+        List<HubDTO> result = new ArrayList<>();
+        for (HubDTO hub : lists.get(0)) {
+            if (commonIds.contains(hub.getId())) {
+                result.add(hub);
+            }
+        }
+
+        return result;
+    }
+
+
+    /*@GetMapping("/api/hubsCriteria")
     public List<HubDTO> getFilteredHubs(
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String competence,
@@ -96,6 +173,8 @@ public class TempController {
         if (searchResults.isEmpty()) return hubService.findAllHubDto();
         else return searchResults;
     }
+
+     */
 
     @GetMapping("/api/hubsRes")
     public List<HubDTO> getResHubs(@RequestParam(required = false) Hub location) {

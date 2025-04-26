@@ -25,6 +25,9 @@ public class Initiative {
     @JoinColumn(name = "creator_id")
     private User creator;
 
+    @Column(name="title", nullable = false)
+    private String title;
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -64,6 +67,14 @@ public class Initiative {
 
     public void setCreator(User creator) {
         this.creator = creator;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
 

@@ -167,7 +167,6 @@ public class HubController {
         }
     }
 
-
     @PostMapping("/offer-facility")
     public String offerFacility(@ModelAttribute Hub hub, @AuthenticationPrincipal User user) {
         hub.setCreator(user);

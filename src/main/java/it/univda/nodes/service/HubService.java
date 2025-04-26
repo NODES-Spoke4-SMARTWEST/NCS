@@ -69,8 +69,6 @@ public class HubService {
         return hubRepository.findImageByHubId(hubId);
     }
 
-
-
     public List<Hub> findAllHubs() {
         return hubRepository.findAll();
     }

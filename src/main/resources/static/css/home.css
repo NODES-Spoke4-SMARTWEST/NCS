@@ -6,6 +6,9 @@ body {
 }
 
 header {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
     background-color: #004996;
     padding: 10px 20px;
     display: flex;
@@ -251,6 +254,26 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+}
+
+.banner-container {
+    display: inline-block;
+}
+
+.banner-image {
+    width: 100%;
+    height: auto;
+}
+
+.banner-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 3.5rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.6);
 }
 
 /* Hub Counter */
