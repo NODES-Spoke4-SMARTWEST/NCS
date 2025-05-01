@@ -139,6 +139,24 @@
 
 </div>
 
+<hr class="my-5">
+
+<div class="container">
+  <h2>Add Municipality</h2>
+  <form th:action="@{/municipality/add}" method="post">
+    <div class="form-group">
+      <label for="municipalityName">Municipality Name:</label>
+      <input type="text" class="form-control" id="municipalityName" name="name" required>
+    </div>
+    <button type="submit" class="btn btn-success">Add Municipality</button>
+  </form>
+
+  <div class="mt-3" th:if="${municipalitySuccess}">
+    <p class="alert alert-success" th:text="${municipalitySuccess}"></p>
+  </div>
+</div>
+
+
 <footer class="bg-light text-center mt-5">
   <div class="footer-content py-4">
     <div class="footer-logo">

@@ -20,7 +20,6 @@ public class HubController {
 
     @Autowired
     private HubService hubService;
-
     @Autowired
     private DistrictService districtService;
     @Autowired
@@ -149,6 +148,7 @@ public class HubController {
     @GetMapping("/offer-facility")
     public String showOfferFacilityForm(Model model) {
         model.addAttribute("hub", new Hub());
+        model.addAttribute("municipalities", hubService.findAllMunicipalities());
         return "offer-facility";
     }
 
@@ -263,5 +263,14 @@ public class HubController {
     public String removeResource(@RequestParam Long hubId, @RequestParam Long resourceId) {
         hubService.flagResourceAsDeleted(hubId, resourceId);
         return "redirect:/my-hubs";
+    }
+
+    @PostMapping("/municipality/add")
+    public String addMunicipality(@RequestParam String name, Model model) {
+        Municipality municipality = new Municipality();
+        municipality.setName(name);
+        hubService.saveMunicipality(municipality);
+        model.addAttribute("municipalitySuccess", "Municipality added successfully!");
+        return "redirect:/district/add"; // oppure usa RedirectAttributes se vuoi mostrare il messaggio
     }
 }

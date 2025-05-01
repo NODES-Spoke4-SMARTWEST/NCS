@@ -3,15 +3,14 @@ package it.univda.nodes.service;
 import it.univda.nodes.dto.DistrictDTO;
 import it.univda.nodes.dto.HubDTO;
 import it.univda.nodes.entity.*;
-import it.univda.nodes.repository.CompetenceRepository;
-import it.univda.nodes.repository.HubRepository;
-import it.univda.nodes.repository.InterestRepository;
-import it.univda.nodes.repository.ResourceRepository;
+import it.univda.nodes.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +25,9 @@ public class HubService {
 
     @Autowired
     private InterestRepository interestRepository;
+
+    @Autowired
+    private MunicipalityRepository municipalityRepository;
 
     @Autowired
     private ResourceRepository resourceRepository;
@@ -205,6 +207,14 @@ public class HubService {
         Resource resource = hub.getResources().stream().filter(r -> r.getId().equals(resourceId)).findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid resource Id:" + resourceId));
         resource.setDeleted(true);
         resourceRepository.save(resource);
+    }
+
+    public List<Municipality> findAllMunicipalities() {
+        return municipalityRepository.findAll();
+    }
+
+    public void saveMunicipality(Municipality municipality) {
+        municipalityRepository.save(municipality);
     }
 
     /*public HubDTO convertToDTO(Hub hub) {
