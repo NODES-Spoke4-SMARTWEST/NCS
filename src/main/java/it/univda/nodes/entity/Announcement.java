@@ -1,6 +1,8 @@
 package it.univda.nodes.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -33,8 +35,19 @@ public class Announcement {
     )
     private List<Interest> interests;
 
-    private Long author;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
+
+    @Column(name = "date_time")
+    private LocalDateTime dateTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hub_id")
+    private Hub hub;
 
     // Getters and setters
     public Long getId() {
@@ -77,11 +90,35 @@ public class Announcement {
         this.interests = interests;
     }
 
-    public Long getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(Long author) {
+    public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public Hub getHub() {
+        return hub;
+    }
+
+    public void setHub(Hub hub) {
+        this.hub = hub;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 }
