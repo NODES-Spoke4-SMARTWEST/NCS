@@ -78,6 +78,7 @@
         th:data-subject="${booking.resource != null ? 'Booking' : (booking.initiative != null ? booking.initiative.subject : 'No Subject')}"
         th:data-start="${booking.startDate}"
         th:data-end="${booking.endDate}"
+        th:data-hub="${booking.resource != null && booking.resource.hub_id != null ? booking.resource.hub_id.name : 'N/A'}"
         th:data-canceled="${booking.canceled}">
       <span th:text="${booking.startDate} + ' - ' + ${booking.endDate}">Booking Date Range</span>
       <span th:if="${booking.resource != null}" th:text="'Resource: ' + ${booking.resource.type}">Resource Name</span>
@@ -139,9 +140,11 @@
     var startDate = listItem.getAttribute('data-start');
     var endDate = listItem.getAttribute('data-end');
     var canceled = listItem.getAttribute('data-canceled') === 'true';
+    var hubName = listItem.getAttribute('data-hub');
 
     var modalContent = document.getElementById('descriptionContent');
-    modalContent.innerHTML = `<p><strong>Title:</strong> ${title}</p><p><strong>Subject:</strong> ${subject}</p><p><strong>Start Date:</strong> ${startDate}</p><p><strong>End Date:</strong> ${endDate}</p>`;
+    modalContent.innerHTML = `<p><strong>Title:</strong> ${title}</p><p><strong>Subject:</strong> ${subject}</p><p><strong>Start Date:</strong> ${startDate}</p><p><strong>End Date:</strong> ${endDate}</p>
+  <p><strong>Hub:</strong> ${hubName}</p>`;
 
     var cancelButton = document.getElementById('cancelButton');
     cancelButton.textContent = canceled ? 'Uncancel Booking' : 'Cancel Booking';

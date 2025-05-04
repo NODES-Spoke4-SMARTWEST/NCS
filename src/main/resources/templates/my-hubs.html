@@ -89,8 +89,9 @@
         <ul class="list-group mb-3">
           <li th:each="resource : ${hub.resources}" th:if="${!resource.deleted}" class="list-group-item d-flex justify-content-between align-items-center">
             <div>
-              <span th:text="${resource.type}">Resource Name</span>
-              <small class="text-muted" th:text="${resource.description}">Resource Description</small>
+              <strong th:text="${resource.type}">Resource Name</strong>
+              <small class="text-muted d-block" th:text="${resource.description}">Resource Description</small>
+              <small class="text-muted d-block">Quantity: <span th:text="${resource.quantity}">0</span></small>
             </div>
             <form th:action="@{/my-hubs/remove-resource}" method="post" class="ml-2">
               <input type="hidden" name="hubId" th:value="${hub.id}">
@@ -101,14 +102,22 @@
         </ul>
         <form th:action="@{/my-hubs/add-resource}" method="post" class="form-inline">
           <input type="hidden" name="hubId" th:value="${hub.id}">
+
           <div class="form-group mb-2">
             <label for="resourceName" class="sr-only">Resource Name</label>
             <input type="text" class="form-control" id="resourceName" name="resourceName" placeholder="Resource Name">
           </div>
+
           <div class="form-group mb-2 ml-2">
             <label for="resourceDescription" class="sr-only">Resource Description</label>
             <input type="text" class="form-control" id="resourceDescription" name="resourceDescription" placeholder="Resource Description">
           </div>
+
+          <div class="form-group mb-2 ml-2">
+            <label for="resourceQuantity" class="sr-only">Quantity</label>
+            <input type="number" class="form-control" id="resourceQuantity" name="resourceQuantity" placeholder="Quantity" min="1">
+          </div>
+
           <button type="submit" class="btn btn-primary mb-2 ml-2">Add Resource</button>
         </form>
       </div>

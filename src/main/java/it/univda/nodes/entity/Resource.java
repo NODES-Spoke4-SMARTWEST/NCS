@@ -29,6 +29,9 @@ public class Resource implements Serializable {
     @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings;
 
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 
@@ -79,5 +82,21 @@ public class Resource implements Serializable {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Hub getHub_id() {
+        return hub_id;
+    }
+
+    public void setHub_id(Hub hub_id) {
+        this.hub_id = hub_id;
     }
 }

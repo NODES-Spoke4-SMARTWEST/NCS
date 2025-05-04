@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -192,12 +190,13 @@ public class HubService {
         hubRepository.save(hub);
     }
 
-    public void addResourceToHub(Long hubId, String resourceName, String resourceDescription) {
+    public void addResourceToHub(Long hubId, String resourceName, String resourceDescription, Integer resourceQuantity) {
         Hub hub = hubRepository.findById(hubId).orElseThrow(() -> new IllegalArgumentException("Invalid hub Id:" + hubId));
         Resource resource = new Resource();
         resource.setType(resourceName);
         resource.setDescription(resourceDescription);
         resource.setLocation(hub);
+        resource.setQuantity(resourceQuantity);
         resourceRepository.save(resource);
         //hubRepository.addHubResource(hubId, resource.getId());
     }

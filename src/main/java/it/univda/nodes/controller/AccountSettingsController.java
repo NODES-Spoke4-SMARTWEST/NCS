@@ -68,20 +68,18 @@ public class AccountSettingsController {
 
     @PostMapping("/settings")
     public String updateAccountSettings(@ModelAttribute User user, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("hubs", hubService.findAllHubs());
-            model.addAttribute("allCompetences", competenceService.findAllCompetences());
-            model.addAttribute("allInterests", interestService.findAllInterests());
-            model.addAttribute("allRoles", roleService.findAll());
-            return "account-settings";
+        model.addAttribute("hubs", hubService.findAllHubs());
+        model.addAttribute("allCompetences", competenceService.findAllCompetences());
+        model.addAttribute("allInterests", interestService.findAllInterests());
+        model.addAttribute("allRoles", roleService.findAll());
+
+        if (!result.hasErrors()) {
+            userService.updateUser(user);
+
+            model.addAttribute("success", "Profile updated successfully!");
         }
-        userService.updateUser(user);
 
-        //userService.updateUserCompetencesAndInterests(user);
-
-
-        model.addAttribute("success", "Profile updated successfully!");
-        return "home";
+        return "account-settings";
     }
 
 }

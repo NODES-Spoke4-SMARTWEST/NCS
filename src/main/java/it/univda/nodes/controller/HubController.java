@@ -254,8 +254,11 @@ public class HubController {
     }
 
     @PostMapping("/my-hubs/add-resource")
-    public String addResource(@RequestParam Long hubId, @RequestParam String resourceName, @RequestParam String resourceDescription) {
-        hubService.addResourceToHub(hubId, resourceName, resourceDescription);
+    public String addResource(@RequestParam Long hubId,
+                              @RequestParam String resourceName,
+                              @RequestParam String resourceDescription,
+                              @RequestParam Integer resourceQuantity) {
+        hubService.addResourceToHub(hubId, resourceName, resourceDescription, resourceQuantity);
         return "redirect:/my-hubs";
     }
 
