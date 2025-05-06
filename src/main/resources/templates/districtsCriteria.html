@@ -107,6 +107,13 @@
                 <option th:each="resourceType : ${resourceTypes}" th:value="${resourceType}" th:text="${resourceType}">Sample Resource Type</option>
             </select>
         </div>
+        <div class="form-group">
+            <label for="municipality">Municipality:</label>
+            <select class="form-control" id="municipality" name="municipality">
+                <option value="">Select Municipality</option>
+                <option th:each="municipality : ${municipalities}" th:value="${municipality.id}" th:text="${municipality.name}">Sample Municipality</option>
+            </select>
+        </div>
         <button type="button" class="btn btn-primary" onclick="searchHubs()">Search</button>
     </form>
 
@@ -161,13 +168,14 @@
         }).addTo(map);
     });
 
-    function searchHubs() {
+    /*function searchHubs() {
         const location = document.getElementById('location').value;
         const competence = document.getElementById('competences').value;
         const interest = document.getElementById('interests').value;
         const resource = document.getElementById('resources').value;
+        const municipality = document.getElementById('municipality').value;
 
-        fetch(`/api/districtsCriteria?location=${location}&competence=${competence}&interest=${interest}&resource=${resource}`)
+        fetch(`/api/districtsCriteria?location=${location}&competence=${competence}&interest=${interest}&resource=${resource}&municipality=${municipality}`)
             .then(response => response.json())
             .then(data => {
                 clearMap();
@@ -248,7 +256,122 @@
                 }
             })
             .catch(error => console.error('Error fetching hubs:', error));
+    }*/
+
+    function searchHubs() {
+        const location = document.getElementById('location').value;
+        const competence = document.getElementById('competences').value;
+        const interest = document.getElementById('interests').value;
+        const resource = document.getElementById('resources').value;
+        const municipality = document.getElementById('municipality').value;
+
+        const params = new URLSearchParams({
+            location: location || '',
+            competence: competence || '',
+            interest: interest || '',
+            resource: resource || '',
+            municipality: municipality || ''
+        });
+
+        fetch(`/api/districtsCriteria?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => {
+                clearMap();
+                const { hubs, districts, points } = data;
+
+                document.getElementById('hub-count').textContent = hubs.length;
+
+                const listElement = document.getElementById('hubs-list');
+                listElement.innerHTML = '';
+                const bounds = [];
+
+                // Render hubs
+                hubs.forEach(hub => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'list-group-item';
+                    listItem.innerHTML = `
+                    <h3>${hub.name}</h3>
+                    <button class="btn btn-secondary mt-2" onclick="toggleDescription(this)">Show Description</button>
+                    <div class="hub-description mt-2" style="display: none;">
+                        <p>${hub.description}</p>
+                        <h5>Resources:</h5>
+                        <ul>${hub.resources.map(resource => `<li>${resource.type}</li>`).join('')}</ul>
+                    </div>`;
+                    listElement.appendChild(listItem);
+
+                    const marker = L.marker([hub.latitude, hub.longitude]).addTo(map);
+                    marker.bindPopup(`<b>${hub.name}</b><br>${hub.description}`);
+                    markers.push(marker);
+                    bounds.push([hub.latitude, hub.longitude]);
+                });
+
+                // Render districts (polygons)
+                const legendList = document.getElementById('legend-list');
+                legendList.innerHTML = '';
+
+                districts.forEach(district => {
+                    const legendItem = document.createElement('li');
+                    legendItem.innerHTML = `
+                    <span style="display:inline-block; width: 15px; height: 15px; background-color:${district.color}; margin-right: 5px;"></span>
+                    ${district.name}`;
+                    legendList.appendChild(legendItem);
+
+                    const latLngs = district.hubs.map(hub => [hub.latitude, hub.longitude]);
+                    const polygon = L.polygon(latLngs, {
+                        color: district.color,
+                        fillColor: district.color,
+                        fillOpacity: 0.3
+                    }).addTo(map);
+
+                    let popupContent = `<b>District: ${district.name}</b><br><br>`;
+
+                    popupContent += `<strong>Competences:</strong>`;
+                    if (district.competences?.length) {
+                        popupContent += `<ul>${district.competences.map(c => `<li>${c.name}</li>`).join('')}</ul>`;
+                    } else {
+                        popupContent += ` None<br>`;
+                    }
+
+                    popupContent += `<strong>Interests:</strong>`;
+                    if (district.interests?.length) {
+                        popupContent += `<ul>${district.interests.map(i => `<li>${i.name}</li>`).join('')}</ul>`;
+                    } else {
+                        popupContent += ` None<br>`;
+                    }
+
+                    polygon.bindPopup(popupContent);
+                    markers.push(polygon);
+                    bounds.push(...latLngs);
+                });
+
+                if (points?.length) {
+                    points.forEach(poi => {
+                        if (poi.latitude && poi.longitude) {
+                            const poiMarker = L.circleMarker([poi.latitude, poi.longitude], {
+                                radius: 8,
+                                color: '#449e08',
+                                fillColor: '#89e849',
+                                fillOpacity: 1.0,
+                                weight: 2
+                            });
+
+                            poiMarker.bindPopup(`<b>POI: ${poi.name}</b><br>Type: ${poi.type}`);
+                            poiMarker.addTo(map).bringToFront();
+                            markers.push(poiMarker);
+                        }
+                    });
+                }
+
+                // Adjust map view
+                if (bounds.length > 0) {
+                    map.fitBounds(bounds);
+                } else {
+                    map.setView([45.737, 7.320], 13);
+                }
+            })
+            .catch(error => console.error('Error fetching hubs:', error));
     }
+
 
     function clearMap() {
         markers.forEach(marker => {

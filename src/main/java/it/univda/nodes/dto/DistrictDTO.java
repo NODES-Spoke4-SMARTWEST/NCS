@@ -1,5 +1,8 @@
 package it.univda.nodes.dto;
 
+import it.univda.nodes.entity.Competence;
+import it.univda.nodes.entity.Interest;
+
 import java.util.List;
 
 public class DistrictDTO {
@@ -7,6 +10,10 @@ public class DistrictDTO {
     private String color; // Color for the district polygon on the map
     private List<HubDTO> hubs;
     private double minimumRadius; // Minimum radius for the district
+
+    private List<Competence> competences;
+
+    private List<Interest> interests;
 
     // Getters and Setters
     public String getName() {
@@ -39,5 +46,21 @@ public class DistrictDTO {
 
     public void setMinimumRadius(double minimumRadius) {
         this.minimumRadius = minimumRadius;
+    }
+
+    public List<Competence> getCompetences() {
+        return competences;
+    }
+
+    public void setCompetences(List<Competence> competences) {
+        this.competences = competences;
+    }
+
+    public List<Interest> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(List<Interest> interests) {
+        this.interests = interests;
     }
 }

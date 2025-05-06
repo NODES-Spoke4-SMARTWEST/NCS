@@ -1,5 +1,6 @@
 package it.univda.nodes.controller;
 
+import it.univda.nodes.dto.HubSearchRequest;
 import it.univda.nodes.entity.*;
 import it.univda.nodes.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -227,15 +228,15 @@ public class HubController {
         return "search-hubs";
     }
 
+//Open the page search hub
     @GetMapping("/districtsCriteria")
     public String districtPage(Model model) {
-        List<Hub> hubs = hubService.findAllHubs();
-        List<String> resourceTypes = resourceService.getAllDistinctTypes();
-        model.addAttribute("hubs", hubs);
-        model.addAttribute("resourceTypes", resourceTypes);
+        model.addAttribute("hubs", hubService.findAllHubs());
+        model.addAttribute("resourceTypes", resourceService.getAllDistinctTypes());
         model.addAttribute("competences", competenceService.findAllCompetences());
         model.addAttribute("interests", interestService.findAllInterests());
         model.addAttribute("districts", districtService.findAllDistricts());
+        model.addAttribute("municipalities", hubService.findAllMunicipalities());
         return "districtsCriteria";
     }
 
@@ -274,6 +275,6 @@ public class HubController {
         municipality.setName(name);
         hubService.saveMunicipality(municipality);
         model.addAttribute("municipalitySuccess", "Municipality added successfully!");
-        return "redirect:/district/add"; // oppure usa RedirectAttributes se vuoi mostrare il messaggio
+        return "redirect:/district/add";
     }
 }

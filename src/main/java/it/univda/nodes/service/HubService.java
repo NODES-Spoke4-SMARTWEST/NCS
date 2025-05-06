@@ -2,6 +2,7 @@ package it.univda.nodes.service;
 
 import it.univda.nodes.dto.DistrictDTO;
 import it.univda.nodes.dto.HubDTO;
+import it.univda.nodes.dto.HubSearchRequest;
 import it.univda.nodes.entity.*;
 import it.univda.nodes.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class HubService {
 
     @Autowired
     private ResourceRepository resourceRepository;
+
+    @Autowired
+    private PointOfInterestRepository poiRepository;
 
     double truncateDouble(double number, int numDigits) {
         double result = number;
@@ -127,18 +131,22 @@ public class HubService {
         return hubRepository.findByInterest(interest);
     }
 
+    public List<PointOfInterest> findPOI() {
+        return poiRepository.findAll();
+    }
+
     public List<DistrictDTO> findDistricts() {
-        // Mocked data: Implement your actual logic to fetch districts based on criteria
-        // This is a placeholder example
         List<DistrictDTO> districts = hubRepository.findAllDistricts().stream()
                 .map(district -> {
                     DistrictDTO dto = new DistrictDTO();
                     dto.setName(district.getName());
-                    dto.setColor("#FF0000"); // Example color
+                    dto.setColor("#FF0000");
                     if(district.getColor()!=null) dto.setColor(district.getColor());
                     //dto.setMinimumRadius(computeMinimumRadius(district));
                     dto.setMinimumRadius(1000000.0);
                     dto.setHubs(district.getHubs().stream().map(this::convertToDTO).collect(Collectors.toList()));
+                    dto.setCompetences(district.getCompetences());
+                    dto.setInterests(district.getInterests());
                     return dto;
                 }).collect(Collectors.toList());
 
@@ -214,6 +222,37 @@ public class HubService {
 
     public void saveMunicipality(Municipality municipality) {
         municipalityRepository.save(municipality);
+    }
+
+    public List<HubDTO> getFilteredHubs(String locationStr, String competenceStr, String interestStr, String resourceStr, String municipalityStr) {
+        Long location = parseLongOrNull(locationStr);
+        Long competence = parseLongOrNull(competenceStr);
+        Long interest = parseLongOrNull(interestStr);
+        Long resource = parseLongOrNull(resourceStr);
+        Long municipality = parseLongOrNull(municipalityStr);
+
+        List<Hub> hubs = hubRepository.findFilteredHubs(location, competence, interest, resource, municipality);
+        return hubs.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    private Long parseLongOrNull(String value) {
+        try {
+            return (value != null && !value.isBlank()) ? Long.parseLong(value) : null;
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    public HubDTO convertToDTOO(Hub hub) {
+        // Convert Hub entity to HubDTO as per your existing logic
+        HubDTO dto = new HubDTO();
+        dto.setId(hub.getId());
+        dto.setName(hub.getName());
+        dto.setDescription(hub.getDescription());
+        dto.setLatitude(hub.getLatitude());
+        dto.setLongitude(hub.getLongitude());
+        //dto.setResources(hub.getResources());
+        return dto;
     }
 
     /*public HubDTO convertToDTO(Hub hub) {

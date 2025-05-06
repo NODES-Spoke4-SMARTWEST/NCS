@@ -3,6 +3,7 @@ package it.univda.nodes.repository;
 import it.univda.nodes.entity.*;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface HubRepository extends JpaRepository<Hub, Long> {
+public interface HubRepository extends JpaRepository<Hub, Long>, JpaSpecificationExecutor<Hub> {
     @Query("SELECT DISTINCT h FROM Hub h")
     List<Hub> findAllHubs();
 
@@ -64,4 +65,22 @@ public interface HubRepository extends JpaRepository<Hub, Long> {
 
     @Query("SELECT h.image FROM Hub h WHERE h.id = :hubId")
     byte[] findImageByHubId(@Param("hubId") Long hubId);
+
+    @Query("SELECT DISTINCT h FROM Hub h " +
+            "LEFT JOIN h.districts d " +
+            "LEFT JOIN d.competences c " +
+            "LEFT JOIN d.interests i " +
+            "LEFT JOIN h.resources r " +
+            "WHERE (:location IS NULL OR h.id = :location) " +
+            "AND (:competence IS NULL OR c.id = :competence) " +
+            "AND (:interest IS NULL OR i.id = :interest) " +
+            "AND (:resource IS NULL OR r.id = :resource) " +
+            "AND (:municipality IS NULL OR h.municipality.id = :municipality)")
+    List<Hub> findFilteredHubs(
+            @Param("location") Long location,
+            @Param("competence") Long competence,
+            @Param("interest") Long interest,
+            @Param("resource") Long resource,
+            @Param("municipality") Long municipality
+    );
 }

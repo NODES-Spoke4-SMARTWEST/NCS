@@ -2,10 +2,14 @@ package it.univda.nodes.controller;
 
 import it.univda.nodes.dto.DistrictDTO;
 import it.univda.nodes.dto.HubDTO;
+import it.univda.nodes.dto.PointDTO;
 import it.univda.nodes.dto.TempHubDto;
 import it.univda.nodes.entity.Hub;
+import it.univda.nodes.entity.PointOfInterest;
+import it.univda.nodes.service.DistrictService;
 import it.univda.nodes.service.HubService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +22,8 @@ public class TempController {
 
     @Autowired
     private HubService hubService;
+    @Autowired
+    private DistrictService districtService;
 
     double truncateDouble(double number, int numDigits) {
         double result = number;
@@ -47,7 +53,7 @@ public class TempController {
         return hubService.findAllHubDto();
     }
 
-    @GetMapping("/api/hubsCriteria")
+    /*@GetMapping("/api/hubsCriteria_old")
     public List<HubDTO> getFilteredHubs(
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String competence,
@@ -98,6 +104,21 @@ public class TempController {
 
         return searchResults.isEmpty() ? hubService.findAllHubDto() : searchResults;
     }
+
+     */
+
+    @GetMapping("/hubsCriteria")
+    public List<HubDTO> getFilteredHubs(
+            Model model,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String competence,
+            @RequestParam(required = false) String interest,
+            @RequestParam(required = false) String resource,
+            @RequestParam(required = false) String municipality) {
+        model.addAttribute("districts", districtService.findAllDistricts());
+        return hubService.getFilteredHubs(location, competence, interest, resource, municipality);
+    }
+
 
     private List<HubDTO> intersectHubs(List<List<HubDTO>> lists) {
         if (lists.isEmpty()) return new ArrayList<>();
@@ -197,9 +218,10 @@ public class TempController {
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String competence,
             @RequestParam(required = false) String interest,
-            @RequestParam(required = false) String resource) {
+            @RequestParam(required = false) String resource,
+            @RequestParam(required = false) String municipality) {
 
-        List<HubDTO> searchResults = new ArrayList<>();
+        /*List<HubDTO> searchResults = new ArrayList<>();
 
         if (location != "") {
             Hub hub = hubService.getHubById(Long.parseLong(location));
@@ -235,10 +257,23 @@ public class TempController {
             }
         }
 
+        if (municipality != "") {
+            List<Hub> hubM = hubService.getFilteredHubs(location, competence, interest, resource, municipality);
+            if (!hubM.isEmpty()) {
+                for (Hub h: hubM) {
+                    searchResults.add(hubService.convertToDTO(h));
+                }
+            }
+        }
+
+         */
+        List<HubDTO> searchResults = hubService.getFilteredHubs(location, competence, interest, resource, municipality);
         List<DistrictDTO> districts = hubService.findDistricts();
+        List<PointOfInterest> points = hubService.findPOI();
         Map<String, Object> result = new HashMap<>();
         result.put("hubs", getUniqueHubsById(searchResults));
         result.put("districts", districts);
+        result.put("points", points);
         return result;
     }
 
