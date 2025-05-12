@@ -79,6 +79,26 @@
 <div class="container mt-5">
     <h1 class="mb-4">Search Hubs</h1>
     <form id="searchForm" onsubmit="return false;">
+
+        <div class="form-group">
+            <label for="month">Month:</label>
+            <select class="form-control" id="month" name="month" required>
+                <option value="">Select Month</option>
+                <option value="JANUARY">January</option>
+                <option value="FEBRUARY">February</option>
+                <option value="MARCH">March</option>
+                <option value="APRIL">April</option>
+                <option value="MAY">May</option>
+                <option value="JUNE">June</option>
+                <option value="JULY">July</option>
+                <option value="AUGUST">August</option>
+                <option value="SEPTEMBER">September</option>
+                <option value="OCTOBER">October</option>
+                <option value="NOVEMBER">November</option>
+                <option value="DECEMBER">December</option>
+            </select>
+        </div>
+
         <div class="form-group">
             <label for="location">Hub:</label>
             <select class="form-control" id="location" name="location">
@@ -168,109 +188,21 @@
         }).addTo(map);
     });
 
-    /*function searchHubs() {
-        const location = document.getElementById('location').value;
-        const competence = document.getElementById('competences').value;
-        const interest = document.getElementById('interests').value;
-        const resource = document.getElementById('resources').value;
-        const municipality = document.getElementById('municipality').value;
-
-        fetch(`/api/districtsCriteria?location=${location}&competence=${competence}&interest=${interest}&resource=${resource}&municipality=${municipality}`)
-            .then(response => response.json())
-            .then(data => {
-                clearMap();
-                const { hubs, districts } = data;
-
-                // Update hub counter
-                document.getElementById('hub-count').textContent = hubs.length;
-
-                // Populate hub list
-                const listElement = document.getElementById('hubs-list');
-                listElement.innerHTML = '';
-                const bounds = [];
-
-                hubs.forEach(hub => {
-                    const listItem = document.createElement('li');
-                    listItem.className = 'list-group-item';
-                    listItem.innerHTML = `
-                        <h3>${hub.name}</h3>
-                        <button class="btn btn-secondary mt-2" onclick="toggleDescription(this)">Show Description</button>
-                        <div class="hub-description mt-2" style="display: none;">
-                            <p>${hub.description}</p>
-                            <h5>Resources:</h5>
-                            <ul>${hub.resources.map(resource => `<li>${resource.type}</li>`).join('')}</ul>
-                        </div>`;
-                    listElement.appendChild(listItem);
-
-                    const marker = L.marker([hub.latitude, hub.longitude]).addTo(map);
-                    marker.bindPopup(`<b>${hub.name}</b><br>${hub.description}`);
-                    markers.push(marker);
-                    bounds.push([hub.latitude, hub.longitude]);
-                });
-
-                // Populate district legend and draw polygons
-                const legendList = document.getElementById('legend-list');
-                legendList.innerHTML = '';
-
-                districts.forEach(district => {
-                    const legendItem = document.createElement('li');
-                    legendItem.innerHTML = `
-                        <span style="display:inline-block; width: 15px; height: 15px; background-color:${district.color}; margin-right: 5px;"></span>
-                        ${district.name}`;
-                    legendList.appendChild(legendItem);
-
-                    const latLngs = district.hubs.map(hub => [hub.latitude, hub.longitude]);
-                    const polygon = L.polygon(latLngs, {
-                        color: district.color,
-                        fillColor: district.color,
-                        fillOpacity: 0.3
-                    }).addTo(map);
-
-                    // Compose popup with competences and interests
-                    let popupContent = `<b>District: ${district.name}</b><br><br>`;
-
-                    popupContent += `<strong>Competences:</strong>`;
-                    if (district.competences?.length) {
-                        popupContent += `<ul>${district.competences.map(c => `<li>${c.name}</li>`).join('')}</ul>`;
-                    } else {
-                        popupContent += ` None<br>`;
-                    }
-
-                    popupContent += `<strong>Interests:</strong>`;
-                    if (district.interests?.length) {
-                        popupContent += `<ul>${district.interests.map(i => `<li>${i.name}</li>`).join('')}</ul>`;
-                    } else {
-                        popupContent += ` None<br>`;
-                    }
-
-                    polygon.bindPopup(popupContent);
-                    markers.push(polygon);
-                    bounds.push(...latLngs);
-                });
-
-                // Adjust view
-                if (bounds.length > 0) {
-                    map.fitBounds(bounds);
-                } else {
-                    map.setView([0, 0], 2);
-                }
-            })
-            .catch(error => console.error('Error fetching hubs:', error));
-    }*/
-
     function searchHubs() {
         const location = document.getElementById('location').value;
         const competence = document.getElementById('competences').value;
         const interest = document.getElementById('interests').value;
         const resource = document.getElementById('resources').value;
         const municipality = document.getElementById('municipality').value;
+        const month = document.getElementById('month').value;
 
         const params = new URLSearchParams({
             location: location || '',
             competence: competence || '',
             interest: interest || '',
             resource: resource || '',
-            municipality: municipality || ''
+            municipality: municipality || '',
+            month: month || ''
         });
 
         fetch(`/api/districtsCriteria?${params.toString()}`)

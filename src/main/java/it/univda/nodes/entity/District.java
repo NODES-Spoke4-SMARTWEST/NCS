@@ -24,6 +24,9 @@ public class District {
     @Column(name="active", nullable = false)
     private boolean active;
 
+    @Column(name="active_month")
+    private String activeMonth;
+
     @ManyToMany(mappedBy = "districts")
     private List<Hub> hubs;
 
@@ -66,6 +69,14 @@ public class District {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getActiveMonth() {
+        return activeMonth;
+    }
+
+    public void setActiveMonth(String activeMonth) {
+        this.activeMonth = activeMonth;
     }
 
     public List<Competence> getCompetences() {

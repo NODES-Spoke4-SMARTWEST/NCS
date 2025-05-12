@@ -219,56 +219,11 @@ public class TempController {
             @RequestParam(required = false) String competence,
             @RequestParam(required = false) String interest,
             @RequestParam(required = false) String resource,
-            @RequestParam(required = false) String municipality) {
+            @RequestParam(required = false) String municipality,
+            @RequestParam(required = true) String month) {
 
-        /*List<HubDTO> searchResults = new ArrayList<>();
-
-        if (location != "") {
-            Hub hub = hubService.getHubById(Long.parseLong(location));
-            if (hub != null) {
-                searchResults.add(hubService.convertToDTO(hub));
-            }
-        }
-
-        if (competence != "") {
-            List<Hub> hubC = hubService.findHubsByCompetence(Long.parseLong(competence));
-            if (!hubC.isEmpty()) {
-                for (Hub h: hubC) {
-                    searchResults.add(hubService.convertToDTO(h));
-                }
-            }
-        }
-
-        if (interest != "") {
-            List<Hub> hubI = hubService.findHubsByInterest(Long.parseLong(interest));
-            if (!hubI.isEmpty()) {
-                for (Hub h: hubI) {
-                    searchResults.add(hubService.convertToDTO(h));
-                }
-            }
-        }
-
-        if (resource != "") {
-            List<Hub> hubR = hubService.getHubsByResourceType(resource);
-            if (!hubR.isEmpty()) {
-                for (Hub h: hubR) {
-                    searchResults.add(hubService.convertToDTO(h));
-                }
-            }
-        }
-
-        if (municipality != "") {
-            List<Hub> hubM = hubService.getFilteredHubs(location, competence, interest, resource, municipality);
-            if (!hubM.isEmpty()) {
-                for (Hub h: hubM) {
-                    searchResults.add(hubService.convertToDTO(h));
-                }
-            }
-        }
-
-         */
         List<HubDTO> searchResults = hubService.getFilteredHubs(location, competence, interest, resource, municipality);
-        List<DistrictDTO> districts = hubService.findDistricts();
+        List<DistrictDTO> districts = districtService.findDistrictsByMonth(month);
         List<PointOfInterest> points = hubService.findPOI();
         Map<String, Object> result = new HashMap<>();
         result.put("hubs", getUniqueHubsById(searchResults));
@@ -278,7 +233,6 @@ public class TempController {
     }
 
     public List<HubDTO> getUniqueHubsById(List<HubDTO> hubs) {
-        // Create a map with hub ID as the key and HubDTO as the value
         Map<Long, HubDTO> hubMap = hubs.stream()
                 .collect(Collectors.toMap(HubDTO::getId, hub -> hub, (existing, replacement) -> existing));
 

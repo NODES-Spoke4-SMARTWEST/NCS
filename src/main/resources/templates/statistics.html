@@ -2,12 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Users</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <title>Booking Statistics</title>
+  <link rel="stylesheet" th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css}">
   <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 <body>
+
 <header>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand d-flex align-items-center" th:href="@{/home}">
@@ -71,46 +71,26 @@
   </nav>
 </header>
 
-<div class="container mt-5">
-  <h1>Manage Users</h1>
-  <table class="table table-bordered mt-4">
-    <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Banned Status</th>
-      <th>Actions</th>
-      <th>Role</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user : ${users}">
-      <td th:text="${user.id}"></td>
-      <td th:text="${user.name}"></td>
-      <td th:text="${user.description}"></td>
-      <td th:text="${user.banned ? 'Banned' : 'Active'}"></td>
-      <td>
-        <form th:action="@{/ban-user}" method="post" th:if="${!user.banned}">
-          <input type="hidden" name="userId" th:value="${user.id}"/>
-          <button type="submit" class="btn btn-danger btn-sm">Ban</button>
-        </form>
-        <form th:action="@{/unban-user}" method="post" th:if="${user.banned}">
-          <input type="hidden" name="userId" th:value="${user.id}"/>
-          <button type="submit" class="btn btn-success btn-sm">Unban</button>
-        </form>
-      </td>
-      <td>
-        <form th:action="@{/toggle-role}" method="post">
-          <input type="hidden" name="userId" th:value="${user.id}" />
-          <button type="submit" class="btn btn-warning btn-sm"
-                  th:text="${user.role.name == 'business' ? 'Make Agent' : 'Make Business'}"></button>
-        </form>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-</div>
+<main class="container mt-5">
+  <h2 class="mb-4">Booking Matrix by Month</h2>
+
+  <div class="list-group mb-4">
+    <div th:each="m : ${months}" class="list-group-item d-flex justify-content-between align-items-center">
+      <span th:text="${m.monthName + ' ' + m.year}"></span>
+      <button class="btn btn-primary"
+              th:attr="data-month=${m.monthValue},data-year=${m.year}"
+              onclick="loadMatrix(this)">View Matrix</button>
+    </div>
+  </div>
+
+  <div id="matrix-container" class="table-responsive" style="display:none;">
+    <h4 id="matrix-title"></h4>
+    <table class="table table-bordered table-striped mt-3" id="matrix-table">
+      <thead id="matrix-head"></thead>
+      <tbody id="matrix-body"></tbody>
+    </table>
+  </div>
+</main>
 
 <footer class="bg-light text-center mt-5">
   <div class="footer-content py-4">
@@ -129,8 +109,54 @@
     </div>
   </div>
 </footer>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  function loadMatrix(button) {
+    const year = button.getAttribute('data-year');
+    const month = button.getAttribute('data-month');
+
+    fetch(`/statistics/matrix?year=${year}&month=${month}`)
+            .then(res => res.json())
+            .then(data => {
+              const container = document.getElementById('matrix-container');
+              const head = document.getElementById('matrix-head');
+              const body = document.getElementById('matrix-body');
+              const title = document.getElementById('matrix-title');
+
+              title.textContent = `Bookings Matrix for ${month}/${year}`;
+              container.style.display = 'block';
+
+              // Clear previous table
+              head.innerHTML = '';
+              body.innerHTML = '';
+
+              // Columns
+              const allTags = data.headers; // e.g. ["Python", "AI", "Design"]
+              const hubs = Object.keys(data.rows); // e.g. ["Hub 1", "Hub 2"]
+
+              let theadRow = "<tr><th>Hub</th>";
+              allTags.forEach(tag => {
+                theadRow += `<th>${tag}</th>`;
+              });
+              theadRow += "</tr>";
+              head.innerHTML = theadRow;
+
+              hubs.forEach(hubName => {
+                const row = data.rows[hubName];
+                let rowHtml = `<tr><td>${hubName}</td>`;
+                allTags.forEach(tag => {
+                  rowHtml += `<td>${row[tag] || 0}</td>`;
+                });
+                rowHtml += "</tr>";
+                body.innerHTML += rowHtml;
+              });
+            })
+            .catch(err => {
+              alert("Failed to load data");
+              console.error(err);
+            });
+  }
+</script>
+
 </body>
 </html>
