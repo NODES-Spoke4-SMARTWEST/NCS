@@ -1,0 +1,5 @@
+How to use the platform:
+•	Git (https://git-scm.com) and Docker (https://www.docker.com/get-started) must be installed in the computer.
+•	Clone the repository of the project (https://github.com/NODES-Spoke4-SMARTWEST/NCS)
+•	Open a terminal and use the following command: “docker-compose up”
+•	After the containers are created and the application is started the platform will be available (http://localhost:8082/login)
