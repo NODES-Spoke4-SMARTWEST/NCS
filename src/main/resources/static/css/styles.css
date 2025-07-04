@@ -52,7 +52,7 @@ body {
 }
 
 .tab.active {
-    border-bottom: 2px solid #007bff;
+    border-bottom: 2px solid #76881d;
 }
 
 .form-footer {
@@ -62,14 +62,13 @@ body {
 }
 
 .form-footer a {
-    color: #007bff;
+    color: #76881d;
     text-decoration: none;
 }
 
 .form-footer a:hover {
     text-decoration: underline;
 }
-
 
 .right-panel {
     flex: 1;
@@ -106,7 +105,7 @@ body {
     display: inline-block;
     padding: 10px 20px;
     color: white;
-    background-color: #5cb85c;
+    background-color: #95a944;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -114,7 +113,7 @@ body {
 }
 
 .btn:hover {
-    background-color: #4cae4c;
+    background-color: #76881d;
 }
 
 .form-footer {
@@ -124,7 +123,7 @@ body {
 }
 
 .form-footer a {
-    color: #5cb85c;
+    color: #76881d;
     text-decoration: none;
 }
 
@@ -145,7 +144,8 @@ body {
 }
 
 .tab.active {
-    border-bottom: 2px solid #5cb85c;
+    border-bottom: 2px solid #76881d;
 }
+
 
 

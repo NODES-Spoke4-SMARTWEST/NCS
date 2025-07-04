@@ -129,7 +129,7 @@ body {
 }
 
 .message.sent p {
-    background-color: #dcf8c6;
+    background-color: #b9cc83;
 }
 
 .chat-footer {
@@ -149,7 +149,7 @@ body {
 #sendButton {
     margin-left: 10px;
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #76881d;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -162,16 +162,17 @@ body {
     top: 20px;
     left: 20px;
     padding: 10px 15px;
-    background-color: #007bff; /* Change this color if needed */
+    background-color: #76881d;
     color: #fff;
     border: none;
     border-radius: 5px;
     text-decoration: none;
     font-size: 16px;
     cursor: pointer;
-    z-index: 10; /* Ensure it appears above other elements */
+    z-index: 10;
 }
 
 #homeButton:hover {
-    background-color: #0056b3; /* Darken on hover */
+    background-color: #5f6e17;
 }
+

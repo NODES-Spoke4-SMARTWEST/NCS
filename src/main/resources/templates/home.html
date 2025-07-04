@@ -28,10 +28,27 @@
 </head>
 <body>
 <header>
+  <div class="top-bar d-flex justify-content-between align-items-center px-4 py-2">
+    <div class="d-flex align-items-center gap-3">
+
+      <img th:src="@{../images/loghi2.png}" alt="Logo" style="height: 50px;">
+
+      <!--img src="/images/eu.png" alt="EU" height="30">
+      <img src="/images/miur.png" alt="MIUR" height="30">
+      <img src="/images/italiadomani.png" alt="Italia Domani" height="30">
+      <img src="/images/nodes.png" alt="NODES" height="30"-->
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <div class="lang-switch">IT | EN</div>
+      <input type="text" placeholder="Search" class="search-box">
+      <!--div class="profile-icon"></div-->
+    </div>
+  </div>
+
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand d-flex align-items-center" th:href="@{/home}">
-      <img th:src="@{../images/logo.png}" alt="Logo" style="height: 40px; margin-right: 10px; border-radius: 5px 5px 5px 5px;">
-      <span style="font-size: 32px; font-weight: bold; color: #004996; font-family: 'Arial Narrow'">NCS</span>
+      <!--img th:src="@{../images/logo.png}" alt="Logo" style="height: 40px; margin-right: 10px; border-radius: 5px 5px 5px 5px;"-->
+      <span style="font-size: 32px; font-weight: bold; color: #76881d; margin-left: 25px; font-family: 'Arial Narrow'">NCS</span>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -106,7 +123,7 @@
                alt="Hub Image" />
           <div class="card-body">
             <h3 class="card-title" th:text="${hub.name}">Hub Name</h3>
-            <button class="btn btn-primary" onclick="toggleDetails(this)">Show Details</button>
+            <button class="btn btn-primary" style="background-color: #6a7b1b" onclick="toggleDetails(this)">Show Details</button>
             <div class="hub-details mt-2">
               <p class="card-text" th:text="${hub.description}">Hub Description</p>
               <!--<p class="card-text">Location: <span th:text="${hub.latitude}"></span>, <span th:text="${hub.longitude}"></span></p>-->

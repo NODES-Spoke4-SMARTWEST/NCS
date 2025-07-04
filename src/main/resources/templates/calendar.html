@@ -83,7 +83,7 @@
       <span th:text="${booking.startDate} + ' - ' + ${booking.endDate}">Booking Date Range</span>
       <span th:if="${booking.resource != null}" th:text="'Resource: ' + ${booking.resource.type}">Resource Name</span>
       <span th:if="${booking.initiative != null}" th:text="'Initiative: ' + ${booking.initiative.title}">Initiative Title</span>
-      <button class="btn btn-info btn-sm float-right" onclick="showDescription(this)">View Details</button>
+      <button class="btn btn-info btn-sm float-right" style="background: #6a7b1b" onclick="showDescription(this)">View Details</button>
     </li>
   </ul>
 </div>
